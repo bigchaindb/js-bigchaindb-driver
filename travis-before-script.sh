@@ -4,7 +4,7 @@ set -e -x
 
 if [ "${TOXENV}" == "py35" ]; then
     rethinkdb --daemon
-    bigchaindb -y configure
+    bigchaindb -y configure rethinkdb
 
     # Start BigchainDB in the background and ignore any output
     bigchaindb start >/dev/null 2>&1 &
