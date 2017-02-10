@@ -1,0 +1,16 @@
+*.seed
+*.log
+*.dat
+*.out
+*.pid
+*.gz
+.idea
+*.sublime-project
+*.sublime-workspace
+*.sublime-workspace
+
+.env
+
+build/*
+
+node_modules/*
