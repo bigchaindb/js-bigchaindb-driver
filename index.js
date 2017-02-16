@@ -109,6 +109,7 @@ export function makeCreateTransaction(asset, metadata, outputs, ...issuers) {
 export function makeTransferTransaction(unspentTransaction, metadata, outputs, ...fulfilledOutputs) {
     const inputs = fulfilledOutputs.map((outputIndex) => {
         const fulfilledOutput = unspentTransaction.outputs[outputIndex];
+        console.log(unspentTransaction, fulfilledOutput)
         const transactionLink = {
             'output': outputIndex,
             'txid': unspentTransaction.id,
