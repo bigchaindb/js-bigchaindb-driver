@@ -141,8 +141,7 @@ export function signTransaction(transaction, ...privateKeys) {
     signedTx.inputs.forEach((input, index) => {
         const privateKey = privateKeys[index];
         const privateKeyBuffer = new Buffer(base58.decode(privateKey));
-        const serializedTransaction = serializeTransactionIntoCanonicalString(transaction);
-
+        const serializedTransaction = serializeTransactionIntoCanonicalString(transaction, input);
         const ed25519Fulfillment = new cc.Ed25519();
         ed25519Fulfillment.sign(new Buffer(serializedTransaction), privateKeyBuffer);
         const fulfillmentUri = ed25519Fulfillment.serializeUri();
@@ -209,14 +208,23 @@ function sha256Hash(data) {
         .hex();
 }
 
-function serializeTransactionIntoCanonicalString(transaction) {
+function serializeTransactionIntoCanonicalString(transaction, input) {
     // BigchainDB signs fulfillments by serializing transactions into a "canonical" format where
     // each fulfillment URI is removed before sorting the remaining keys
     const tx = clone(transaction);
-    tx.inputs.forEach((input) => {
-        input.fulfillment = null;
-    });
+    let match;
+    tx.inputs.forEach((_input) => {
 
+        if (!(_input && input && _input['fulfills'] && input['fulfills']
+            && !(_input['fulfills']['txid'] === input['fulfills']['txid']
+            && _input['fulfills']['output'] === input['fulfills']['output']))) {
+            match = tx.inputs.indexOf(_input);
+        }
+        _input.fulfillment = null;
+    });
+    if (input && match >= 0 && tx.inputs) {
+        tx.inputs = [tx.inputs[match]];
+    }
     // Sort the keys
     return stableStringify(tx, (a, b) => (a.key > b.key ? 1 : -1));
 }
