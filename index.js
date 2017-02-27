@@ -228,3 +228,120 @@ function serializeTransactionIntoCanonicalString(transaction, input) {
     // Sort the keys
     return stableStringify(tx, (a, b) => (a.key > b.key ? 1 : -1));
 }
+
+import { request as baseRequest, sanitize } from 'js-utility-belt/es6';
+
+// import { request } from 'utils/request';
+//
+// const FLASK_BASE_URL = process.env.FLASK_BASE_URL;
+// export const BDB_SERVER_URL = process.env.BDB_SERVER_URL;
+// const API_PATH = `${BDB_SERVER_URL}/api/v1/`;
+//
+//
+const DEFAULT_REQUEST_CONFIG = {
+    credentials: 'include',
+    headers: {
+        'Accept': 'application/json'
+    }
+};
+
+/**
+ * Small wrapper around js-utility-belt's request that provides url resolving, default settings, and
+ * response handling.
+ */
+function request(url, config = {}) {
+    // Load default fetch configuration and remove any falsy query parameters
+    const requestConfig = Object.assign({}, DEFAULT_REQUEST_CONFIG, config, {
+        query: config.query && sanitize(config.query)
+    });
+    let apiUrl = url;
+
+    if (requestConfig.jsonBody) {
+        requestConfig.headers = Object.assign({}, requestConfig.headers, {
+            'Content-Type': 'application/json'
+        });
+    }
+    if (!url) {
+        return Promise.reject(new Error('Request was not given a url.'));
+    }
+
+    return baseRequest(apiUrl, requestConfig)
+        .then((res) => res.json())
+        .catch((err) => {
+            console.error(err);
+            throw err;
+        });
+}
+
+
+export function getApiUrls(API_PATH) {
+    return {
+        'transactions': API_PATH + 'transactions',
+        'transactions_detail': API_PATH + 'transactions/%(txId)s',
+        'outputs': API_PATH + 'outputs',
+        'statuses': API_PATH + 'statuses'
+    };
+}
+
+
+export function getTransaction(txId, API_PATH) {
+    return request(getApiUrls(API_PATH)['transactions_detail'], {
+            urlTemplateSpec: {
+                txId
+            }
+        });
+}
+
+export function postTransaction(transaction, API_PATH) {
+    return request(getApiUrls(API_PATH)['transactions'], {
+        method: 'POST',
+        jsonBody: transaction
+    })
+}
+
+export function listTransactions({ asset_id, operation }, API_PATH) {
+    return request(getApiUrls(API_PATH)['transactions'], {
+        query: {
+            asset_id,
+            operation
+        }
+    })
+}
+
+export function pollStatusAndFetchTransaction(transaction, API_PATH) {
+    return new Promise((resolve, reject) => {
+        const timer = setInterval(() => {
+            getStatus(transaction.id, API_PATH)
+                .then((res) => {
+                    console.log('Fetched transaction status:', res);
+                    if (res.status === 'valid') {
+                        clearInterval(timer);
+                        getTransaction(transaction.id, API_PATH)
+                            .then((res) => {
+                                console.log('Fetched transaction:', res);
+                                resolve();
+                            });
+                    }
+                });
+        }, 500)
+    })
+}
+
+export function listOutputs({ public_key, unspent }, API_PATH) {
+    return request(getApiUrls(API_PATH)['outputs'], {
+        query: {
+            public_key,
+            unspent
+        }
+    })
+}
+
+export function getStatus(tx_id, API_PATH) {
+    return request(getApiUrls(API_PATH)['statuses'], {
+            query: {
+                tx_id
+            }
+        });
+}
+
+

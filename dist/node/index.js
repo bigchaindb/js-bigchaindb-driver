@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.BDB_SERVER_URL = undefined;
 
 var _extends2 = require('babel-runtime/helpers/extends');
 
@@ -14,6 +15,7 @@ exports.makeOutput = makeOutput;
 exports.makeCreateTransaction = makeCreateTransaction;
 exports.makeTransferTransaction = makeTransferTransaction;
 exports.signTransaction = signTransaction;
+exports.testMe = testMe;
 
 var _buffer = require('buffer');
 
@@ -193,8 +195,7 @@ function signTransaction(transaction) {
     signedTx.inputs.forEach(function (input, index) {
         var privateKey = privateKeys[index];
         var privateKeyBuffer = new _buffer.Buffer(_bs2.default.decode(privateKey));
-        var serializedTransaction = serializeTransactionIntoCanonicalString(transaction);
-
+        var serializedTransaction = serializeTransactionIntoCanonicalString(transaction, input);
         var ed25519Fulfillment = new _fiveBellsCondition2.default.Ed25519();
         ed25519Fulfillment.sign(new _buffer.Buffer(serializedTransaction), privateKeyBuffer);
         var fulfillmentUri = ed25519Fulfillment.serializeUri();
@@ -266,16 +267,137 @@ function sha256Hash(data) {
     return _jsSha2.default.sha3_256.create().update(data).hex();
 }
 
-function serializeTransactionIntoCanonicalString(transaction) {
+function serializeTransactionIntoCanonicalString(transaction, input) {
     // BigchainDB signs fulfillments by serializing transactions into a "canonical" format where
     // each fulfillment URI is removed before sorting the remaining keys
     var tx = (0, _clone2.default)(transaction);
-    tx.inputs.forEach(function (input) {
-        input.fulfillment = null;
-    });
+    var match = void 0;
+    tx.inputs.forEach(function (_input) {
 
+        if (!(_input && input && _input['fulfills'] && input['fulfills'] && !(_input['fulfills']['txid'] === input['fulfills']['txid'] && _input['fulfills']['output'] === input['fulfills']['output']))) {
+            match = tx.inputs.indexOf(_input);
+        }
+        _input.fulfillment = null;
+    });
+    if (input && match >= 0 && tx.inputs) {
+        tx.inputs = [tx.inputs[match]];
+    }
     // Sort the keys
     return (0, _jsonStableStringify2.default)(tx, function (a, b) {
         return a.key > b.key ? 1 : -1;
     });
 }
+
+var BDB_SERVER_URL = exports.BDB_SERVER_URL = process.env.BDB_SERVER_URL;
+function testMe() {
+    return 'test';
+}
+
+// import { request as baseRequest, sanitize } from 'js-utility-belt/es6';
+//
+// const FLASK_BASE_URL = process.env.FLASK_BASE_URL;
+// export const BDB_SERVER_URL = process.env.BDB_SERVER_URL;
+// const API_PATH = `${BDB_SERVER_URL}/api/v1/`;
+//
+//
+// const DEFAULT_REQUEST_CONFIG = {
+//     credentials: 'include',
+//     headers: {
+//         'Accept': 'application/json'
+//     }
+// };
+//
+// /**
+//  * Small wrapper around js-utility-belt's request that provides url resolving, default settings, and
+//  * response handling.
+//  */
+// function request(url, config = {}) {
+//     // Load default fetch configuration and remove any falsy query parameters
+//     const requestConfig = Object.assign({}, DEFAULT_REQUEST_CONFIG, config, {
+//         query: config.query && sanitize(config.query)
+//     });
+//     let apiUrl = url;
+//
+//     if (requestConfig.jsonBody) {
+//         requestConfig.headers = Object.assign({}, requestConfig.headers, {
+//             'Content-Type': 'application/json'
+//         });
+//     }
+//     if (!url) {
+//         return Promise.reject(new Error('Request was not given a url.'));
+//     } else if (!url.match(/^http/)) {
+//         apiUrl = ApiUrls[url];
+//         if (!apiUrl) {
+//             return Promise.reject(new Error(`Request could not find a url mapping for "${url}"`));
+//         }
+//     }
+//
+//     return baseRequest(apiUrl, requestConfig)
+//         .then((res) => res.json())
+//         .catch((err) => {
+//             console.error(err);
+//             throw err;
+//         });
+// }
+//
+//
+//
+// export function requestTransaction(txId) {
+//     return request(ApiUrls['transactions_detail'], {
+//             urlTemplateSpec: {
+//                 txId
+//             }
+//         });
+// }
+//
+// export function postTransaction(transaction) {
+//     return request(ApiUrls['transactions'], {
+//         method: 'POST',
+//         jsonBody: transaction
+//     })
+// }
+//
+// export function listTransactions({ asset_id, operation }) {
+//     return request(ApiUrls['transactions'], {
+//         query: {
+//             asset_id,
+//             operation
+//         }
+//     })
+// }
+//
+// export function pollStatusAndFetchTransaction(transaction) {
+//     return new Promise((resolve, reject) => {
+//         const timer = setInterval(() => {
+//             requestStatus(transaction.id)
+//                 .then((res) => {
+//                     console.log('Fetched transaction status:', res);
+//                     if (res.status === 'valid') {
+//                         clearInterval(timer);
+//                         requestTransaction(transaction.id)
+//                             .then((res) => {
+//                                 console.log('Fetched transaction:', res);
+//                                 resolve();
+//                             });
+//                     }
+//                 });
+//         }, 500)
+//     })
+// }
+//
+// export function listOutputs({ public_key, unspent }) {
+//     return request(ApiUrls['outputs'], {
+//         query: {
+//             public_key,
+//             unspent
+//         }
+//     })
+// }
+//
+// export function requestStatus(tx_id) {
+//     return request(ApiUrls['statuses'], {
+//             query: {
+//                 tx_id
+//             }
+//         });
+// }
