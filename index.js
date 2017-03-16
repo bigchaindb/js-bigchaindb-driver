@@ -276,10 +276,13 @@ function request(url, config = {}) {
 
 export function getApiUrls(API_PATH) {
     return {
+        'blocks': API_PATH + 'blocks',
+        'blocks_detail': API_PATH + 'blocks/%(blockId)s',
+        'outputs': API_PATH + 'outputs',
+        'statuses': API_PATH + 'statuses',
         'transactions': API_PATH + 'transactions',
         'transactions_detail': API_PATH + 'transactions/%(txId)s',
-        'outputs': API_PATH + 'outputs',
-        'statuses': API_PATH + 'statuses'
+        'votes': API_PATH + 'votes'
     };
 }
 
@@ -340,6 +343,31 @@ export function getStatus(tx_id, API_PATH) {
     return request(getApiUrls(API_PATH)['statuses'], {
             query: {
                 tx_id
+            }
+        });
+}
+
+export function getBlock(blockId, API_PATH) {
+    return request(getApiUrls(API_PATH)['blocks_detail'], {
+            urlTemplateSpec: {
+                blockId
+            }
+        });
+}
+
+export function listBlocks({tx_id, status}, API_PATH) {
+    return request(getApiUrls(API_PATH)['blocks'], {
+            query: {
+                tx_id,
+                status
+            }
+        });
+}
+
+export function listVotes(block_id, API_PATH) {
+    return request(getApiUrls(API_PATH)['votes'], {
+            query: {
+                block_id
             }
         });
 }
