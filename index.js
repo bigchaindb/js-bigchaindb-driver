@@ -311,20 +311,24 @@ export function listTransactions({ asset_id, operation }, API_PATH) {
     })
 }
 
-export function pollStatusAndFetchTransaction(transaction, API_PATH) {
+export function pollStatusAndFetchTransaction(tx_id, API_PATH) {
     return new Promise((resolve, reject) => {
         const timer = setInterval(() => {
-            getStatus(transaction.id, API_PATH)
+            getStatus(tx_id, API_PATH)
                 .then((res) => {
                     console.log('Fetched transaction status:', res);
                     if (res.status === 'valid') {
                         clearInterval(timer);
-                        getTransaction(transaction.id, API_PATH)
+                        getTransaction(tx_id, API_PATH)
                             .then((res) => {
                                 console.log('Fetched transaction:', res);
-                                resolve();
+                                resolve(res);
                             });
                     }
+                })
+                .catch((err) => {
+                    clearInterval(timer);
+                    reject(err);
                 });
         }, 500)
     })
