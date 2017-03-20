@@ -249,7 +249,7 @@ const DEFAULT_REQUEST_CONFIG = {
  * Small wrapper around js-utility-belt's request that provides url resolving, default settings, and
  * response handling.
  */
-function request(url, config = {}) {
+function request(url, config = {}, onlyJsonResponse=true) {
     // Load default fetch configuration and remove any falsy query parameters
     const requestConfig = Object.assign({}, DEFAULT_REQUEST_CONFIG, config, {
         query: config.query && sanitize(config.query)
@@ -266,7 +266,13 @@ function request(url, config = {}) {
     }
 
     return baseRequest(apiUrl, requestConfig)
-        .then((res) => res.json())
+        .then((res) => {
+            return onlyJsonResponse ? res.json() :
+                {
+                    json: res.json(),
+                    url: res.url
+                };
+        })
         .catch((err) => {
             console.error(err);
             throw err;
@@ -334,13 +340,13 @@ export function pollStatusAndFetchTransaction(tx_id, API_PATH) {
     })
 }
 
-export function listOutputs({ public_key, unspent }, API_PATH) {
+export function listOutputs({ public_key, unspent }, API_PATH, onlyJsonResponse=true) {
     return request(getApiUrls(API_PATH)['outputs'], {
         query: {
             public_key,
             unspent
         }
-    })
+    }, onlyJsonResponse)
 }
 
 export function getStatus(tx_id, API_PATH) {
