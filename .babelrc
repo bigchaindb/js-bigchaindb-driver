@@ -1,18 +1,26 @@
 {
-    'presets': [['latest', { es2015: { modules: false } }]],
+    'presets': ['es2015-no-commonjs'],
     'plugins': [
+        'transform-export-extensions',
         'transform-object-assign',
-        'transform-object-rest-spread',
-        [ 'transform-runtime', {
-            'polyfill': false,
-            'regenerator': false
-        } ]
+        'transform-object-rest-spread'
     ],
     'sourceMaps': true,
 
     'env': {
+        'bundle': {
+            'plugins': [
+                ['transform-runtime', {
+                    'polyfill': true,
+                    'regenerator': false
+                }]
+            ]
+        },
         'cjs': {
-            'presets': ['latest']
+            'plugins': [
+                'add-module-exports',
+                'transform-es2015-modules-commonjs'
+            ]
         }
     }
 }

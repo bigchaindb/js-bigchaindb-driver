@@ -9,7 +9,7 @@ const webpack = require('webpack');
 const PRODUCTION = process.env.NODE_ENV === 'production';
 
 const PATHS = {
-    ENTRY: path.resolve(__dirname, 'index.js'),
+    ENTRY: path.resolve(__dirname, './src/index.js'),
     BUNDLE: path.resolve(__dirname, 'dist/bundle'),
     NODE_MODULES: path.resolve(__dirname, 'node_modules'),
 };
