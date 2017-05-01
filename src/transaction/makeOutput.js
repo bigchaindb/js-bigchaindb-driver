@@ -7,8 +7,9 @@
  */
 export default function makeOutput(condition, amount = 1) {
     return {
-        amount,
+        amount: JSON.stringify(amount),
         condition,
-        'public_keys': [condition.details.public_key],
+        'public_keys': condition.details.hasOwnProperty('public_key') ?
+            [condition.details.public_key] : [],
     };
 }
