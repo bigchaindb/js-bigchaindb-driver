@@ -1,7 +1,12 @@
 import getTransaction from './getTransaction';
 import getStatus from './getStatus';
 
-
+/**
+ * @public
+ * @param tx_id
+ * @param API_PATH
+ * @return {Promise}
+ */
 export default function (tx_id, API_PATH) {
     return new Promise((resolve, reject) => {
         const timer = setInterval(() => {

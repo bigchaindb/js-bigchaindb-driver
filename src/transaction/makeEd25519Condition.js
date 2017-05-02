@@ -7,9 +7,10 @@ import ccJsonify from './utils/ccJsonify';
 
 
 /**
+ * @public
  * Create an Ed25519 Cryptocondition from an Ed25519 public key to put into an Output of a Transaction
  * @param {string} publicKey base58 encoded Ed25519 public key for the recipient of the Transaction
- * @param {bool} json If true returns a json object otherwise a crypto-condition type
+ * @param {boolean} [json=true] If true returns a json object otherwise a crypto-condition type
  * @returns {object} Ed25519 Condition (that will need to wrapped in an Output)
  */
 export default function makeEd25519Condition(publicKey, json=true) {

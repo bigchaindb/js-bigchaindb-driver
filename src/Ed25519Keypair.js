@@ -3,9 +3,10 @@ import nacl from 'tweetnacl';
 import sha3 from 'js-sha3';
 
 /**
+ * @public
  * @class Keypair Ed25519 keypair in base58 (as BigchainDB expects base58 keys)
  * @type {Object}
- * @param {number} secret A seed that will be used as a key derivation function
+ * @param {number} [secret] A seed that will be used as a key derivation function
  * @property {string} publicKey
  * @property {string} privateKey
  */

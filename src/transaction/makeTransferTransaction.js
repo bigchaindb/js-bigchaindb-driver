@@ -1,7 +1,9 @@
 import makeInputTemplate from './makeInputTemplate';
 import makeTransaction from './makeTransaction';
 
+
 /**
+ * @public
  * Generate a `TRANSFER` transaction holding the `asset`, `metadata`, and `outputs`, that fulfills
  * the `fulfilledOutputs` of `unspentTransaction`.
  * @param {object} unspentTransaction Previous Transaction you have control over (i.e. can fulfill

@@ -7,6 +7,7 @@ import serializeTransactionIntoCanonicalString from './serializeTransactionIntoC
 
 
 /**
+ * @public
  * Sign the given `transaction` with the given `privateKey`s, returning a new copy of `transaction`
  * that's been signed.
  * Note: Only generates Ed25519 Fulfillments. Thresholds and other types of Fulfillments are left as
