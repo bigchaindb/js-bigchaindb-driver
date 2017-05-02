@@ -23,39 +23,23 @@ of which I expect you'll know quite well ([otherwise, go check out js-reactor](h
 
 ### Install from npm
 
-```
+```bash
+# install from npm
 npm install js-bigchaindb-driver
-```
-
-
-### Install from GitHub
-
-Depending on your GitHub login credentials
-
-- ssh
-```
+# Install from GitHub - ssh
 npm install git+ssh://github.com/bigchaindb/js-bigchaindb-driver.git
-```
-
-- https
-
-```
+# Install from GitHub - https
 npm install git+https://github.com/bigchaindb/js-bigchaindb-driver.git
 ```
 
-### Browser / ES6
+### Import / ES6
 
 ```javascript
+// ES6 Browser
 import * as driver from 'js-bigchaindb-driver';
-```
-
-### Browser / require
-```javascript
+// ES<<6 Browser
 let driver = require('js-bigchaindb-driver');
-```
-
-### CommonJS / node
-```javascript
+// ES<<6 CommonJS / node
 let driver = require('js-bigchaindb-driver/dist/node');
 ```
 
