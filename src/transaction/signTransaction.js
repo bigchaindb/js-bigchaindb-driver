@@ -22,7 +22,7 @@ export default function signTransaction(transaction, ...privateKeys) {
     signedTx.inputs.forEach((input, index) => {
         const privateKey = privateKeys[index];
         const privateKeyBuffer = new Buffer(base58.decode(privateKey));
-        const serializedTransaction = serializeTransactionIntoCanonicalString(transaction, input);
+        const serializedTransaction = serializeTransactionIntoCanonicalString(transaction);
         const ed25519Fulfillment = new cc.Ed25519();
         ed25519Fulfillment.sign(new Buffer(serializedTransaction), privateKeyBuffer);
         const fulfillmentUri = ed25519Fulfillment.serializeUri();
