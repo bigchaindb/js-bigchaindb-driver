@@ -5,12 +5,24 @@ import cc from 'five-bells-condition';
 
 import ccJsonify from './utils/ccJsonify';
 /**
- * Create an Ed25519 Cryptocondition from an Ed25519 public key to put into an Output of a Transaction
- * @param {string} publicKey base58 encoded Ed25519 public key for the recipient of the Transaction
- * @returns {object} Ed25519 Condition (that will need to wrapped in an Output)
+ * Create an Sha256 Threshold Cryptocondition from threshold to put into an Output of a Transaction
+ * @param {number} threshold
+ * @param {array} subconditions
+ * @param {bool} json If true returns a json object otherwise a crypto-condition type
+ * @returns {object} Sha256 Threshold Condition (that will need to wrapped in an Output)
  */
-export default function makeThresholdCondition(thresholdCondition, ccFormat=false) {
-    if (ccFormat) return new cc.ThresholdSha256();
+export default function makeThresholdCondition(threshold, subconditions=[], json=true) {
+    const thresholdCondition = new cc.ThresholdSha256();
+    thresholdCondition.threshold = threshold;
 
-    return ccJsonify(thresholdCondition)
+    subconditions.forEach((subcondition) => {
+        // TODO: add support for Condition and URIs
+        thresholdCondition.addSubfulfillment(subcondition);
+    });
+
+    if (json) {
+        return ccJsonify(thresholdCondition)
+    }
+
+    return thresholdCondition
 }
