@@ -3,7 +3,8 @@ import cc from 'five-bells-condition';
 import { Buffer } from 'buffer';
 
 /**
- *
+ * @public
+ * Loads a crypto-condition class (Fulfillment or Condition) from a BigchainDB JSON object
  * @param {object} conditionJson
  * @returns {cc.Condition} Ed25519 Condition (that will need to wrapped in an Output)
  */

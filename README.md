@@ -17,7 +17,7 @@ of which I expect you'll know quite well ([otherwise, go check out js-reactor](h
 - [Usage](#usage)
 - [Speed Optimizations](#speed-optimizations)
 - [Warnings](#warnings)
-- [API](#api)
+- [API](API.md)
 
 ## Getting started
 
@@ -158,22 +158,3 @@ An example BigchainDB Server-generated keypair (encoded in `base58`):
 
 Your package should be able to take in the decoded version of the **private** key and return you the
 same **public** key (once you encode that to `base58`).
-
-
-## API
-
-### Keypairs
-
-```
-new Ed25519Keypair(secret)
-```
-
-### Transaction
-
-```
-Transaction(secret)
-```
-
-
-
-### Connection

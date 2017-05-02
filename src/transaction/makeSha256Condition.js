@@ -4,10 +4,12 @@ import cc from 'five-bells-condition';
 
 import ccJsonify from './utils/ccJsonify';
 
+
 /**
+ * @public
  * Create a Preimage-Sha256 Cryptocondition from a secret to put into an Output of a Transaction
  * @param {string} preimage Preimage to be hashed and wrapped in a crypto-condition
- * @param {bool} json If true returns a json object otherwise a crypto-condition type
+ * @param {boolean} [json=true] If true returns a json object otherwise a crypto-condition type
  * @returns {object} Preimage-Sha256 Condition (that will need to wrapped in an Output)
  */
 export default function makeSha256Condition(preimage, json=true) {

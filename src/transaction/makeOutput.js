@@ -1,4 +1,5 @@
 /**
+ * @public
  * Create an Output from a Condition.
  * Note: Assumes the given Condition was generated from a single public key (e.g. a Ed25519 Condition)
  * @param {object} condition Condition (e.g. a Ed25519 Condition from `makeEd25519Condition()`)
