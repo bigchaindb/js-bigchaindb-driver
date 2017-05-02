@@ -1,7 +1,8 @@
 import base58 from 'bs58';
 
 /**
- * Create an Ed25519 Cryptocondition from an Ed25519 public key to put into an Output of a Transaction
+ * @public
+ * Serializes a crypto-condition class (Condition or Fulfillment) into a BigchainDB-compatible JSON
  * @param {cc.Fulfillment} fulfillment base58 encoded Ed25519 public key for the recipient of the Transaction
  * @returns {object} Ed25519 Condition (that will need to wrapped in an Output)
  */

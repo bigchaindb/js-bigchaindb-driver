@@ -1,7 +1,9 @@
 import makeInputTemplate from './makeInputTemplate';
 import makeTransaction from './makeTransaction';
 
+
 /**
+ * @public
  * Generate a `CREATE` transaction holding the `asset`, `metadata`, and `outputs`, to be signed by
  * the `issuers`.
  * @param {object} asset Created asset's data

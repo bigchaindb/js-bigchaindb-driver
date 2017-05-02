@@ -8,3 +8,4 @@ export makeTransferTransaction from './makeTransferTransaction';
 export serializeTransactionIntoCanonicalString from './serializeTransactionIntoCanonicalString';
 export signTransaction from './signTransaction';
 export ccJsonLoad from './utils/ccJsonLoad';
+export ccJsonify from './utils/ccJsonify';
