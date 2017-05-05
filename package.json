@@ -8,7 +8,7 @@
   },
   "license": "¯\\_(ツ)_/¯",
   "author": "BigchainDB",
-  "main": "./src/index.js",
+  "main": "./dist/bundle/bundle.js",
   "scripts": {
     "lint": "eslint ./",
     "build": "npm run clean && npm run build:bundle && npm run build:cjs && npm run build:dist",
