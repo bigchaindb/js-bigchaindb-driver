@@ -1,12 +1,14 @@
 {
-  "name": "js-bigchaindb-quickstart",
+  "name": "js-bigchaindb-driver",
   "version": "0.0.1",
-  "description": "Some quickstarting for BigchainDB with JavaScript (node + browser)",
+  "description": "JavaScript driver for BigchainDB (node + browser)",
+  "homepage": "https://www.bigchaindb.com/",
+  "bugs": "https://github.com/bigchaindb/js-bigchaindb-driver/issues",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sohkai/js-bigchaindb-quickstart.git"
+    "url": "git+https://github.com/bigchaindb/js-bigchaindb-driver.git"
   },
-  "license": "¯\\_(ツ)_/¯",
+  "license": "Apache Software License 2.0",
   "author": "BigchainDB",
   "main": "./dist/bundle/bundle.js",
   "scripts": {
@@ -56,6 +58,9 @@
   },
   "keywords": [
     "bigchaindb",
-    "cryptoconditions"
+    "driver",
+    "blockchain",
+    "decentralized",
+    "dapp"
   ]
 }
