@@ -2,7 +2,7 @@
 
 > Inspired by [`js-bigchaindb-quickstart`](https://github.com/sohkai/js-bigchaindb-quickstart) of @sohkhai [thanks]
 
-> Supports BigchainDB Server v0.10
+> Supports BigchainDB Server v0.10 (Warning: use CORS enabled [branch](https://github.com/bigchaindb/bigchaindb/tree/kyber-master-feat-cors) untill [PR #1311](https://github.com/bigchaindb/bigchaindb/pull/1311) is resolved )
 
 Some naive helpers to get you on your way to making some transactions, if you'd like to use
 [BigchainDB](https://github.com/bigchaindb/bigchaindb) with JavaScript.
