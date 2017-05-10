@@ -47,7 +47,7 @@ const config = {
 
     output: {
         filename: PRODUCTION ? 'bundle.min.js' : 'bundle.js',
-        library: 'js-bigchaindb-quickstart',
+        library: 'js-bigchaindb-driver',
         libraryTarget: 'umd',
         path: PATHS.BUNDLE,
     },
