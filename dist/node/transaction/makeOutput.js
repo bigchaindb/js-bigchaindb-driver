@@ -16,7 +16,7 @@ function makeOutput(condition) {
     var amount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
 
     return {
-        amount: JSON.stringify(amount),
+        amount: amount,
         condition: condition,
         'public_keys': condition.details.hasOwnProperty('public_key') ? [condition.details.public_key] : []
     };
