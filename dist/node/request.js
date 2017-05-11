@@ -26,8 +26,8 @@ var DEFAULT_REQUEST_CONFIG = {
 };
 
 /**
- * Small wrapper around js-utility-belt's request that provides url resolving, default settings, and
- * response handling.
+ * Small wrapper around js-utility-belt's request that provides url resolving,
+ * default settings, and response handling.
  */
 function request(url) {
     var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
