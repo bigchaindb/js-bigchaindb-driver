@@ -10,8 +10,8 @@ const DEFAULT_REQUEST_CONFIG = {
 };
 
 /**
- * Small wrapper around js-utility-belt's request that provides url resolving, default settings, and
- * response handling.
+ * Small wrapper around js-utility-belt's request that provides url resolving,
+ * default settings, and response handling.
  */
 export default function request(url, config = {}, onlyJsonResponse=true) {
     // Load default fetch configuration and remove any falsy query parameters
@@ -42,4 +42,3 @@ export default function request(url, config = {}, onlyJsonResponse=true) {
             throw err;
         });
 }
-

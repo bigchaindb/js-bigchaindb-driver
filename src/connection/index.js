@@ -1,154 +1,158 @@
 import request from '../request';
 
 
-export default function getApiUrls(API_PATH) {
-    return {
-        'blocks': API_PATH + 'blocks',
-        'blocks_detail': API_PATH + 'blocks/%(blockId)s',
-        'outputs': API_PATH + 'outputs',
-        'statuses': API_PATH + 'statuses',
-        'transactions': API_PATH + 'transactions',
-        'transactions_detail': API_PATH + 'transactions/%(txId)s',
-        'votes': API_PATH + 'votes'
-    };
-}
+class Connection {
+    constructor(path, headers) {
+        this.path = path;
+        this.headers = headers;
+    }
 
-/**
- * @public
- * @param blockId
- * @param API_PATH
- */
-export default function getBlock(blockId, API_PATH) {
-    return request(getApiUrls(API_PATH)['blocks_detail'], {
-            urlTemplateSpec: {
-                blockId
-            }
-        });
-}
+    getApiUrls(endpoints) {
+        return {
+            'blocks': this.path + 'blocks',
+            'blocks_detail': this.path + 'blocks/%(blockId)s',
+            'outputs': this.path + 'outputs',
+            'statuses': this.path + 'statuses',
+            'transactions': this.path + 'transactions',
+            'transactions_detail': this.path + 'transactions/%(txId)s',
+            'votes': this.path + 'votes'
+        }[endpoints];
+    }
 
-/**
- * @public
- * @param tx_id
- * @param API_PATH
- */
-export default function getStatus(tx_id, API_PATH) {
-    return request(getApiUrls(API_PATH)['statuses'], {
+    req(path, options={}) {
+        // NOTE: `options.headers` could be undefined, but that's OK.
+        options.headers = Object.assign({}, options.headers, this.headers)
+        return request(path, options)
+    }
+
+    /**
+     * @public
+     * @param blockId
+     */
+    getBlock(blockId) {
+        return this.req(this.getApiUrls('blocks_detail'), {
+                urlTemplateSpec: {
+                    blockId
+                }
+            });
+    }
+
+    /**
+     * @public
+     * @param tx_id
+     */
+    getStatus(tx_id) {
+        return this.req(this.getApiUrls('statuses'), {
+                query: {
+                    tx_id
+                }
+            });
+    }
+
+    /**
+     * @public
+     * @param txId
+     */
+    getTransaction(txId) {
+        return this.req(this.getApiUrls('transactions_detail'), {
+                urlTemplateSpec: {
+                    txId
+                }
+            });
+    }
+
+    /**
+     * @public
+     * @param tx_id
+     * @param status
+     */
+    listBlocks({ tx_id, status }) {
+        return this.req(this.getApiUrls('blocks'), {
+                query: {
+                    tx_id,
+                    status
+                }
+            });
+    }
+
+    /**
+     * @public
+     * @param public_key
+     * @param unspent
+     * @param onlyJsonResponse
+     */
+    listOutputs({ public_key, unspent }, onlyJsonResponse=true) {
+        return this.req(this.getApiUrls('outputs'), {
             query: {
-                tx_id
+                public_key,
+                unspent
             }
-        });
-}
+        }, onlyJsonResponse)
+    }
 
-/**
- * @public
- * @param txId
- * @param API_PATH
- */
-export default function getTransaction(txId, API_PATH) {
-    return request(getApiUrls(API_PATH)['transactions_detail'], {
-            urlTemplateSpec: {
-                txId
-            }
-        });
-}
-
-/**
- * @public
- * @param tx_id
- * @param status
- * @param API_PATH
- */
-export default function listBlocks({tx_id, status}, API_PATH) {
-    return request(getApiUrls(API_PATH)['blocks'], {
+    /**
+     * @public
+     * @param asset_id
+     * @param operation
+     */
+    listTransactions({ asset_id, operation }) {
+        return this.req(this.getApiUrls('transactions'), {
             query: {
-                tx_id,
-                status
+                asset_id,
+                operation
             }
-        });
-}
+        })
+    }
 
-/**
- * @public
- * @param public_key
- * @param unspent
- * @param API_PATH
- * @param onlyJsonResponse
- */
-export default function listOutputs({ public_key, unspent }, API_PATH, onlyJsonResponse=true) {
-    return request(getApiUrls(API_PATH)['outputs'], {
-        query: {
-            public_key,
-            unspent
-        }
-    }, onlyJsonResponse)
-}
+    /**
+     * @public
+     * @param block_id
+     */
+    listVotes(block_id) {
+        return this.req(this.getApiUrls('votes'), {
+                query: {
+                    block_id
+                }
+            });
+    }
 
-/**
- * @public
- * @param asset_id
- * @param operation
- * @param API_PATH
- */
-export default function listTransactions({ asset_id, operation }, API_PATH) {
-    return request(getApiUrls(API_PATH)['transactions'], {
-        query: {
-            asset_id,
-            operation
-        }
-    })
-}
-
-/**
- * @public
- * @param block_id
- * @param API_PATH
- */
-export default function listVotes(block_id, API_PATH) {
-    return request(getApiUrls(API_PATH)['votes'], {
-            query: {
-                block_id
-            }
-        });
-}
-
-/**
- * @public
- * @param tx_id
- * @param API_PATH
- * @return {Promise}
- */
-export default function (tx_id, API_PATH) {
-    return new Promise((resolve, reject) => {
-        const timer = setInterval(() => {
-            getStatus(tx_id, API_PATH)
-                .then((res) => {
-                    console.log('Fetched transaction status:', res);
-                    if (res.status === 'valid') {
+    /**
+     * @public
+     * @param tx_id
+     * @return {Promise}
+     */
+    pollStatusAndFetchTransaction(tx_id) {
+        return new Promise((resolve, reject) => {
+            const timer = setInterval(() => {
+                this.getStatus(tx_id)
+                    .then((res) => {
+                        console.log('Fetched transaction status:', res);
+                        if (res.status === 'valid') {
+                            clearInterval(timer);
+                            this.getTransaction(tx_id)
+                                .then((res) => {
+                                    console.log('Fetched transaction:', res);
+                                    resolve(res);
+                                });
+                        }
+                    })
+                    .catch((err) => {
                         clearInterval(timer);
-                        getTransaction(tx_id, API_PATH)
-                            .then((res) => {
-                                console.log('Fetched transaction:', res);
-                                resolve(res);
-                            });
-                    }
-                })
-                .catch((err) => {
-                    clearInterval(timer);
-                    reject(err);
-                });
-        }, 500)
-    })
-}
+                        reject(err);
+                    });
+            }, 500)
+        })
+    }
 
-/**
- * @public
- *
- * @param transaction
- * @param API_PATH
- */
-export default function postTransaction(transaction, API_PATH) {
-    return request(getApiUrls(API_PATH)['transactions'], {
-        method: 'POST',
-        jsonBody: transaction
-    })
+    /**
+     * @public
+     *
+     * @param transaction
+     */
+    postTransaction(transaction) {
+        return this.req(this.getApiUrls('transactions'), {
+            method: 'POST',
+            jsonBody: transaction
+        })
+    }
 }

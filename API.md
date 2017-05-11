@@ -148,80 +148,73 @@ Returns **cc.Condition** Ed25519 Condition (that will need to wrapped in an Outp
 
 Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Ed25519 Condition (that will need to wrapped in an Output)
 
-## getBlock
+## Connection
+
+### getBlock
 
 **Parameters**
 
 -   `blockId`  
--   `API_PATH`  
 
-## getTransaction
+### getTransaction
 
 **Parameters**
 
 -   `txId`  
--   `API_PATH`  
 
-## getStatus
+### getStatus
 
 **Parameters**
 
 -   `tx_id`  
--   `API_PATH`  
 
-## listBlocks
+### listBlocks
 
 **Parameters**
 
 -   `$0` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
     -   `$0.tx_id`  
     -   `$0.status`  
--   `API_PATH`  
 -   `tx_id`  
 -   `status`  
 
-## listOutputs
+### listOutputs
 
 **Parameters**
 
 -   `$0` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
     -   `$0.public_key`  
     -   `$0.unspent`  
--   `API_PATH`  
 -   `onlyJsonResponse`  
 -   `public_key`  
 -   `unspent`  
 
-## listTransactions
+### listTransactions
 
 **Parameters**
 
 -   `$0` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
     -   `$0.asset_id`  
     -   `$0.operation`  
--   `API_PATH`  
 -   `asset_id`  
 -   `operation`  
 
-## listVotes
+### listVotes
 
 **Parameters**
 
 -   `block_id`  
--   `API_PATH`  
 
-## pollStatusAndFetchTransaction
+### pollStatusAndFetchTransaction
 
 **Parameters**
 
 -   `tx_id`  
--   `API_PATH`  
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
 
-## postTransaction
+### postTransaction
 
 **Parameters**
 
 -   `transaction`  
--   `API_PATH`  
