@@ -1,7 +1,7 @@
 import request from '../request';
 
 
-class Connection {
+export default class Connection {
     constructor(path, headers) {
         this.path = path;
         this.headers = headers;

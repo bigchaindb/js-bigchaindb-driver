@@ -75,7 +75,7 @@ const tx = driver.Transaction.makeCreateTransaction(
 const txSigned = driver.Transaction.signTransaction(tx, alice.privateKey);
 
 // send it off to BigchainDB
-let conn = driver.Connection(PATH);
+let conn = new driver.Connection(PATH, { 'Content-Type': 'application/json' });
 conn.postTransaction(txSigned)
     .then(() => conn.getStatus(txSigned.id))
     .then((res) => console.log('Transaction status:', res.status));
