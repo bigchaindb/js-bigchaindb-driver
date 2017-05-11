@@ -11,7 +11,7 @@ Aimed to support usage in browsers or node and ES∞+, so
 you'll probably need a babel here and a bundler there (or use [one of the built versions](./dist)),
 of which I expect you'll know quite well ([otherwise, go check out js-reactor](https://github.com/bigchaindb/js-reactor)).
 
-## Compatability
+## Compatibility
 
 | BigchainDB Server | BigchainDB Javascript Driver |
 | ----------------- |------------------------------|
