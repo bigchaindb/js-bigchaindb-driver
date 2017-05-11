@@ -1,6 +1,6 @@
 {
   "name": "js-bigchaindb-driver",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "JavaScript driver for BigchainDB (node + browser)",
   "homepage": "https://www.bigchaindb.com/",
   "bugs": "https://github.com/bigchaindb/js-bigchaindb-driver/issues",
