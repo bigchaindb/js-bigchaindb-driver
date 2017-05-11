@@ -75,13 +75,10 @@ const tx = driver.Transaction.makeCreateTransaction(
 const txSigned = driver.Transaction.signTransaction(tx, alice.privateKey);
 
 // send it off to BigchainDB
-driver.Connection
-    .postTransaction(txSigned, API_PATH)
-    .then((res) => {
-        // request the status of the transaction
-        driver.Connection
-            .getStatus(txSigned.id, API_PATH)
-            .then((res) => console.log('Transaction status:', res.status))});
+let conn = driver.Connection(PATH);
+conn.postTransaction(txSigned)
+    .then(() => conn.getStatus(txSigned.id))
+    .then((res) => console.log('Transaction status:', res.status));
 ```
 
 You may also be interested in some [long-form tutorials with actual code](https://github.com/bigchaindb/kyber).
