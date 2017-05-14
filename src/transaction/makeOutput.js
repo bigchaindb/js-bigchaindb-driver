@@ -8,7 +8,7 @@
  */
 export default function makeOutput(condition, amount = 1) {
     return {
-        amount: amount,
+        amount: amount.toString(),
         condition,
         'public_keys': condition.details.hasOwnProperty('public_key') ?
             [condition.details.public_key] : [],
