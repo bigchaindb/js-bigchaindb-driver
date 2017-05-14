@@ -14,8 +14,8 @@
 -   [ccJsonLoad](#ccjsonload)
 -   [ccJsonify](#ccjsonify)
 -   [getBlock](#getblock)
--   [getTransaction](#gettransaction)
 -   [getStatus](#getstatus)
+-   [getTransaction](#gettransaction)
 -   [listBlocks](#listblocks)
 -   [listOutputs](#listoutputs)
 -   [listTransactions](#listtransactions)
@@ -148,27 +148,25 @@ Returns **cc.Condition** Ed25519 Condition (that will need to wrapped in an Outp
 
 Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Ed25519 Condition (that will need to wrapped in an Output)
 
-## Connection
-
-### getBlock
+## getBlock
 
 **Parameters**
 
 -   `blockId`  
 
-### getTransaction
-
-**Parameters**
-
--   `txId`  
-
-### getStatus
+## getStatus
 
 **Parameters**
 
 -   `tx_id`  
 
-### listBlocks
+## getTransaction
+
+**Parameters**
+
+-   `txId`  
+
+## listBlocks
 
 **Parameters**
 
@@ -178,7 +176,7 @@ Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 -   `tx_id`  
 -   `status`  
 
-### listOutputs
+## listOutputs
 
 **Parameters**
 
@@ -189,7 +187,7 @@ Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 -   `public_key`  
 -   `unspent`  
 
-### listTransactions
+## listTransactions
 
 **Parameters**
 
@@ -199,13 +197,13 @@ Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 -   `asset_id`  
 -   `operation`  
 
-### listVotes
+## listVotes
 
 **Parameters**
 
 -   `block_id`  
 
-### pollStatusAndFetchTransaction
+## pollStatusAndFetchTransaction
 
 **Parameters**
 
@@ -213,7 +211,7 @@ Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
 
-### postTransaction
+## postTransaction
 
 **Parameters**
 
