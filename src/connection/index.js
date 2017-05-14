@@ -19,7 +19,7 @@ export default class Connection {
         }[endpoints];
     }
 
-    req(path, options={}) {
+    _req(path, options={}) {
         // NOTE: `options.headers` could be undefined, but that's OK.
         options.headers = Object.assign({}, options.headers, this.headers)
         return request(path, options)
@@ -30,7 +30,7 @@ export default class Connection {
      * @param blockId
      */
     getBlock(blockId) {
-        return this.req(this.getApiUrls('blocks_detail'), {
+        return this._req(this.getApiUrls('blocks_detail'), {
                 urlTemplateSpec: {
                     blockId
                 }
@@ -42,7 +42,7 @@ export default class Connection {
      * @param tx_id
      */
     getStatus(tx_id) {
-        return this.req(this.getApiUrls('statuses'), {
+        return this._req(this.getApiUrls('statuses'), {
                 query: {
                     tx_id
                 }
@@ -54,7 +54,7 @@ export default class Connection {
      * @param txId
      */
     getTransaction(txId) {
-        return this.req(this.getApiUrls('transactions_detail'), {
+        return this._req(this.getApiUrls('transactions_detail'), {
                 urlTemplateSpec: {
                     txId
                 }
@@ -67,7 +67,7 @@ export default class Connection {
      * @param status
      */
     listBlocks({ tx_id, status }) {
-        return this.req(this.getApiUrls('blocks'), {
+        return this._req(this.getApiUrls('blocks'), {
                 query: {
                     tx_id,
                     status
@@ -82,7 +82,7 @@ export default class Connection {
      * @param onlyJsonResponse
      */
     listOutputs({ public_key, unspent }, onlyJsonResponse=true) {
-        return this.req(this.getApiUrls('outputs'), {
+        return this._req(this.getApiUrls('outputs'), {
             query: {
                 public_key,
                 unspent
@@ -96,7 +96,7 @@ export default class Connection {
      * @param operation
      */
     listTransactions({ asset_id, operation }) {
-        return this.req(this.getApiUrls('transactions'), {
+        return this._req(this.getApiUrls('transactions'), {
             query: {
                 asset_id,
                 operation
@@ -109,7 +109,7 @@ export default class Connection {
      * @param block_id
      */
     listVotes(block_id) {
-        return this.req(this.getApiUrls('votes'), {
+        return this._req(this.getApiUrls('votes'), {
                 query: {
                     block_id
                 }
@@ -150,7 +150,7 @@ export default class Connection {
      * @param transaction
      */
     postTransaction(transaction) {
-        return this.req(this.getApiUrls('transactions'), {
+        return this._req(this.getApiUrls('transactions'), {
             method: 'POST',
             jsonBody: transaction
         })
