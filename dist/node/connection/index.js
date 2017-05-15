@@ -38,8 +38,8 @@ var Connection = function () {
             }[endpoints];
         }
     }, {
-        key: 'req',
-        value: function req(path) {
+        key: '_req',
+        value: function _req(path) {
             var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
             // NOTE: `options.headers` could be undefined, but that's OK.
@@ -55,7 +55,7 @@ var Connection = function () {
     }, {
         key: 'getBlock',
         value: function getBlock(blockId) {
-            return this.req(this.getApiUrls('blocks_detail'), {
+            return this._req(this.getApiUrls('blocks_detail'), {
                 urlTemplateSpec: {
                     blockId: blockId
                 }
@@ -70,7 +70,7 @@ var Connection = function () {
     }, {
         key: 'getStatus',
         value: function getStatus(tx_id) {
-            return this.req(this.getApiUrls('statuses'), {
+            return this._req(this.getApiUrls('statuses'), {
                 query: {
                     tx_id: tx_id
                 }
@@ -85,7 +85,7 @@ var Connection = function () {
     }, {
         key: 'getTransaction',
         value: function getTransaction(txId) {
-            return this.req(this.getApiUrls('transactions_detail'), {
+            return this._req(this.getApiUrls('transactions_detail'), {
                 urlTemplateSpec: {
                     txId: txId
                 }
@@ -104,7 +104,7 @@ var Connection = function () {
             var tx_id = _ref.tx_id,
                 status = _ref.status;
 
-            return this.req(this.getApiUrls('blocks'), {
+            return this._req(this.getApiUrls('blocks'), {
                 query: {
                     tx_id: tx_id,
                     status: status
@@ -126,7 +126,7 @@ var Connection = function () {
                 unspent = _ref2.unspent;
             var onlyJsonResponse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
-            return this.req(this.getApiUrls('outputs'), {
+            return this._req(this.getApiUrls('outputs'), {
                 query: {
                     public_key: public_key,
                     unspent: unspent
@@ -146,7 +146,7 @@ var Connection = function () {
             var asset_id = _ref3.asset_id,
                 operation = _ref3.operation;
 
-            return this.req(this.getApiUrls('transactions'), {
+            return this._req(this.getApiUrls('transactions'), {
                 query: {
                     asset_id: asset_id,
                     operation: operation
@@ -162,7 +162,7 @@ var Connection = function () {
     }, {
         key: 'listVotes',
         value: function listVotes(block_id) {
-            return this.req(this.getApiUrls('votes'), {
+            return this._req(this.getApiUrls('votes'), {
                 query: {
                     block_id: block_id
                 }
@@ -208,7 +208,7 @@ var Connection = function () {
     }, {
         key: 'postTransaction',
         value: function postTransaction(transaction) {
-            return this.req(this.getApiUrls('transactions'), {
+            return this._req(this.getApiUrls('transactions'), {
                 method: 'POST',
                 jsonBody: transaction
             });
