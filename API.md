@@ -14,8 +14,8 @@
 -   [ccJsonLoad](#ccjsonload)
 -   [ccJsonify](#ccjsonify)
 -   [getBlock](#getblock)
--   [getTransaction](#gettransaction)
 -   [getStatus](#getstatus)
+-   [getTransaction](#gettransaction)
 -   [listBlocks](#listblocks)
 -   [listOutputs](#listoutputs)
 -   [listTransactions](#listtransactions)
@@ -153,21 +153,18 @@ Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 **Parameters**
 
 -   `blockId`  
--   `API_PATH`  
-
-## getTransaction
-
-**Parameters**
-
--   `txId`  
--   `API_PATH`  
 
 ## getStatus
 
 **Parameters**
 
 -   `tx_id`  
--   `API_PATH`  
+
+## getTransaction
+
+**Parameters**
+
+-   `txId`  
 
 ## listBlocks
 
@@ -176,7 +173,6 @@ Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 -   `$0` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
     -   `$0.tx_id`  
     -   `$0.status`  
--   `API_PATH`  
 -   `tx_id`  
 -   `status`  
 
@@ -187,7 +183,6 @@ Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 -   `$0` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
     -   `$0.public_key`  
     -   `$0.unspent`  
--   `API_PATH`  
 -   `onlyJsonResponse`  
 -   `public_key`  
 -   `unspent`  
@@ -199,7 +194,6 @@ Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 -   `$0` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
     -   `$0.asset_id`  
     -   `$0.operation`  
--   `API_PATH`  
 -   `asset_id`  
 -   `operation`  
 
@@ -208,14 +202,12 @@ Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 **Parameters**
 
 -   `block_id`  
--   `API_PATH`  
 
 ## pollStatusAndFetchTransaction
 
 **Parameters**
 
 -   `tx_id`  
--   `API_PATH`  
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
 
@@ -224,4 +216,3 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 **Parameters**
 
 -   `transaction`  
--   `API_PATH`  
