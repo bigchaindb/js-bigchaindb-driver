@@ -10,6 +10,7 @@ Some naive helpers to get you on your way to making some transactions, if you'd 
 Aimed to support usage in browsers or node and ES∞+, so
 you'll probably need a babel here and a bundler there (or use [one of the built versions](./dist)),
 of which I expect you'll know quite well ([otherwise, go check out js-reactor](https://github.com/bigchaindb/js-reactor)).
+[![Build Status](https://travis-ci.org/bigchaindb/js-bigchaindb-driver.svg?branch=master)](https://travis-ci.org/bigchaindb/js-bigchaindb-driver)
 
 ## Compatibility
 

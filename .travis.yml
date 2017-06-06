@@ -1,0 +1,15 @@
+language: node_js
+node_js: node
+
+install: npm install
+
+script:
+  - npm run clean
+  - npm run build
+
+cache:
+  directories:
+    - node_modules
+  
+notifications:
+    email: false
