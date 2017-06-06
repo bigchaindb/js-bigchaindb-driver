@@ -19,6 +19,7 @@
 - [Usage](#usage)
 - [Speed Optimizations](#speed-optimizations)
 - [Warnings](#warnings)
+- [npm releases](#npmreleases)
 - [Authors](#authors)
 - [License](#license)
 - [API reference](API.md)
@@ -119,6 +120,34 @@ An example BigchainDB Server-generated keypair (encoded in `base58`):
 
 Your package should be able to take in the decoded version of the **private** key and return you the
 same **public** key (once you encode that to `base58`).
+
+## npm releases
+
+For a new **patch release**, execute on the machine where you're logged into your npm account:
+
+```bash
+npm run release
+```
+
+Command is powered by [`release-it`](https://github.com/webpro/release-it) package, defined in the `package.json`.
+
+That's what the command does without any user interaction:
+
+- create release commit by updating version in `package.json`
+- create tag for that release commit
+- push commit & tag
+- create a new release on GitHub, with change log auto-generated from commit messages
+- publish to npm as a new release
+
+If you want to create a **minor** or **major release**, use these commands:
+
+```bash
+npm run release-minor
+```
+
+```bash
+npm run release-major
+```
 
 ## Authors
 
