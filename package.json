@@ -1,7 +1,7 @@
 {
-  "name": "js-bigchaindb-driver",
+  "name": "bigchaindb-driver",
   "version": "0.1.1",
-  "description": "JavaScript driver for BigchainDB (node + browser)",
+  "description": "Node.js driver for BigchainDB",
   "homepage": "https://www.bigchaindb.com/",
   "bugs": "https://github.com/bigchaindb/js-bigchaindb-driver/issues",
   "repository": {
@@ -48,7 +48,7 @@
     "decamelize": "^1.2.0",
     "es6-promise": "^4.0.5",
     "fetch-ponyfill": "^4.0.0",
-    "five-bells-condition": "=3.3.1",
+    "five-bells-condition": "3.3.1",
     "isomorphic-fetch": "^2.2.1",
     "js-sha3": "^0.5.7",
     "js-utility-belt": "^1.5.0",
