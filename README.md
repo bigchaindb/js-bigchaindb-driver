@@ -20,7 +20,7 @@
 - [Usage](#usage)
 - [Speed Optimizations](#speed-optimizations)
 - [Warnings](#warnings)
-- [npm releases](#npmreleases)
+- [npm releases](#npm-releases)
 - [Authors](#authors)
 - [License](#license)
 - [API reference](API.md)
@@ -152,8 +152,7 @@ npm run release-major
 
 ## Authors
 
-Inspired by [`js-bigchaindb-quickstart`](https://github.com/sohkai/js-bigchaindb-quickstart) of @sohkhai [thanks]
-
+* inspired by [`js-bigchaindb-quickstart`](https://github.com/sohkai/js-bigchaindb-quickstart) of @sohkhai [thanks]
 * BigchainDB <dev@bigchaindb.com>
 
 ## License
