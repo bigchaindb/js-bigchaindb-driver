@@ -28,6 +28,7 @@ of which I expect you'll know quite well ([otherwise, go check out js-reactor](h
 - [API](API.md)
 
 ## Getting started
+- [License](#license)
 
 ### Install from npm
 
@@ -147,3 +148,20 @@ An example BigchainDB Server-generated keypair (encoded in `base58`):
 
 Your package should be able to take in the decoded version of the **private** key and return you the
 same **public** key (once you encode that to `base58`).
+## License
+
+```
+Copyright 2017 BigchainDB GmbH
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
