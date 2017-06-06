@@ -5,6 +5,7 @@
 [![npm](https://img.shields.io/npm/v/js-bigchaindb-driver.svg)](https://www.npmjs.com/package/js-bigchaindb-driver)
 [![js bigchaindb](https://img.shields.io/badge/js-bigchaindb-39BA91.svg)](https://github.com/ascribe/javascript)
 [![Build Status](https://travis-ci.org/bigchaindb/js-bigchaindb-driver.svg?branch=master)](https://travis-ci.org/bigchaindb/js-bigchaindb-driver)
+[![Greenkeeper badge](https://badges.greenkeeper.io/bigchaindb/js-bigchaindb-driver.svg)](https://greenkeeper.io/)
 
 ## Compatibility
 
