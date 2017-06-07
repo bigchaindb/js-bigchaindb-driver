@@ -42,10 +42,10 @@ import * as driver from 'js-bigchaindb-driver';
 // http(s)://<bigchaindb-API-url>/ (e.g. http://localhost:9984/api/v1/)
 const API_PATH = 'http://localhost:9984/api/v1/';
 
-// create a new user with a public-private keypair
+// Create a new user with a public-private key pair
 const alice = new driver.Ed25519Keypair();
 
-// Create a transation
+// Create a transaction
 const tx = driver.Transaction.makeCreateTransaction(
     { assetMessage: 'My very own asset...' },
     { metaDataMessage: 'wrapped in a transaction' },
@@ -55,10 +55,10 @@ const tx = driver.Transaction.makeCreateTransaction(
     alice.publicKey
 );
 
-// sign/fulfill the transaction
+// Sign/fulfill the transaction
 const txSigned = driver.Transaction.signTransaction(tx, alice.privateKey);
 
-// send it off to BigchainDB
+// Send it off to BigchainDB
 let conn = new driver.Connection(PATH, { 'Content-Type': 'application/json' });
 conn.postTransaction(txSigned)
     .then(() => conn.getStatus(txSigned.id))
@@ -69,11 +69,11 @@ You may also be interested in some [long-form tutorials with actual code](https:
 
 The expected flow for making transactions:
 
-1. Go get yourself some keypairs. (or a whole bunch of them, nobody's counting)
+1. Go get yourself some key pairs. (or a whole bunch of them, nobody's counting)
     - `new driver.Ed25519Keypair()` 
 2. Construct a transaction payload that you can send off to BigchainDB:
     - `driver.Transaction.makeCreateTransaction()` for creating a new asset or
-    - `driver.Transaction.makeTransferTransaction()` for transfering an existing asset
+    - `driver.Transaction.makeTransferTransaction()` for transferring an existing asset
 3. A transaction needs an output (\*):
     - `driver.Transaction.makeOutput()` still requires a crypto-condition
     - `driver.Transaction.makeEd25519Condition()` should do the trick for a simple public key output.
@@ -89,11 +89,8 @@ The expected flow for making transactions:
 
 This implementation plays "safe" by using JS-native (or downgradable) libraries for its crypto-related functions to keep compatibilities with the browser. If you do want some more speed, feel free to explore the following: 
 
-* [chloride](https://github.com/dominictarr/chloride), or its underlying [sodium](https://github.com/paixaop/node-sodium)
-  library
-* [node-sha3](https://github.com/phusion/node-sha3) -- **MAKE SURE** to use [steakknife's fork](https://github.com/steakknife/node-sha3)
-  if [the FIPS 202 upgrade](https://github.com/phusion/node-sha3/pull/25) hasn't been merged
-  (otherwise, you'll run into all kinds of hashing problems)
+* [chloride](https://github.com/dominictarr/chloride), or its underlying [sodium](https://github.com/paixaop/node-sodium) library
+* [node-sha3](https://github.com/phusion/node-sha3) -- **MAKE SURE** to use [steakknife's fork](https://github.com/steakknife/node-sha3) if [the FIPS 202 upgrade](https://github.com/phusion/node-sha3/pull/25) hasn't been merged (otherwise, you'll run into all kinds of hashing problems)
 
 ## Warnings
 
@@ -101,26 +98,24 @@ This implementation plays "safe" by using JS-native (or downgradable) libraries 
 
 Make sure you keep using a crypto-conditions implementation that implements the older v1 draft (e.g.
 [`five-bells-condition@v3.3.1`](https://github.com/interledgerjs/five-bells-condition/releases/tag/v3.3.1)).
+
 BigchainDB Server 0.10 does not implement the newer version of the spec and **WILL** fail if you try using a newer implementation of crypto-conditions.
 
 > SHA3
 
-Make sure to use a SHA3 implementation that has been upgraded as per [FIPS 202](http://csrc.nist.gov/publications/drafts/fips-202/fips_202_draft.pdf).
-Otherwise, the hashes you generate **WILL** be invalid in the eyes of the BigchainDB Server.
+Make sure to use a SHA3 implementation that has been upgraded as per [FIPS 202](http://csrc.nist.gov/publications/drafts/fips-202/fips_202_draft.pdf). Otherwise, the hashes you generate **WILL** be invalid in the eyes of the BigchainDB Server.
 
 > Ed25519
 
-If you do end up replacing `tweetnacl` with `chloride` (or any other `Ed25519` package), you might
-want to double check that it gives you a correct public/private (or verifying/signing, if they use
-that lingo) keypair.
+If you do end up replacing `tweetnacl` with `chloride` (or any other `Ed25519` package), you might want to double check that it gives you a correct public/private (or verifying/signing, if they use
+that lingo) key pair.
 
-An example BigchainDB Server-generated keypair (encoded in `base58`):
+An example BigchainDB Server-generated key pair (encoded in `base58`):
 
 - Public: `DjPMHDD9JtgypDKY38mPz9f6owjAMAKhLuN1JfRAat8C`
 - Private: `7Gf5YRch2hYTyeLxqNLgTY63D9K5QH2UQ7LYFeBGuKvo`
 
-Your package should be able to take in the decoded version of the **private** key and return you the
-same **public** key (once you encode that to `base58`).
+Your package should be able to take in the decoded version of the **private** key and return you the same **public** key (once you encode that to `base58`).
 
 ## npm releases
 
