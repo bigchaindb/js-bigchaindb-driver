@@ -1,6 +1,6 @@
 # [![js-bigchaindb-driver](media/repo-banner@2x.png)](https://www.bigchaindb.com)
 
-> Official Node.js driver for [BigchainDB](https://github.com/bigchaindb/bigchaindb) with some naive helpers to get you on your way making transactions with BigchainDB and Node.js.
+> Official JavaScript driver for [BigchainDB](https://github.com/bigchaindb/bigchaindb) with some naive helpers to get you on your way making transactions in Node.js and the browser.
 
 [![npm](https://img.shields.io/npm/v/js-bigchaindb-driver.svg)](https://www.npmjs.com/package/js-bigchaindb-driver)
 [![js bigchaindb](https://img.shields.io/badge/js-bigchaindb-39BA91.svg)](https://github.com/ascribe/javascript)
@@ -9,7 +9,7 @@
 
 ## Compatibility
 
-| BigchainDB Server | BigchainDB Node.js Driver |
+| BigchainDB Server | BigchainDB JavaScript Driver |
 | ----------------- |------------------------------|
 | `~=0.10.1` | `~=0.1.0` |
 
