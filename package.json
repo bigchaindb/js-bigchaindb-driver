@@ -1,14 +1,14 @@
 {
-  "name": "js-bigchaindb-driver",
+  "name": "bigchaindb-driver",
   "version": "0.1.1",
-  "description": "JavaScript driver for BigchainDB (node + browser)",
+  "description": "Node.js driver for BigchainDB",
   "homepage": "https://www.bigchaindb.com/",
   "bugs": "https://github.com/bigchaindb/js-bigchaindb-driver/issues",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bigchaindb/js-bigchaindb-driver.git"
   },
-  "license": "Apache Software License 2.0",
+  "license": "Apache-2.0",
   "author": "BigchainDB",
   "main": "./dist/bundle/bundle.js",
   "scripts": {
@@ -18,7 +18,10 @@
     "build:cjs": "cross-env BABEL_ENV=cjs babel ./src -d dist/node",
     "build:dist": "cross-env NODE_ENV=production webpack -p",
     "clean": "rimraf dist/bundle dist/node",
-    "test": "echo \"Error: no test specified AWWWW YEAHHH\" && exit 1"
+    "test": "echo \"Error: no test specified AWWWW YEAHHH\" && exit 1",
+    "release": "./node_modules/release-it/bin/release.js --src.tagName='v%s' --github.release --npm.publish --non-interactive",
+    "release-minor": "./node_modules/release-it/bin/release.js minor --src.tagName='v%s' --github.release --npm.publish --non-interactive",
+    "release-major": "./node_modules/release-it/bin/release.js major --src.tagName='v%s' --github.release --npm.publish --non-interactive"
   },
   "devDependencies": {
     "babel-cli": "^6.22.2",
@@ -37,6 +40,7 @@
     "eslint": "^3.14.1",
     "eslint-config-ascribe": "^3.0.1",
     "eslint-plugin-import": "^2.2.0",
+    "release-it": "^2.7.3",
     "rimraf": "^2.5.4",
     "webpack": "^2.2.1"
   },
@@ -48,7 +52,7 @@
     "decamelize": "^1.2.0",
     "es6-promise": "^4.0.5",
     "fetch-ponyfill": "^4.0.0",
-    "five-bells-condition": "=3.3.1",
+    "five-bells-condition": "3.3.1",
     "isomorphic-fetch": "^2.2.1",
     "js-sha3": "^0.5.7",
     "js-utility-belt": "^1.5.0",

@@ -1,25 +1,25 @@
 {
-    'presets': ['es2015-no-commonjs'],
-    'plugins': [
-        'transform-export-extensions',
-        'transform-object-assign',
-        'transform-object-rest-spread'
+    "presets": ["es2015-no-commonjs"],
+    "plugins": [
+        "transform-export-extensions",
+        "transform-object-assign",
+        "transform-object-rest-spread"
     ],
-    'sourceMaps': true,
+    "sourceMaps": true,
 
-    'env': {
-        'bundle': {
-            'plugins': [
-                ['transform-runtime', {
-                    'polyfill': true,
-                    'regenerator': false
+    "env": {
+        "bundle": {
+            "plugins": [
+                ["transform-runtime", {
+                    "polyfill": true,
+                    "regenerator": false
                 }]
             ]
         },
-        'cjs': {
-            'plugins': [
-                'add-module-exports',
-                'transform-es2015-modules-commonjs'
+        "cjs": {
+            "plugins": [
+                "add-module-exports",
+                "transform-es2015-modules-commonjs"
             ]
         }
     }
