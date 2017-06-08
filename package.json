@@ -18,12 +18,13 @@
     "build:cjs": "cross-env BABEL_ENV=cjs babel ./src -d dist/node",
     "build:dist": "cross-env NODE_ENV=production webpack -p",
     "clean": "rimraf dist/bundle dist/node",
-    "test": "echo \"Error: no test specified AWWWW YEAHHH\" && exit 1",
+    "test": "ava",
     "release": "./node_modules/release-it/bin/release.js --src.tagName='v%s' --github.release --npm.publish --non-interactive",
     "release-minor": "./node_modules/release-it/bin/release.js minor --src.tagName='v%s' --github.release --npm.publish --non-interactive",
     "release-major": "./node_modules/release-it/bin/release.js major --src.tagName='v%s' --github.release --npm.publish --non-interactive"
   },
   "devDependencies": {
+    "ava": "^0.19.1",
     "babel-cli": "^6.22.2",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.10",
