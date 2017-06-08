@@ -34,8 +34,6 @@ npm install bigchaindb-driver
 
 ## Usage
 
-You'll probably need a babel here and a bundler there. Alternatively, use [one of the bundled dist versions](./dist).
-
 ```js
 import * as driver from 'js-bigchaindb-driver';
 
@@ -64,6 +62,11 @@ conn.postTransaction(txSigned)
     .then(() => conn.getStatus(txSigned.id))
     .then((res) => console.log('Transaction status:', res.status));
 ```
+
+You'll probably need a babel here and a bundler there. Alternatively, use [one of the bundled dist versions](./dist):
+
+- `dist/bundle/`: Babelified and packaged with dependencies, so you can drop it in anywhere you want.
+- `dist/node/`: Babelified into a CommonJS module, so you can drop it in on any node project.
 
 You may also be interested in some [long-form tutorials with actual code](https://github.com/bigchaindb/kyber).
 
