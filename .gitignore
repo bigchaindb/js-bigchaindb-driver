@@ -11,7 +11,7 @@
 
 .env
 
-build/*
-
-node_modules/*
+node_modules
 dist
+yarn.lock
+package-lock.json

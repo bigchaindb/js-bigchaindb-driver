@@ -1,5 +1,2 @@
-build/*
-dist/*
-node_modules/*
-yarn.lock
-package-lock.json
+dist
+node_modules
