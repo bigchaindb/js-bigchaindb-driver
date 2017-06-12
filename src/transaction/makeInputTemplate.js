@@ -3,5 +3,5 @@ export default function makeInputTemplate(publicKeys = [], fulfills = null, fulf
         fulfillment,
         fulfills,
         'owners_before': publicKeys,
-    };
+    }
 }

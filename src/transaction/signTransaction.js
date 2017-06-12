@@ -1,9 +1,9 @@
-import { Buffer } from 'buffer';
-import base58 from 'bs58';
-import cc from 'five-bells-condition';
-import clone from 'clone';
+import { Buffer } from 'buffer'
+import base58 from 'bs58'
+import cc from 'five-bells-condition'
+import clone from 'clone'
 
-import serializeTransactionIntoCanonicalString from './serializeTransactionIntoCanonicalString';
+import serializeTransactionIntoCanonicalString from './serializeTransactionIntoCanonicalString'
 
 
 /**
@@ -19,17 +19,17 @@ import serializeTransactionIntoCanonicalString from './serializeTransactionIntoC
  * @returns {object} The signed version of `transaction`.
  */
 export default function signTransaction(transaction, ...privateKeys) {
-    const signedTx = clone(transaction);
+    const signedTx = clone(transaction)
     signedTx.inputs.forEach((input, index) => {
-        const privateKey = privateKeys[index];
-        const privateKeyBuffer = new Buffer(base58.decode(privateKey));
-        const serializedTransaction = serializeTransactionIntoCanonicalString(transaction);
-        const ed25519Fulfillment = new cc.Ed25519();
-        ed25519Fulfillment.sign(new Buffer(serializedTransaction), privateKeyBuffer);
-        const fulfillmentUri = ed25519Fulfillment.serializeUri();
+        const privateKey = privateKeys[index]
+        const privateKeyBuffer = new Buffer(base58.decode(privateKey))
+        const serializedTransaction = serializeTransactionIntoCanonicalString(transaction)
+        const ed25519Fulfillment = new cc.Ed25519()
+        ed25519Fulfillment.sign(new Buffer(serializedTransaction), privateKeyBuffer)
+        const fulfillmentUri = ed25519Fulfillment.serializeUri()
 
-        input.fulfillment = fulfillmentUri;
-    });
+        input.fulfillment = fulfillmentUri
+    })
 
-    return signedTx;
+    return signedTx
 }

@@ -1,5 +1,5 @@
-import makeInputTemplate from './makeInputTemplate';
-import makeTransaction from './makeTransaction';
+import makeInputTemplate from './makeInputTemplate'
+import makeTransaction from './makeTransaction'
 
 
 /**
@@ -24,19 +24,19 @@ import makeTransaction from './makeTransaction';
  */
 export default function makeTransferTransaction(unspentTransaction, metadata, outputs, ...fulfilledOutputs) {
     const inputs = fulfilledOutputs.map((outputIndex) => {
-        const fulfilledOutput = unspentTransaction.outputs[outputIndex];
+        const fulfilledOutput = unspentTransaction.outputs[outputIndex]
         const transactionLink = {
             'output': outputIndex,
             'txid': unspentTransaction.id,
-        };
+        }
 
-        return makeInputTemplate(fulfilledOutput.public_keys, transactionLink);
-    });
+        return makeInputTemplate(fulfilledOutput.public_keys, transactionLink)
+    })
 
     const assetLink = {
         'id': unspentTransaction.operation === 'CREATE' ? unspentTransaction.id
                                                         : unspentTransaction.asset.id
-    };
+    }
 
-    return makeTransaction('TRANSFER', assetLink, metadata, outputs, inputs);
+    return makeTransaction('TRANSFER', assetLink, metadata, outputs, inputs)
 }

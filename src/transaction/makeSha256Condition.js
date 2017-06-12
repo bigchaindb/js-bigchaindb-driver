@@ -1,8 +1,8 @@
-import { Buffer } from 'buffer';
+import { Buffer } from 'buffer'
 
-import cc from 'five-bells-condition';
+import cc from 'five-bells-condition'
 
-import ccJsonify from './utils/ccJsonify';
+import ccJsonify from './utils/ccJsonify'
 
 
 /**
@@ -12,12 +12,12 @@ import ccJsonify from './utils/ccJsonify';
  * @param {boolean} [json=true] If true returns a json object otherwise a crypto-condition type
  * @returns {object} Preimage-Sha256 Condition (that will need to wrapped in an Output)
  */
-export default function makeSha256Condition(preimage, json=true) {
-    const sha256Fulfillment = new cc.PreimageSha256();
-    sha256Fulfillment.preimage = new Buffer(preimage);
+export default function makeSha256Condition(preimage, json = true) {
+    const sha256Fulfillment = new cc.PreimageSha256()
+    sha256Fulfillment.preimage = new Buffer(preimage)
 
     if (json) {
         return ccJsonify(sha256Fulfillment)
     }
-    return sha256Fulfillment;
+    return sha256Fulfillment
 }
