@@ -22,7 +22,12 @@ import makeTransaction from './makeTransaction'
  * @returns {object} Unsigned transaction -- make sure to call signTransaction() on it before
  *                   sending it off!
  */
-export default function makeTransferTransaction(unspentTransaction, metadata, outputs, ...fulfilledOutputs) {
+export default function makeTransferTransaction(
+        unspentTransaction,
+        metadata,
+        outputs,
+        ...fulfilledOutputs
+    ) {
     const inputs = fulfilledOutputs.map((outputIndex) => {
         const fulfilledOutput = unspentTransaction.outputs[outputIndex]
         const transactionLink = {
