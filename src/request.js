@@ -3,7 +3,6 @@ import sanitize from './sanitize';
 
 
 const DEFAULT_REQUEST_CONFIG = {
-    credentials: 'include',
     headers: {
         'Accept': 'application/json'
     }
