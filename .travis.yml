@@ -4,7 +4,7 @@ node_js: node
 install: npm install
 
 script:
-  - npm run clean
+  - npm test
   - npm run build
 
 cache:
