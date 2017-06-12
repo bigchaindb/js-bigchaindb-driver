@@ -8,6 +8,7 @@ export default class Connection {
     }
 
     getApiUrls(endpoints) {
+        // TODO: Use camel case
         return {
             'blocks': this.path + 'blocks',
             'blocks_detail': this.path + 'blocks/%(blockId)s',
@@ -15,6 +16,7 @@ export default class Connection {
             'statuses': this.path + 'statuses',
             'transactions': this.path + 'transactions',
             'transactions_detail': this.path + 'transactions/%(txId)s',
+            'search_assets': this.path + 'assets',
             'votes': this.path + 'votes'
         }[endpoints];
     }
@@ -153,6 +155,20 @@ export default class Connection {
         return this._req(this.getApiUrls('transactions'), {
             method: 'POST',
             jsonBody: transaction
+        })
+    }
+
+
+    /**
+     * @public
+     *
+     * @param transaction
+     */
+    searchAssets(query) {
+        return this.req(this.getApiUrls('search_assets'), {
+            query: {
+                text_search: query
+            }
         })
     }
 }
