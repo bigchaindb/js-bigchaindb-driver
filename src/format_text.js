@@ -3,7 +3,7 @@ import { sprintf } from 'sprintf-js'
 
 // Regexes taken from or inspired by sprintf-js
 const Regex = {
-    TEMPLATE_LITERAL: /\${([^\)]+?)}/g,
+    TEMPLATE_LITERAL: /\${([^)]+?)}/g,
     KEY: /^([a-z_][a-z_\d]*)/i,
     KEY_ACCESS: /^\.([a-z_][a-z_\d]*)/i,
     INDEX_ACCESS: /^\[(\d+)\]/

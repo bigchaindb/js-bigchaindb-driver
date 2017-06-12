@@ -3,7 +3,7 @@ import base58 from 'bs58'
 /**
  * @public
  * Serializes a crypto-condition class (Condition or Fulfillment) into a BigchainDB-compatible JSON
- * @param {cc.Fulfillment} fulfillment base58 encoded Ed25519 public key for the recipient of the Transaction
+ * @param {cc.Fulfillment} fulfillment base58 encoded Ed25519 public key for recipient of the Transaction
  * @returns {object} Ed25519 Condition (that will need to wrapped in an Output)
  */
 export default function ccJsonify(fulfillment) {

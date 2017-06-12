@@ -41,12 +41,12 @@ export default class Connection {
 
     /**
      * @public
-     * @param tx_id
+     * @param txId
      */
-    getStatus(tx_id) {
+    getStatus(txId) {
         return this._req(this.getApiUrls('statuses'), {
             query: {
-                tx_id
+                txId
             }
         })
     }
@@ -65,13 +65,13 @@ export default class Connection {
 
     /**
      * @public
-     * @param tx_id
+     * @param txId
      * @param status
      */
-    listBlocks({ tx_id, status }) {
+    listBlocks({ txId, status }) {
         return this._req(this.getApiUrls('blocks'), {
             query: {
-                tx_id,
+                txId,
                 status
             }
         })
@@ -108,33 +108,33 @@ export default class Connection {
 
     /**
      * @public
-     * @param block_id
+     * @param blockId
      */
-    listVotes(block_id) {
+    listVotes(blockId) {
         return this._req(this.getApiUrls('votes'), {
             query: {
-                block_id
+                blockId
             }
         })
     }
 
     /**
      * @public
-     * @param tx_id
+     * @param txId
      * @return {Promise}
      */
-    pollStatusAndFetchTransaction(tx_id) {
+    pollStatusAndFetchTransaction(txId) {
         return new Promise((resolve, reject) => {
             const timer = setInterval(() => {
-                this.getStatus(tx_id)
+                this.getStatus(txId)
                     .then((res) => {
-                        console.log('Fetched transaction status:', res)
+                        console.log('Fetched transaction status:', res) // eslint-disable-line no-console
                         if (res.status === 'valid') {
                             clearInterval(timer)
-                            this.getTransaction(tx_id)
-                                .then((res) => {
-                                    console.log('Fetched transaction:', res)
-                                    resolve(res)
+                            this.getTransaction(txId)
+                                .then((res_) => {
+                                    console.log('Fetched transaction:', res_) // eslint-disable-line no-console
+                                    resolve(res_)
                                 })
                         }
                     })
