@@ -1,27 +1,27 @@
-import request from '../request';
+import request from '../request'
 
 
 export default class Connection {
     constructor(path, headers) {
-        this.path = path;
-        this.headers = headers;
+        this.path = path
+        this.headers = headers
     }
 
     getApiUrls(endpoints) {
         // TODO: Use camel case
         return {
-            'blocks': this.path + 'blocks',
-            'blocks_detail': this.path + 'blocks/%(blockId)s',
-            'outputs': this.path + 'outputs',
-            'statuses': this.path + 'statuses',
-            'transactions': this.path + 'transactions',
-            'transactions_detail': this.path + 'transactions/%(txId)s',
-            'search_assets': this.path + 'assets',
-            'votes': this.path + 'votes'
-        }[endpoints];
+            'blocks': `${this.path}blocks`,
+            'blocks_detail': `${this.path}blocks/%(blockId)s`,
+            'outputs': `${this.path}outputs`,
+            'statuses': `${this.path}statuses`,
+            'transactions': `${this.path}transactions`,
+            'transactions_detail': `${this.path}transactions/%(txId)s`,
+            'search_assets': `${this.path}assets`,
+            'votes': `${this.path}votes`
+        }[endpoints]
     }
 
-    _req(path, options={}) {
+    _req(path, options = {}) {
         // NOTE: `options.headers` could be undefined, but that's OK.
         options.headers = Object.assign({}, options.headers, this.headers)
         return request(path, options)
@@ -33,10 +33,10 @@ export default class Connection {
      */
     getBlock(blockId) {
         return this._req(this.getApiUrls('blocks_detail'), {
-                urlTemplateSpec: {
-                    blockId
-                }
-            });
+            urlTemplateSpec: {
+                blockId
+            }
+        })
     }
 
     /**
@@ -45,10 +45,10 @@ export default class Connection {
      */
     getStatus(tx_id) {
         return this._req(this.getApiUrls('statuses'), {
-                query: {
-                    tx_id
-                }
-            });
+            query: {
+                tx_id
+            }
+        })
     }
 
     /**
@@ -57,10 +57,10 @@ export default class Connection {
      */
     getTransaction(txId) {
         return this._req(this.getApiUrls('transactions_detail'), {
-                urlTemplateSpec: {
-                    txId
-                }
-            });
+            urlTemplateSpec: {
+                txId
+            }
+        })
     }
 
     /**
@@ -70,11 +70,11 @@ export default class Connection {
      */
     listBlocks({ tx_id, status }) {
         return this._req(this.getApiUrls('blocks'), {
-                query: {
-                    tx_id,
-                    status
-                }
-            });
+            query: {
+                tx_id,
+                status
+            }
+        })
     }
 
     /**
@@ -83,7 +83,7 @@ export default class Connection {
      * @param unspent
      * @param onlyJsonResponse
      */
-    listOutputs({ public_key, unspent }, onlyJsonResponse=true) {
+    listOutputs({ public_key, unspent }, onlyJsonResponse = true) {
         return this._req(this.getApiUrls('outputs'), {
             query: {
                 public_key,
@@ -112,10 +112,10 @@ export default class Connection {
      */
     listVotes(block_id) {
         return this._req(this.getApiUrls('votes'), {
-                query: {
-                    block_id
-                }
-            });
+            query: {
+                block_id
+            }
+        })
     }
 
     /**
@@ -128,20 +128,20 @@ export default class Connection {
             const timer = setInterval(() => {
                 this.getStatus(tx_id)
                     .then((res) => {
-                        console.log('Fetched transaction status:', res);
+                        console.log('Fetched transaction status:', res)
                         if (res.status === 'valid') {
-                            clearInterval(timer);
+                            clearInterval(timer)
                             this.getTransaction(tx_id)
                                 .then((res) => {
-                                    console.log('Fetched transaction:', res);
-                                    resolve(res);
-                                });
+                                    console.log('Fetched transaction:', res)
+                                    resolve(res)
+                                })
                         }
                     })
                     .catch((err) => {
-                        clearInterval(timer);
-                        reject(err);
-                    });
+                        clearInterval(timer)
+                        reject(err)
+                    })
             }, 500)
         })
     }

@@ -1,9 +1,9 @@
-import { Buffer } from 'buffer';
+import { Buffer } from 'buffer'
 
-import base58 from 'bs58';
-import cc from 'five-bells-condition';
+import base58 from 'bs58'
+import cc from 'five-bells-condition'
 
-import ccJsonify from './utils/ccJsonify';
+import ccJsonify from './utils/ccJsonify'
 
 
 /**
@@ -13,15 +13,15 @@ import ccJsonify from './utils/ccJsonify';
  * @param {boolean} [json=true] If true returns a json object otherwise a crypto-condition type
  * @returns {object} Ed25519 Condition (that will need to wrapped in an Output)
  */
-export default function makeEd25519Condition(publicKey, json=true) {
-    const publicKeyBuffer = new Buffer(base58.decode(publicKey));
+export default function makeEd25519Condition(publicKey, json = true) {
+    const publicKeyBuffer = new Buffer(base58.decode(publicKey))
 
-    const ed25519Fulfillment = new cc.Ed25519();
-    ed25519Fulfillment.setPublicKey(publicKeyBuffer);
+    const ed25519Fulfillment = new cc.Ed25519()
+    ed25519Fulfillment.setPublicKey(publicKeyBuffer)
 
     if (json) {
         return ccJsonify(ed25519Fulfillment)
     }
 
-    return ed25519Fulfillment;
+    return ed25519Fulfillment
 }

@@ -59,6 +59,7 @@
     "js-sha3": "^0.5.7",
     "js-utility-belt": "^1.5.0",
     "json-stable-stringify": "^1.0.1",
+    "query-string": "^4.3.4",
     "sprintf-js": "^1.0.3",
     "tweetnacl": "^1.0.0"
   },
