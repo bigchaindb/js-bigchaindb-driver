@@ -26,7 +26,7 @@
   "devDependencies": {
     "babel-cli": "^6.22.2",
     "babel-eslint": "^7.1.1",
-    "babel-loader": "^6.2.10",
+    "babel-loader": "^7.0.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.23.0",
     "babel-plugin-transform-export-extensions": "^6.22.0",
@@ -36,7 +36,7 @@
     "babel-preset-es2015-no-commonjs": "0.0.2",
     "babel-preset-latest": "^6.22.0",
     "babel-runtime": "^6.22.0",
-    "cross-env": "^3.1.4",
+    "cross-env": "^5.0.1",
     "eslint": "^3.14.1",
     "eslint-config-ascribe": "^3.0.1",
     "eslint-plugin-import": "^2.2.0",
@@ -58,7 +58,7 @@
     "js-utility-belt": "^1.5.0",
     "json-stable-stringify": "^1.0.1",
     "sprintf-js": "^1.0.3",
-    "tweetnacl": "^0.14.5"
+    "tweetnacl": "^1.0.0"
   },
   "keywords": [
     "bigchaindb",
