@@ -10,7 +10,7 @@
   },
   "license": "Apache-2.0",
   "author": "BigchainDB",
-  "main": "./src/index.js",
+  "main": "./dist/bundle/bundle.js",
   "scripts": {
     "lint": "eslint ./",
     "build": "npm run clean && npm run build:bundle && npm run build:cjs && npm run build:dist",
@@ -22,7 +22,7 @@
     "release": "./node_modules/release-it/bin/release.js --src.tagName='v%s' --github.release --npm.publish --non-interactive",
     "release-minor": "./node_modules/release-it/bin/release.js minor --src.tagName='v%s' --github.release --npm.publish --non-interactive",
     "release-major": "./node_modules/release-it/bin/release.js major --src.tagName='v%s' --github.release --npm.publish --non-interactive",
-    "postinstall": "npm i && npm run build",
+    "prepublishOnly": "npm update && npm run build",
     "precommit": "npm run lint"
   },
   "devDependencies": {
