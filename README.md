@@ -2,8 +2,8 @@
 
 > Official JavaScript driver for [BigchainDB](https://github.com/bigchaindb/bigchaindb) with some naive helpers to get you on your way making transactions in Node.js and the browser.
 
-[![npm](https://img.shields.io/npm/v/js-bigchaindb-driver.svg)](https://www.npmjs.com/package/js-bigchaindb-driver)
-[![js bigchaindb](https://img.shields.io/badge/js-bigchaindb-39BA91.svg)](https://github.com/ascribe/javascript)
+[![npm](https://img.shields.io/npm/v/bigchaindb-driver.svg)](https://www.npmjs.com/package/bigchaindb-driver)
+[![js ascribe](https://img.shields.io/badge/js-ascribe-39BA91.svg)](https://github.com/ascribe/javascript)
 [![Build Status](https://travis-ci.org/bigchaindb/js-bigchaindb-driver.svg?branch=master)](https://travis-ci.org/bigchaindb/js-bigchaindb-driver)
 [![Greenkeeper badge](https://badges.greenkeeper.io/bigchaindb/js-bigchaindb-driver.svg)](https://greenkeeper.io/)
 
@@ -11,7 +11,7 @@
 
 | BigchainDB Server | BigchainDB JavaScript Driver |
 | ----------------- |------------------------------|
-| `~=0.10.1` | `~=0.1.0` |
+| `~=0.10.1` | `~=1.0.0` |
 
 
 ## Contents
@@ -28,20 +28,19 @@
 ## Installation
 
 ```bash
-# install from npm
 npm install bigchaindb-driver
 ```
 
 ## Usage
 
 ```js
-import * as driver from 'js-bigchaindb-driver';
+import * as driver from 'bigchaindb-driver'
 
 // http(s)://<bigchaindb-API-url>/ (e.g. http://localhost:9984/api/v1/)
-const API_PATH = 'http://localhost:9984/api/v1/';
+const API_PATH = 'http://localhost:9984/api/v1/'
 
 // Create a new user with a public-private key pair
-const alice = new driver.Ed25519Keypair();
+const alice = new driver.Ed25519Keypair()
 
 // Create a transaction
 const tx = driver.Transaction.makeCreateTransaction(
@@ -54,13 +53,13 @@ const tx = driver.Transaction.makeCreateTransaction(
 );
 
 // Sign/fulfill the transaction
-const txSigned = driver.Transaction.signTransaction(tx, alice.privateKey);
+const txSigned = driver.Transaction.signTransaction(tx, alice.privateKey)
 
 // Send it off to BigchainDB
-let conn = new driver.Connection(PATH, { 'Content-Type': 'application/json' });
+let conn = new driver.Connection(PATH, { 'Content-Type': 'application/json' })
 conn.postTransaction(txSigned)
     .then(() => conn.getStatus(txSigned.id))
-    .then((res) => console.log('Transaction status:', res.status));
+    .then((res) => console.log('Transaction status:', res.status))
 ```
 
 You'll probably need a babel here and a bundler there. Alternatively, use [one of the bundled dist versions](./dist):
