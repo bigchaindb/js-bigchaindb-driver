@@ -1,6 +1,6 @@
-import cc from 'five-bells-condition';
+import cc from 'five-bells-condition'
 
-import ccJsonify from './utils/ccJsonify';
+import ccJsonify from './utils/ccJsonify'
 
 
 /**
@@ -11,14 +11,14 @@ import ccJsonify from './utils/ccJsonify';
  * @param {boolean} [json=true] If true returns a json object otherwise a crypto-condition type
  * @returns {object} Sha256 Threshold Condition (that will need to wrapped in an Output)
  */
-export default function makeThresholdCondition(threshold, subconditions=[], json=true) {
-    const thresholdCondition = new cc.ThresholdSha256();
-    thresholdCondition.threshold = threshold;
+export default function makeThresholdCondition(threshold, subconditions = [], json = true) {
+    const thresholdCondition = new cc.ThresholdSha256()
+    thresholdCondition.threshold = threshold
 
     subconditions.forEach((subcondition) => {
         // TODO: add support for Condition and URIs
-        thresholdCondition.addSubfulfillment(subcondition);
-    });
+        thresholdCondition.addSubfulfillment(subcondition)
+    })
 
     if (json) {
         return ccJsonify(thresholdCondition)

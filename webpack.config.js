@@ -1,24 +1,24 @@
 /* eslint-disable strict, no-console, object-shorthand */
 
-'use strict';
+'use strict'
 
-const path = require('path');
+const path = require('path')
 
-const webpack = require('webpack');
+const webpack = require('webpack')
 
-const PRODUCTION = process.env.NODE_ENV === 'production';
+const PRODUCTION = process.env.NODE_ENV === 'production'
 
 const PATHS = {
     ENTRY: path.resolve(__dirname, './src/index.js'),
     BUNDLE: path.resolve(__dirname, 'dist/bundle'),
     NODE_MODULES: path.resolve(__dirname, 'node_modules'),
-};
+}
 
 
 /** PLUGINS **/
 const PLUGINS = [
     new webpack.NoEmitOnErrorsPlugin(),
-];
+]
 
 const PROD_PLUGINS = [
     new webpack.optimize.UglifyJsPlugin({
@@ -34,10 +34,10 @@ const PROD_PLUGINS = [
         debug: false,
         minimize: true,
     }),
-];
+]
 
 if (PRODUCTION) {
-    PLUGINS.push(...PROD_PLUGINS);
+    PLUGINS.push(...PROD_PLUGINS)
 }
 
 
@@ -75,6 +75,6 @@ const config = {
             },
         ],
     },
-};
+}
 
-module.exports = config;
+module.exports = config

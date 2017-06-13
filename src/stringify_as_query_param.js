@@ -1,6 +1,6 @@
-import coreObjectEntries from 'core-js/library/fn/object/entries';
-import decamelize from 'decamelize';
-import queryString from 'query-string';
+import coreObjectEntries from 'core-js/library/fn/object/entries'
+import decamelize from 'decamelize'
+import queryString from 'query-string'
 
 
 /**
@@ -30,13 +30,13 @@ import queryString from 'query-string';
  */
 export default function stringifyAsQueryParam(obj, transform = decamelize) {
     if (!obj || typeof obj !== 'object' || !Object.keys(obj).length) {
-        return '';
+        return ''
     }
 
     const transformedKeysObj = coreObjectEntries(obj).reduce((paramsObj, [key, value]) => {
-        paramsObj[transform(key)] = value;
-        return paramsObj;
-    }, {});
+        paramsObj[transform(key)] = value
+        return paramsObj
+    }, {})
 
-    return `?${queryString.stringify(transformedKeysObj)}`;
+    return `?${queryString.stringify(transformedKeysObj)}`
 }

@@ -1,5 +1,5 @@
-import makeInputTemplate from './makeInputTemplate';
-import makeTransaction from './makeTransaction';
+import makeInputTemplate from './makeInputTemplate'
+import makeTransaction from './makeTransaction'
 
 
 /**
@@ -24,8 +24,8 @@ import makeTransaction from './makeTransaction';
 export default function makeCreateTransaction(asset, metadata, outputs, ...issuers) {
     const assetDefinition = {
         'data': asset || null,
-    };
-    const inputs = issuers.map((issuer) => makeInputTemplate([issuer]));
+    }
+    const inputs = issuers.map((issuer) => makeInputTemplate([issuer]))
 
-    return makeTransaction('CREATE', assetDefinition, metadata, outputs, inputs);
+    return makeTransaction('CREATE', assetDefinition, metadata, outputs, inputs)
 }
