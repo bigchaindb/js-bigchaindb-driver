@@ -22,8 +22,8 @@ export default function ccJsonLoad(conditionJson) {
         if (conditionJson.type_id === 2) {
             fulfillment = new cc.ThresholdSha256()
             fulfillment.threshold = conditionJson.threshold
-            conditionJson.subfulfillments.forEach((subfulfillment) => {
-                subfulfillment = ccJsonLoad(subfulfillment)
+            conditionJson.subfulfillments.forEach((subfulfillmentJson) => {
+                const subfulfillment = ccJsonLoad(subfulfillmentJson)
                 if ('getConditionUri' in subfulfillment) {
                     fulfillment.addSubfulfillment(subfulfillment)
                 } else if ('serializeUri' in subfulfillment) {
