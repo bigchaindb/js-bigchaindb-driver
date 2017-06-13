@@ -41,12 +41,12 @@ export default class Connection {
 
     /**
      * @public
-     * @param txId
+     * @param tx_id
      */
-    getStatus(txId) {
+    getStatus(tx_id) { // eslint-disable-line camelcase
         return this._req(this.getApiUrls('statuses'), {
             query: {
-                txId
+                tx_id
             }
         })
     }
@@ -65,13 +65,13 @@ export default class Connection {
 
     /**
      * @public
-     * @param txId
+     * @param tx_id
      * @param status
      */
-    listBlocks({ txId, status }) {
+    listBlocks({ tx_id, status }) {
         return this._req(this.getApiUrls('blocks'), {
             query: {
-                txId,
+                tx_id,
                 status
             }
         })
@@ -108,12 +108,12 @@ export default class Connection {
 
     /**
      * @public
-     * @param blockId
+     * @param block_id
      */
-    listVotes(blockId) {
+    listVotes(block_id) { // eslint-disable-line camelcase
         return this._req(this.getApiUrls('votes'), {
             query: {
-                blockId
+                block_id
             }
         })
     }
