@@ -16,14 +16,16 @@
 
 ## Contents
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Speed Optimizations](#speed-optimizations)
-- [Warnings](#warnings)
-- [npm releases](#npm-releases)
-- [Authors](#authors)
-- [License](#license)
-- [API reference](API.md)
+* [Installation](#installation)
+* [Usage](#usage)
+   * [Example: Create a transaction](#example-create-a-transaction)
+   * [More examples](#more-examples)
+* [Documentation](#bigchaindb-documentation)
+* [Speed Optimizations](#speed-optimizations)
+* [Warnings](#warnings)
+* [npm Releases](#npm-releases)
+* [Authors](#authors)
+* [License](#license)
 
 ## Installation
 
@@ -33,6 +35,13 @@ npm install bigchaindb-driver
 
 ## Usage
 
+You'll probably need a babel here and a bundler there. Alternatively, use one of the bundled dist versions:
+
+- `dist/bundle/`: Babelified and packaged with dependencies, so you can drop it in anywhere you want.
+- `dist/node/`: Babelified into a CommonJS module, so you can drop it in on any node project.
+
+### Example: Create a transaction
+
 ```js
 import * as driver from 'bigchaindb-driver'
 
@@ -40,52 +49,55 @@ import * as driver from 'bigchaindb-driver'
 const API_PATH = 'http://localhost:9984/api/v1/'
 
 // Create a new user with a public-private key pair
+// (or a whole bunch of them, nobody's counting)
 const alice = new driver.Ed25519Keypair()
 
-// Create a transaction
+// Construct a transaction payload
+// `driver.Transaction.makeCreateTransaction()`: create a new asset
+// `driver.Transaction.makeTransferTransaction()`: transfer an existing asset
 const tx = driver.Transaction.makeCreateTransaction(
     { assetMessage: 'My very own asset...' },
     { metaDataMessage: 'wrapped in a transaction' },
+    // A transaction needs an output
+    // `driver.Transaction.makeOutput()`: requires a crypto-condition
+    // `driver.Transaction.makeEd25519Condition()`: simple public key output
     [ driver.Transaction.makeOutput(
             driver.Transaction.makeEd25519Condition(alice.publicKey))
     ],
     alice.publicKey
 );
 
-// Sign/fulfill the transaction
+// Optional: You've got everything you need, except for an asset 
+// and metadata. Maybe define them here, any JSON-serializable object 
+// will do
+
+// Ok, now that you have a transaction, you need to *sign* it
+// cause, you know... cryptography and ¯\_(ツ)_/¯
+
+// Sign/fulfill the transaction with private keys
 const txSigned = driver.Transaction.signTransaction(tx, alice.privateKey)
 
-// Send it off to BigchainDB
+// Send the transaction off to BigchainDB
 let conn = new driver.Connection(PATH, { 'Content-Type': 'application/json' })
+
 conn.postTransaction(txSigned)
     .then(() => conn.getStatus(txSigned.id))
     .then((res) => console.log('Transaction status:', res.status))
 ```
 
-You'll probably need a babel here and a bundler there. Alternatively, use [one of the bundled dist versions](./dist):
+### More examples
 
-- `dist/bundle/`: Babelified and packaged with dependencies, so you can drop it in anywhere you want.
-- `dist/node/`: Babelified into a CommonJS module, so you can drop it in on any node project.
+You may also be interested in some [long-form tutorials with actual code](https://github.com/bigchaindb/kyber):
 
-You may also be interested in some [long-form tutorials with actual code](https://github.com/bigchaindb/kyber).
+- [Kyber](https://github.com/bigchaindb/kyber): full suite of BigchainDB repos with tutorials, examples and experiments included.
 
-The expected flow for making transactions:
+## BigchainDB Documentation
 
-1. Go get yourself some key pairs. (or a whole bunch of them, nobody's counting)
-    - `new driver.Ed25519Keypair()` 
-2. Construct a transaction payload that you can send off to BigchainDB:
-    - `driver.Transaction.makeCreateTransaction()` for creating a new asset or
-    - `driver.Transaction.makeTransferTransaction()` for transferring an existing asset
-3. A transaction needs an output (\*):
-    - `driver.Transaction.makeOutput()` still requires a crypto-condition
-    - `driver.Transaction.makeEd25519Condition()` should do the trick for a simple public key output.
-4. (**Optional**) You've got everything you need, except for an asset and metadata. Maybe define them (any JSON-serializable object will do).
-5. Ok, now you've got a transaction, but we need you to *sign* it cause, you know... cryptography and `¯\_(ツ)_/¯`:
-   - `driver.Transaction.signTransaction()` allows you to sign with private keys.
-6. Final step is to send the transaction off to BigchainDB:
-   - `driver.Connection.postTransaction()`
-
-(\*) If you're not sure what any of this means (and you're as confused as I think you are right now), you might wanna go check out [this](https://docs.bigchaindb.com/projects/server/en/latest/data-models/crypto-conditions.html) and [this](https://docs.bigchaindb.com/projects/py-driver/en/latest/usage.html#asset-transfer) and [this](https://tools.ietf.org/html/draft-thomas-crypto-conditions-01) first.
+- [HTTP API Reference](https://docs.bigchaindb.com/projects/server/en/latest/http-client-server-api.html)
+- [The Transaction Model](https://docs.bigchaindb.com/projects/server/en/latest/data-models/transaction-model.html?highlight=crypto%20conditions)
+- [Inputs and Outputs](https://docs.bigchaindb.com/projects/server/en/latest/data-models/inputs-outputs.html)
+- [Asset Transfer](https://docs.bigchaindb.com/projects/py-driver/en/latest/usage.html#asset-transfer)
+- [All BigchainDB Documentation](https://docs.bigchaindb.com/)
 
 ## Speed Optimizations
 
@@ -119,7 +131,7 @@ An example BigchainDB Server-generated key pair (encoded in `base58`):
 
 Your package should be able to take in the decoded version of the **private** key and return you the same **public** key (once you encode that to `base58`).
 
-## npm releases
+## npm Releases
 
 For a new **patch release**, execute on the machine where you're logged into your npm account:
 
@@ -131,11 +143,13 @@ Command is powered by [`release-it`](https://github.com/webpro/release-it) packa
 
 That's what the command does without any user interaction:
 
-- create release commit by updating version in `package.json`
-- create tag for that release commit
-- push commit & tag
-- create a new release on GitHub, with change log auto-generated from commit messages
-- publish to npm as a new release
+1. create release commit by updating version in `package.json`
+1. create tag for that release commit
+1. push commit & tag
+1. create a new release on GitHub, with change log auto-generated from commit messages
+1. update local dependencies to latest version
+1. build bundled dist versions
+1. publish to npm as a new release
 
 If you want to create a **minor** or **major release**, use these commands:
 
