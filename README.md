@@ -45,7 +45,7 @@ You'll probably need a babel here and a bundler there. Alternatively, use one of
 ```js
 import * as driver from 'bigchaindb-driver'
 
-// http(s)://<bigchaindb-API-url>/ (e.g. http://localhost:9984/api/v1/)
+// BigchainDB server instance or IPDB (e.g. https://test.ipdb.io/api/v1/)
 const API_PATH = 'http://localhost:9984/api/v1/'
 
 // Create a new user with a public-private key pair
