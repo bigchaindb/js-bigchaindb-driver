@@ -65,7 +65,7 @@ const tx = driver.Transaction.makeCreateTransaction(
             driver.Transaction.makeEd25519Condition(alice.publicKey))
     ],
     alice.publicKey
-);
+)
 
 // Optional: You've got everything you need, except for an asset 
 // and metadata. Maybe define them here, any JSON-serializable object 
