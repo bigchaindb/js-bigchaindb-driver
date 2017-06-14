@@ -10,7 +10,7 @@
   },
   "license": "Apache-2.0",
   "author": "BigchainDB",
-  "main": "./dist/bundle/bundle.js",
+  "main": "./dist/node/index.js",
   "scripts": {
     "lint": "eslint ./",
     "build": "npm run clean && npm run build:bundle && npm run build:cjs && npm run build:dist",
