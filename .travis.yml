@@ -11,7 +11,15 @@ addons:
     packages:
       - g++-4.9
 
-install: npm install
+before_install:
+  - sudo .ci/travis-before-install.sh
+
+install:
+  - .ci/travis-install.sh
+  - npm install
+
+before_script:
+  - .ci/travis-before-script.sh
 
 script:
   - npm test
@@ -20,6 +28,11 @@ script:
 cache:
   directories:
     - node_modules
-  
+
 notifications:
     email: false
+
+
+
+
+
