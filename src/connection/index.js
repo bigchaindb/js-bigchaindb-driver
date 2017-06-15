@@ -165,7 +165,7 @@ export default class Connection {
      * @param transaction
      */
     searchAssets(query) {
-        return this.req(this.getApiUrls('search_assets'), {
+        return this._req(this.getApiUrls('search_assets'), {
             query: {
                 text_search: query
             }
