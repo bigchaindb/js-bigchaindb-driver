@@ -32,7 +32,7 @@ export default function makeTransferTransaction(
         const fulfilledOutput = unspentTransaction.outputs[outputIndex]
         const transactionLink = {
             'output': outputIndex,
-            'txid': unspentTransaction.id,
+            'transaction_id': unspentTransaction.id,
         }
 
         return makeInputTemplate(fulfilledOutput.public_keys, transactionLink)
