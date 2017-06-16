@@ -71,5 +71,23 @@
     "blockchain",
     "decentralized",
     "dapp"
-  ]
+  ],
+  "ava": {
+      "files": [
+          "test/*.js"
+      ],
+      "source": [
+          "**/*.{js,jsx}",
+          "!node_modules/**/*",
+          "!dist/**/*"
+      ],
+      "failFast": true,
+      "failWithoutAssertions": false,
+      "tap": true,
+      "powerAssert": false,
+      "require": [
+          "babel-register"
+      ],
+      "babel": "inherit"
+  }
 }

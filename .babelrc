@@ -1,5 +1,10 @@
 {
-    "presets": ["es2015-no-commonjs"],
+    "presets": [
+        "@ava/stage-4",
+        "@ava/transform-test-files",
+        "es2015-no-commonjs"
+    ],
+
     "plugins": [
         "transform-export-extensions",
         "transform-object-assign",
