@@ -10,7 +10,7 @@ const PRODUCTION = process.env.NODE_ENV === 'production'
 
 const PATHS = {
     ENTRY: path.resolve(__dirname, './src/index.js'),
-    BUNDLE: path.resolve(__dirname, 'dist/bundle'),
+    BUNDLE: path.resolve(__dirname, 'dist/browser'),
     NODE_MODULES: path.resolve(__dirname, 'node_modules'),
 }
 
