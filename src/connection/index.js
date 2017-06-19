@@ -9,15 +9,15 @@ export default class Connection {
 
     getApiUrls(endpoints) {
         // TODO: Use camel case
-        return {
-            'blocks': `${this.path}blocks`,
-            'blocks_detail': `${this.path}blocks/%(blockId)s`,
-            'outputs': `${this.path}outputs`,
-            'statuses': `${this.path}statuses`,
-            'transactions': `${this.path}transactions`,
-            'transactions_detail': `${this.path}transactions/%(txId)s`,
-            'search_assets': `${this.path}assets`,
-            'votes': `${this.path}votes`
+        return this.path + {
+            'blocks': 'blocks',
+            'blocks_detail': 'blocks/%(blockId)s',
+            'outputs': 'outputs',
+            'statuses': 'statuses',
+            'transactions': 'transactions',
+            'transactions_detail': 'transactions/%(transactionId)s',
+            'search_assets': 'assets',
+            'votes': 'votes'
         }[endpoints]
     }
 
@@ -41,37 +41,37 @@ export default class Connection {
 
     /**
      * @public
-     * @param tx_id
+     * @param transactionId
      */
-    getStatus(tx_id) { // eslint-disable-line camelcase
+    getStatus(transactionId) {
         return this._req(this.getApiUrls('statuses'), {
             query: {
-                tx_id
+                transaction_id: transactionId
             }
         })
     }
 
     /**
      * @public
-     * @param txId
+     * @param transactionId
      */
-    getTransaction(txId) {
+    getTransaction(transactionId) {
         return this._req(this.getApiUrls('transactions_detail'), {
             urlTemplateSpec: {
-                txId
+                transaction_id: transactionId
             }
         })
     }
 
     /**
      * @public
-     * @param tx_id
+     * @param transactionId
      * @param status
      */
-    listBlocks({ tx_id, status }) {
+    listBlocks({ transactionId, status }) {
         return this._req(this.getApiUrls('blocks'), {
             query: {
-                tx_id,
+                transaction_id: transactionId,
                 status
             }
         })
@@ -83,6 +83,7 @@ export default class Connection {
      * @param unspent
      * @param onlyJsonResponse
      */
+    // TODO: Use camel case for parameters
     listOutputs({ public_key, unspent }, onlyJsonResponse = true) {
         return this._req(this.getApiUrls('outputs'), {
             query: {
@@ -97,6 +98,7 @@ export default class Connection {
      * @param asset_id
      * @param operation
      */
+    // TODO: Use camel case for parameters
     listTransactions({ asset_id, operation }) {
         return this._req(this.getApiUrls('transactions'), {
             query: {
@@ -108,12 +110,12 @@ export default class Connection {
 
     /**
      * @public
-     * @param block_id
+     * @param blockId
      */
-    listVotes(block_id) { // eslint-disable-line camelcase
+    listVotes(blockId) {
         return this._req(this.getApiUrls('votes'), {
             query: {
-                block_id
+                block_id: blockId
             }
         })
     }
