@@ -1,5 +1,6 @@
 import test from 'ava'
 import sinon from 'sinon'
+import * as request from '../../src/request' // eslint-disable-line
 import { Connection } from '../../src'
 
 const API_PATH = 'http://localhost:9984/api/v1/'
@@ -21,6 +22,24 @@ test('generate API URLS', t => {
         const expected = API_PATH + endpoints[endpointName]
         t.is(url, expected)
     })
+})
+
+
+test('Request with custom headers', t => {
+    const testConn = new Connection(API_PATH, { hello: 'world' })
+    const expectedOptions = {
+        headers: {
+            hello: 'world',
+            custom: 'headers'
+        }
+    }
+
+    // request is read only, cannot be mocked?
+    sinon.spy(request, 'default')
+    testConn._req(API_PATH, { headers: { custom: 'headers' } })
+
+    t.truthy(request.default.calledWith(API_PATH, expectedOptions))
+    request.default.restore()
 })
 
 
