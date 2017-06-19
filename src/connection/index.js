@@ -129,12 +129,10 @@ export default class Connection {
             const timer = setInterval(() => {
                 this.getStatus(txId)
                     .then((res) => {
-                        console.log('Fetched transaction status:', res) // eslint-disable-line no-console
                         if (res.status === 'valid') {
                             clearInterval(timer)
                             this.getTransaction(txId)
                                 .then((res_) => {
-                                    console.log('Fetched transaction:', res_) // eslint-disable-line no-console
                                     resolve(res_)
                                 })
                         }
