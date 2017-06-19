@@ -8,15 +8,14 @@ export default class Connection {
     }
 
     getApiUrls(endpoints) {
-        // TODO: Use camel case
         return this.path + {
             'blocks': 'blocks',
-            'blocks_detail': 'blocks/%(blockId)s',
+            'blocksDetail': 'blocks/%(blockId)s',
             'outputs': 'outputs',
             'statuses': 'statuses',
             'transactions': 'transactions',
-            'transactions_detail': 'transactions/%(transactionId)s',
-            'search_assets': 'assets',
+            'transactionsDetail': 'transactions/%(transactionId)s',
+            'searchAssets': 'assets',
             'votes': 'votes'
         }[endpoints]
     }
@@ -32,7 +31,7 @@ export default class Connection {
      * @param blockId
      */
     getBlock(blockId) {
-        return this._req(this.getApiUrls('blocks_detail'), {
+        return this._req(this.getApiUrls('blocksDetail'), {
             urlTemplateSpec: {
                 blockId
             }
@@ -56,9 +55,9 @@ export default class Connection {
      * @param transactionId
      */
     getTransaction(transactionId) {
-        return this._req(this.getApiUrls('transactions_detail'), {
+        return this._req(this.getApiUrls('transactionsDetail'), {
             urlTemplateSpec: {
-                transaction_id: transactionId
+                transactionId
             }
         })
     }
@@ -164,10 +163,10 @@ export default class Connection {
     /**
      * @public
      *
-     * @param transaction
+     * @param query
      */
     searchAssets(query) {
-        return this.req(this.getApiUrls('search_assets'), {
+        return this._req(this.getApiUrls('searchAssets'), {
             query: {
                 text_search: query
             }

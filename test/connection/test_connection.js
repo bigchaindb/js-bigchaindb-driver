@@ -9,18 +9,33 @@ const conn = new Connection(API_PATH)
 test('generate API URLS', t => {
     const endpoints = {
         'blocks': 'blocks',
-        'blocks_detail': 'blocks/%(blockId)s',
+        'blocksDetail': 'blocks/%(blockId)s',
         'outputs': 'outputs',
         'statuses': 'statuses',
         'transactions': 'transactions',
-        'transactions_detail': 'transactions/%(transactionId)s',
-        'search_assets': 'assets',
+        'transactionsDetail': 'transactions/%(transactionId)s',
+        'searchAssets': 'assets',
     }
     Object.keys(endpoints).forEach((endpointName) => {
         const url = conn.getApiUrls(endpointName)
         const expected = API_PATH + endpoints[endpointName]
         t.is(url, expected)
     })
+})
+
+
+test('Get block for a block id', t => {
+    const expectedPath = 'path'
+    const blockId = 'abc'
+
+    conn._req = sinon.spy()
+    conn.getApiUrls = sinon.stub().returns(expectedPath)
+
+    conn.getBlock(blockId)
+    t.truthy(conn._req.calledWith(
+        expectedPath,
+        { urlTemplateSpec: { blockId } }
+    ))
 })
 
 
@@ -49,7 +64,7 @@ test('Get transaction for a transaction id', t => {
     conn.getTransaction(transactionId)
     t.truthy(conn._req.calledWith(
         expectedPath,
-        { urlTemplateSpec: { transaction_id: transactionId } }
+        { urlTemplateSpec: { transactionId } }
     ))
 })
 
@@ -86,5 +101,20 @@ test('Get votes for a block id', t => {
     t.truthy(conn._req.calledWith(
         expectedPath,
         { query: { block_id: blockId } }
+    ))
+})
+
+
+test('Get asset for a text', t => {
+    const expectedPath = 'path'
+    const query = 'abc'
+
+    conn._req = sinon.spy()
+    conn.getApiUrls = sinon.stub().returns(expectedPath)
+
+    conn.searchAssets(query)
+    t.truthy(conn._req.calledWith(
+        expectedPath,
+        { query: { text_search: query } }
     ))
 })
