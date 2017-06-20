@@ -7,9 +7,7 @@ import makeInputTemplate from '../../src/transaction/makeInputTemplate'
 
 import {
     alice,
-    aliceCondition,
     aliceOutput,
-    assetMessage,
     metaDataMessage,
     createTx,
     transferTx

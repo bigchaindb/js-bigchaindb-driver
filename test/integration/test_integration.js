@@ -71,7 +71,7 @@ test('Valid TRANSFER transaction with single Ed25519 input', t => {
             return conn.postTransaction(transferTxSigned)
                 .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
                 .then(resTx => t.truthy(resTx))
-    })
+        })
 })
 
 
@@ -106,5 +106,5 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs', t => {
             return conn.postTransaction(transferTxSigned)
                 .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
                 .then(resTx => t.truthy(resTx))
-    })
+        })
 })

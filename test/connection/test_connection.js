@@ -1,5 +1,6 @@
 import test from 'ava'
 import sinon from 'sinon'
+
 import * as request from '../../src/request' // eslint-disable-line
 import { Connection } from '../../src'
 
