@@ -14,25 +14,27 @@ import makeTransaction from './makeTransaction'
  *                           For `TRANSFER` Transactions, this should usually just be a list of
  *                           Outputs wrapping Ed25519 Conditions generated from the public keys of
  *                           the recipients.
- * @param {...number} fulfilledOutputs Indices of the Outputs in `unspentTransaction` that this
+ * @param {...number} OutputIndices Indices of the Outputs in `unspentTransaction` that this
  *                                     Transaction fulfills.
- *                                     Note that the public keys listed in the fulfilled Outputs
- *                                     must be used (and in the same order) to sign the Transaction
+ *                                     Note that listed public keys listed must be used (and in
+ *                                     the same order) to sign the Transaction
  *                                     (`signTransaction()`).
  * @returns {object} Unsigned transaction -- make sure to call signTransaction() on it before
  *                   sending it off!
  */
+// TODO:
+// - Make `metadata` optional argument
 export default function makeTransferTransaction(
         unspentTransaction,
         metadata,
         outputs,
-        ...fulfilledOutputs
+        ...outputIndices
     ) {
-    const inputs = fulfilledOutputs.map((outputIndex) => {
+    const inputs = outputIndices.map((outputIndex) => {
         const fulfilledOutput = unspentTransaction.outputs[outputIndex]
         const transactionLink = {
             'output': outputIndex,
-            'txid': unspentTransaction.id,
+            'transaction_id': unspentTransaction.id,
         }
 
         return makeInputTemplate(fulfilledOutput.public_keys, transactionLink)

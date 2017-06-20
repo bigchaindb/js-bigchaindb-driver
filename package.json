@@ -42,11 +42,12 @@
     "babel-runtime": "^6.22.0",
     "cross-env": "^5.0.1",
     "eslint": "^3.14.1",
-    "eslint-config-ascribe": "^3.0.1",
+    "eslint-config-ascribe": "^3.0.4",
     "eslint-plugin-import": "^2.2.0",
     "husky": "^0.13.4",
     "release-it": "^2.7.3",
     "rimraf": "^2.5.4",
+    "sinon": "^2.3.4",
     "webpack": "^2.2.1"
   },
   "dependencies": {
