@@ -2,23 +2,23 @@ import test from 'ava'
 import { Transaction, Ed25519Keypair } from '../src'
 // TODO: Find out if ava has something like conftest, if so put this there.
 
-// TODO: We're adding `Math.random()` here to never create the same transaction
-// twice.
-export const assetMessage = { assetMessage: Math.random() }
-export const metaDataMessage = { metaDataMessage: 'metaDataMessage' }
+// NOTE: We cast `Math.random()` to a string, as sometimes Javascript simply
+// yields a slightly different float during runtime, lol
+export function asset() { return { message: `${Math.random()}` } }
+export const metaData = { message: 'metaDataMessage' }
 
 export const alice = new Ed25519Keypair()
 export const aliceCondition = Transaction.makeEd25519Condition(alice.publicKey)
 export const aliceOutput = Transaction.makeOutput(aliceCondition)
 export const createTx = Transaction.makeCreateTransaction(
-    assetMessage,
-    metaDataMessage,
+    asset,
+    metaData,
     [aliceOutput],
     alice.publicKey
 )
 export const transferTx = Transaction.makeTransferTransaction(
     createTx,
-    metaDataMessage,
+    metaData,
     [aliceOutput],
     0
 )

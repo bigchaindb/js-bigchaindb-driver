@@ -16,7 +16,7 @@ test('generate API URLS', t => {
         'statuses': 'statuses',
         'transactions': 'transactions',
         'transactionsDetail': 'transactions/%(transactionId)s',
-        'searchAssets': 'assets',
+        'assets': 'assets',
     }
     Object.keys(endpoints).forEach((endpointName) => {
         const url = conn.getApiUrls(endpointName)
@@ -125,16 +125,16 @@ test('Get votes for a block id', t => {
 })
 
 
-test('Get asset for a text', t => {
+test('Get asset for text', t => {
     const expectedPath = 'path'
-    const query = 'abc'
+    const search = 'abc'
 
     conn._req = sinon.spy()
     conn.getApiUrls = sinon.stub().returns(expectedPath)
 
-    conn.searchAssets(query)
+    conn.searchAssets(search)
     t.truthy(conn._req.calledWith(
         expectedPath,
-        { query: { text_search: query } }
+        { query: { search } }
     ))
 })

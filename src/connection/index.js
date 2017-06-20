@@ -15,7 +15,7 @@ export default class Connection {
             'statuses': 'statuses',
             'transactions': 'transactions',
             'transactionsDetail': 'transactions/%(transactionId)s',
-            'searchAssets': 'assets',
+            'assets': 'assets',
             'votes': 'votes'
         }[endpoints]
     }
@@ -161,12 +161,12 @@ export default class Connection {
     /**
      * @public
      *
-     * @param query
+     * @param search
      */
-    searchAssets(query) {
-        return this._req(this.getApiUrls('searchAssets'), {
+    searchAssets(search) {
+        return this._req(this.getApiUrls('assets'), {
             query: {
-                text_search: query
+                search
             }
         })
     }

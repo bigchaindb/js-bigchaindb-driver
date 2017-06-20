@@ -7,8 +7,8 @@ import {
     aliceOutput,
     bob,
     bobOutput,
-    assetMessage,
-    metaDataMessage
+    asset,
+    metaData
 } from '../constants'
 
 const API_PATH = 'http://localhost:9984/api/v1/'
@@ -29,15 +29,15 @@ test('Valid CREATE transaction', t => {
     const conn = new Connection(API_PATH)
 
     const tx = Transaction.makeCreateTransaction(
-        assetMessage,
-        metaDataMessage,
+        asset(),
+        metaData,
         [aliceOutput],
         alice.publicKey
     )
-
     const txSigned = Transaction.signTransaction(tx, alice.privateKey)
+
     return conn.postTransaction(txSigned)
-        .then(({ 'id': txId }) => conn.pollStatusAndFetchTransaction(txId))
+        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
         .then(resTx => t.truthy(resTx))
 })
 
@@ -45,8 +45,8 @@ test('Valid CREATE transaction', t => {
 test('Valid TRANSFER transaction with single Ed25519 input', t => {
     const conn = new Connection(API_PATH)
     const createTx = Transaction.makeCreateTransaction(
-        assetMessage,
-        metaDataMessage,
+        asset(),
+        metaData,
         [aliceOutput],
         alice.publicKey
     )
@@ -56,11 +56,11 @@ test('Valid TRANSFER transaction with single Ed25519 input', t => {
     )
 
     return conn.postTransaction(createTxSigned)
-        .then(({ 'id': txId }) => conn.pollStatusAndFetchTransaction(txId))
+        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
         .then(() => {
             const transferTx = Transaction.makeTransferTransaction(
                 createTxSigned,
-                metaDataMessage,
+                metaData,
                 [aliceOutput],
                 0
             )
@@ -78,8 +78,8 @@ test('Valid TRANSFER transaction with single Ed25519 input', t => {
 test('Valid TRANSFER transaction with multiple Ed25519 inputs', t => {
     const conn = new Connection(API_PATH)
     const createTx = Transaction.makeCreateTransaction(
-        assetMessage,
-        metaDataMessage,
+        asset(),
+        metaData,
         [aliceOutput, bobOutput],
         alice.publicKey
     )
@@ -93,7 +93,7 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs', t => {
         .then(() => {
             const transferTx = Transaction.makeTransferTransaction(
                 createTxSigned,
-                metaDataMessage,
+                metaData,
                 [Transaction.makeOutput(aliceCondition, '2')],
                 0,
                 1
@@ -107,4 +107,28 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs', t => {
                 .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
                 .then(resTx => t.truthy(resTx))
         })
+})
+
+
+test('Search for an asset', t => {
+    const conn = new Connection(API_PATH)
+
+    const createTx = Transaction.makeCreateTransaction(
+        asset(),
+        metaData,
+        [aliceOutput],
+        alice.publicKey
+    )
+    const createTxSigned = Transaction.signTransaction(
+        createTx,
+        alice.privateKey
+    )
+
+    return conn.postTransaction(createTxSigned)
+        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+        .then(() => conn.searchAssets(createTxSigned.asset.data.message))
+        .then(assets => t.truthy(
+            assets.pop(),
+            createTxSigned.asset.data.message
+        ))
 })

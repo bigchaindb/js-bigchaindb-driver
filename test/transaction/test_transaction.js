@@ -1,14 +1,14 @@
 import test from 'ava'
 import sinon from 'sinon'
 
-import { Transaction, Ed25519Keypair } from '../../src'
+import { Transaction } from '../../src'
 import * as makeTransaction from '../../src/transaction/makeTransaction' // eslint-disable-line
 import makeInputTemplate from '../../src/transaction/makeInputTemplate'
 
 import {
     alice,
     aliceOutput,
-    metaDataMessage,
+    metaData,
     createTx,
     transferTx
 } from '../constants'
@@ -72,14 +72,14 @@ test('Create TRANSFER transaction based on CREATE transaction', t => {
 
     Transaction.makeTransferTransaction(
         createTx,
-        metaDataMessage,
+        metaData,
         [aliceOutput],
         0
     )
     const expected = [
         'TRANSFER',
         { id: createTx.id },
-        metaDataMessage,
+        metaData,
         [aliceOutput],
         [makeInputTemplate(
             [alice.publicKey],
@@ -100,14 +100,14 @@ test('Create TRANSFER transaction based on TRANSFER transaction', t => {
 
     Transaction.makeTransferTransaction(
         transferTx,
-        metaDataMessage,
+        metaData,
         [aliceOutput],
         0
     )
     const expected = [
         'TRANSFER',
         { id: transferTx.asset.id },
-        metaDataMessage,
+        metaData,
         [aliceOutput],
         [makeInputTemplate(
             [alice.publicKey],
