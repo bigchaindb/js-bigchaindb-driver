@@ -36,7 +36,7 @@ test('Create valid output with default amount', t => {
         public_keys: ['abc']
     }
     const res = Transaction.makeOutput(condition)
-    return t.deepEqual(res, expected)
+    t.deepEqual(res, expected)
 })
 
 
@@ -53,7 +53,7 @@ test('Create valid output with custom amount', t => {
         public_keys: ['abc']
     }
     const res = Transaction.makeOutput(condition, customAmount)
-    return t.deepEqual(res, expected)
+    t.deepEqual(res, expected)
 })
 
 test('Pass condition not based on public_keys to makeOutput', t => {
@@ -68,7 +68,7 @@ test('Pass condition not based on public_keys to makeOutput', t => {
         public_keys: []
     }
     const res = Transaction.makeOutput(condition)
-    return t.deepEqual(res, expected)
+    t.deepEqual(res, expected)
 })
 
 
