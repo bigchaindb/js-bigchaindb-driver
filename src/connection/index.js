@@ -78,17 +78,21 @@ export default class Connection {
 
     /**
      * @public
-     * @param public_key
-     * @param unspent
+     * @param publicKey
+     * @param spent
      * @param onlyJsonResponse
      */
-    // TODO: Use camel case for parameters
-    listOutputs({ public_key, unspent }, onlyJsonResponse = true) {
+    listOutputs(publicKey, spent, onlyJsonResponse = true) {
+        const query = {
+            public_key: publicKey
+        }
+        // NOTE: If `spent` is not defined, it must not be included in the
+        // query parameters.
+        if (spent !== undefined) {
+            query.spent = spent
+        }
         return this._req(this.getApiUrls('outputs'), {
-            query: {
-                public_key,
-                unspent
-            }
+            query
         }, onlyJsonResponse)
     }
 

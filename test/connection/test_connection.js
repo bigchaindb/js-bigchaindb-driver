@@ -110,6 +110,53 @@ test('Get list of blocks for a transaction id', t => {
 })
 
 
+test('Get outputs for a public key and no spent flag', t => {
+    const expectedPath = 'path'
+    const publicKey = 'publicKey'
+
+    conn._req = sinon.spy()
+    conn.getApiUrls = sinon.stub().returns(expectedPath)
+
+    conn.listOutputs(publicKey)
+    t.truthy(conn._req.calledWith(
+        expectedPath,
+        { query: { public_key: publicKey } }
+    ))
+})
+
+
+test('Get outputs for a public key and spent=false', t => {
+    const expectedPath = 'path'
+    const publicKey = 'publicKey'
+    const spent = false
+
+    conn._req = sinon.spy()
+    conn.getApiUrls = sinon.stub().returns(expectedPath)
+
+    conn.listOutputs(publicKey, spent)
+    t.truthy(conn._req.calledWith(
+        expectedPath,
+        { query: { public_key: publicKey, spent } }
+    ))
+})
+
+
+test('Get outputs for a public key and spent=true', t => {
+    const expectedPath = 'path'
+    const publicKey = 'publicKey'
+    const spent = true
+
+    conn._req = sinon.spy()
+    conn.getApiUrls = sinon.stub().returns(expectedPath)
+
+    conn.listOutputs(publicKey, spent)
+    t.truthy(conn._req.calledWith(
+        expectedPath,
+        { query: { public_key: publicKey, spent } }
+    ))
+})
+
+
 test('Get votes for a block id', t => {
     const expectedPath = 'path'
     const blockId = 'abc'
