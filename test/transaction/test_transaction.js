@@ -86,7 +86,7 @@ test('Create TRANSFER transaction based on CREATE transaction', t => {
     )
     const expected = [
         'TRANSFER',
-        {id: createTx.id },
+        { id: createTx.id },
         metaDataMessage,
         [aliceOutput],
         [makeInputTemplate(

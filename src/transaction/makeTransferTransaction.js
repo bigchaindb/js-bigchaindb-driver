@@ -54,11 +54,6 @@ export function _makeTransferTransaction(
 // - Rename `fulfilledOutputs`, e.g. inputs
 // TODO: `outputs` should throw or include output in array if no array was
 // passed
-export default function makeTransferTransaction(
-        unspentTransaction,
-        metadata,
-        outputs,
-        ...fulfilledOutputs
-    ) {
-    return makeTransaction(..._makeTransferTransaction(...arguments))
+export default function makeTransferTransaction(...args) {
+    return makeTransaction(..._makeTransferTransaction(...args))
 }
