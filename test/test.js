@@ -28,3 +28,18 @@ test('Valid CREATE transaction is evaluated by BigchainDB', t => {
         .then(resTx => t.truthy(resTx))
 })
 
+test('Ed25519 condition correctly formed', t => {
+    const publicKey = '4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS'
+    const output = Transaction.makeOutput(Transaction.makeEd25519Condition(publicKey))
+    const target = {
+        details: {
+            type_id: 4,
+            bitmask: 32,
+            signature: null,
+            public_key: publicKey,
+            type: 'fulfillment'
+        },
+        uri: 'ni:///sha-256;uLdVX7FEjLWVDkAkfMAkEqPPwFqZj7qfiGE152t_x5c?fpt=ed25519-sha-256&cost=131072'
+    }
+    t.deepEqual(target, output.condition)
+})

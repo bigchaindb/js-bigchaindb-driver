@@ -16,7 +16,7 @@ import ccJsonify from './utils/ccJsonify'
 export default function makeEd25519Condition(publicKey, json = true) {
     const publicKeyBuffer = new Buffer(base58.decode(publicKey))
 
-    const ed25519Fulfillment = new cc.Ed25519()
+    const ed25519Fulfillment = new cc.Ed25519Sha256()
     ed25519Fulfillment.setPublicKey(publicKeyBuffer)
 
     if (json) {
