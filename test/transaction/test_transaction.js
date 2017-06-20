@@ -1,6 +1,8 @@
 import test from 'ava'
+import sinon from 'sinon'
+
 import { Transaction, Ed25519Keypair } from '../../src'
-import { _makeTransferTransaction } from '../../src/transaction/makeTransferTransaction'
+import * as makeTransaction from '../../src/transaction/makeTransaction' // eslint-disable-line
 import makeInputTemplate from '../../src/transaction/makeInputTemplate'
 
 
@@ -78,7 +80,9 @@ test('makeOutput throws TypeError with incorrect amount type', t => {
 
 
 test('Create TRANSFER transaction based on CREATE transaction', t => {
-    const testTx = _makeTransferTransaction(
+    sinon.spy(makeTransaction, 'default')
+
+    Transaction.makeTransferTransaction(
         createTx,
         metaDataMessage,
         [aliceOutput],
@@ -95,12 +99,18 @@ test('Create TRANSFER transaction based on CREATE transaction', t => {
         )]
     ]
 
-    t.deepEqual(testTx, expected)
+    // NOTE: `src/transaction/makeTransaction` is `export default`, hence we
+    // can only mock `makeTransaction.default` with a hack:
+    // See: https://stackoverflow.com/a/33676328/1263876
+    t.truthy(makeTransaction.default.calledWith(...expected))
+    makeTransaction.default.restore()
 })
 
 
 test('Create TRANSFER transaction based on TRANSFER transaction', t => {
-    const testTx = _makeTransferTransaction(
+    sinon.spy(makeTransaction, 'default')
+
+    Transaction.makeTransferTransaction(
         transferTx,
         metaDataMessage,
         [aliceOutput],
@@ -117,5 +127,6 @@ test('Create TRANSFER transaction based on TRANSFER transaction', t => {
         )]
     ]
 
-    t.deepEqual(testTx, expected)
+    t.truthy(makeTransaction.default.calledWith(...expected))
+    makeTransaction.default.restore()
 })

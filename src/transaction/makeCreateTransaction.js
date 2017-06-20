@@ -21,8 +21,6 @@ import makeTransaction from './makeTransaction'
  * @returns {object} Unsigned transaction -- make sure to call signTransaction() on it before
  *                   sending it off!
  */
-// TODO: `outputs` should throw or include output in array if no array was
-// passed
 export default function makeCreateTransaction(asset, metadata, outputs, ...issuers) {
     const assetDefinition = {
         'data': asset || null,
