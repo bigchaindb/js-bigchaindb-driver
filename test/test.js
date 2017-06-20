@@ -28,18 +28,34 @@ test('Valid CREATE transaction is evaluated by BigchainDB', t => {
         .then(resTx => t.truthy(resTx))
 })
 
-test('Ed25519 condition correctly formed', t => {
+test('Ed25519 condition encoding', t => {
     const publicKey = '4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS'
-    const output = Transaction.makeOutput(Transaction.makeEd25519Condition(publicKey))
     const target = {
         details: {
-            type_id: 4,
-            bitmask: 32,
-            signature: null,
+            type: 'ed25519-sha-256',
             public_key: publicKey,
-            type: 'fulfillment'
+            signature: null,
         },
         uri: 'ni:///sha-256;uLdVX7FEjLWVDkAkfMAkEqPPwFqZj7qfiGE152t_x5c?fpt=ed25519-sha-256&cost=131072'
     }
-    t.deepEqual(target, output.condition)
+    t.deepEqual(target, Transaction.makeEd25519Condition(publicKey))
+})
+
+test('Threshold condition encoding', t => {
+    const publicKey = '4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS'
+    const condition = Transaction.makeThresholdCondition(
+            1, [Transaction.makeEd25519Condition(publicKey, false)])
+    const target = {
+        details: {
+            type: 'threshold-sha-256',
+            threshold: 1,
+            subfulfillments: [{
+                type: 'ed25519-sha-256',
+                public_key: publicKey,
+                signature: null,
+            }]
+        },
+        uri: 'ni:///sha-256;VBIfZSoBprUQy-LVNAzaZ2q-eyWbrcPKtBg1PuNXIpQ?fpt=threshold-sha-256&cost=132096&subtypes=ed25519-sha-256'
+    }
+    t.deepEqual(target, condition)
 })

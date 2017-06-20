@@ -33,13 +33,10 @@ export default function ccJsonify(fulfillment) {
     if (fulfillment.getTypeId() === 2) {
         return {
             'details': {
-                'type_id': 2,
-                'type': 'fulfillment',
-                'bitmask': fulfillment.getBitmask(),
+                'type': 'threshold-sha-256',
                 'threshold': fulfillment.threshold,
                 'subfulfillments': fulfillment.subconditions.map((subcondition) => {
                     const subconditionJson = ccJsonify(subcondition.body)
-                    subconditionJson.details.weight = 1
                     return subconditionJson.details
                 })
             },
@@ -48,13 +45,11 @@ export default function ccJsonify(fulfillment) {
     }
 
     if (fulfillment.getTypeId() === 4) {
-        jsonBody.details.type_id = 4
-        jsonBody.details.bitmask = 32
+        jsonBody.details.type = 'ed25519-sha-256'
 
         if ('publicKey' in fulfillment) {
             jsonBody.details.signature = null
             jsonBody.details.public_key = base58.encode(fulfillment.publicKey)
-            jsonBody.details.type = 'fulfillment'
         }
     }
 
