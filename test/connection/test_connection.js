@@ -97,7 +97,7 @@ test('Get list of blocks for a transaction id', t => {
     conn._req = sinon.spy()
     conn.getApiUrls = sinon.stub().returns(expectedPath)
 
-    conn.listBlocks({ transactionId, status })
+    conn.listBlocks(transactionId, status)
     t.truthy(conn._req.calledWith(
         expectedPath,
         {

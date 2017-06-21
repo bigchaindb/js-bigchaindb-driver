@@ -67,7 +67,7 @@ export default class Connection {
      * @param transactionId
      * @param status
      */
-    listBlocks({ transactionId, status }) {
+    listBlocks(transactionId, status) {
         return this._req(this.getApiUrls('blocks'), {
             query: {
                 transaction_id: transactionId,
