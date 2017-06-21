@@ -89,7 +89,7 @@ export default class Connection {
         // NOTE: If `spent` is not defined, it must not be included in the
         // query parameters.
         if (spent !== undefined) {
-            query.spent = spent
+            query.spent = spent.toString()
         }
         return this._req(this.getApiUrls('outputs'), {
             query

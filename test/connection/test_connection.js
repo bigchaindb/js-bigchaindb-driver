@@ -157,7 +157,7 @@ test('Get outputs for a public key and spent=false', t => {
     conn.listOutputs(publicKey, spent)
     t.truthy(conn._req.calledWith(
         expectedPath,
-        { query: { public_key: publicKey, spent } }
+        { query: { public_key: publicKey, spent: 'false' } }
     ))
 })
 
@@ -173,7 +173,7 @@ test('Get outputs for a public key and spent=true', t => {
     conn.listOutputs(publicKey, spent)
     t.truthy(conn._req.calledWith(
         expectedPath,
-        { query: { public_key: publicKey, spent } }
+        { query: { public_key: publicKey, spent: 'true' } }
     ))
 })
 
