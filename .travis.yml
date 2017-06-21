@@ -20,6 +20,7 @@ before_install:
       -e BIGCHAINDB_DATABASE_HOST=172.17.0.1
       bigchaindb/bigchaindb:master
       start
+    - npm install -g codecov
 
 script: yarn test
 
