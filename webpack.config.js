@@ -14,6 +14,39 @@ const PATHS = {
     NODE_MODULES: path.resolve(__dirname, 'node_modules'),
 }
 
+const OUTPUTS = [
+    {
+        filename: PRODUCTION ? 'bundle.window.min.js' : 'bundle.window.js',
+        library: 'BigchainDB',
+        libraryTarget: 'window',
+        path: PATHS.BUNDLE,
+    },
+    {
+        filename: PRODUCTION ? 'bundle.umd.min.js' : 'bundle.umd.js',
+        library: 'bigchaindb-driver',
+        libraryTarget: 'umd',
+        path: PATHS.BUNDLE,
+    },
+    {
+        filename: PRODUCTION ? 'bundle.cjs.min.js' : 'bundle.cjs.js',
+        library: 'bigchaindb-driver',
+        libraryTarget: 'commonjs',
+        path: PATHS.BUNDLE,
+    },
+    {
+        filename: PRODUCTION ? 'bundle.cjs2.min.js' : 'bundle.cjs2.js',
+        library: 'bigchaindb-driver',
+        libraryTarget: 'commonjs2',
+        path: PATHS.BUNDLE,
+    },
+    {
+        filename: PRODUCTION ? 'bundle.amd.min.js' : 'bundle.amd.js',
+        library: 'bigchaindb-driver',
+        libraryTarget: 'amd',
+        path: PATHS.BUNDLE,
+    }
+]
+
 
 /** PLUGINS **/
 const PLUGINS = [
@@ -40,17 +73,8 @@ if (PRODUCTION) {
     PLUGINS.push(...PROD_PLUGINS)
 }
 
-
-/** EXPORTED WEBPACK CONFIG **/
-const config = {
+const configBoilerplate = {
     entry: [PATHS.ENTRY],
-
-    output: {
-        filename: PRODUCTION ? 'bundle.min.js' : 'bundle.js',
-        library: 'js-bigchaindb-driver',
-        libraryTarget: 'umd',
-        path: PATHS.BUNDLE,
-    },
 
     devtool: PRODUCTION ? '#source-map' : '#inline-source-map',
 
@@ -76,5 +100,12 @@ const config = {
         ],
     },
 }
+
+/** EXPORTED WEBPACK CONFIG **/
+const config = OUTPUTS.map(output => {
+    const configCopy = Object.assign({}, configBoilerplate)
+    configCopy.output = output
+    return configCopy
+})
 
 module.exports = config
