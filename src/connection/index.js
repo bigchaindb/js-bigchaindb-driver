@@ -7,7 +7,7 @@ export default class Connection {
         this.headers = headers
     }
 
-    getApiUrls(endpoints) {
+    getApiUrls(endpoint) {
         return this.path + {
             'blocks': 'blocks',
             'blocksDetail': 'blocks/%(blockId)s',
@@ -17,7 +17,7 @@ export default class Connection {
             'transactionsDetail': 'transactions/%(transactionId)s',
             'assets': 'assets',
             'votes': 'votes'
-        }[endpoints]
+        }[endpoint]
     }
 
     _req(path, options = {}) {
