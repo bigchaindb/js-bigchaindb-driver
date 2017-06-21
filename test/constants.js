@@ -2,8 +2,8 @@ import test from 'ava'
 import { Transaction, Ed25519Keypair } from '../src'
 // TODO: Find out if ava has something like conftest, if so put this there.
 
-// NOTE: We cast `Math.random()` to a string, as sometimes Javascript simply
-// yields a slightly different float during runtime, lol
+// NOTE: It's safer to cast `Math.random()` to a string, to avoid differences
+// in "float interpretation" between languages (e.g. JavaScript and Python)
 export function asset() { return { message: `${Math.random()}` } }
 export const metaData = { message: 'metaDataMessage' }
 
