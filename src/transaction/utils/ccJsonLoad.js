@@ -19,7 +19,7 @@ export default function ccJsonLoad(conditionJson) {
     } else {
         let fulfillment
 
-        if (conditionJson.type_id === 2) {
+        if (conditionJson.type === 'threshold-sha-256') {
             fulfillment = new cc.ThresholdSha256()
             fulfillment.threshold = conditionJson.threshold
             conditionJson.subfulfillments.forEach((subfulfillmentJson) => {
@@ -32,13 +32,8 @@ export default function ccJsonLoad(conditionJson) {
             })
         }
 
-        if (conditionJson.type_id === 0) {
-            fulfillment = new cc.PreimageSha256()
-            fulfillment.preimage = new Buffer(conditionJson.preimage)
-        }
-
-        if (conditionJson.type_id === 4) {
-            fulfillment = new cc.Ed25519()
+        if (conditionJson.type === 'ed25519-sha-256') {
+            fulfillment = new cc.Ed25519Sha256()
             fulfillment.publicKey = new Buffer(base58.decode(conditionJson.public_key))
             if (conditionJson.signature) {
                 fulfillment.signature = new Buffer(base58.decode(conditionJson.signature))
