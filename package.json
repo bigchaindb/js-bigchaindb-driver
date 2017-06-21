@@ -28,7 +28,7 @@
     "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov"
   },
   "lint-staged": {
-    "*.js": ["npm run lint"]
+    "*.js": ["eslint"]
   },
   "devDependencies": {
     "ava": "^0.19.1",
