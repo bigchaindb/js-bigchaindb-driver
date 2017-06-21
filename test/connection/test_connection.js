@@ -18,7 +18,7 @@ test('generate API URLS', t => {
         'transactionsDetail': 'transactions/%(transactionId)s',
         'assets': 'assets',
     }
-    Object.keys(endpoints).forEach((endpointName) => {
+    Object.keys(endpoints).forEach(endpointName => {
         const url = conn.getApiUrls(endpointName)
         const expected = API_PATH + endpoints[endpointName]
         t.is(url, expected)
