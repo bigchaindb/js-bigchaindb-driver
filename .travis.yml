@@ -21,7 +21,7 @@ before_install:
       bigchaindb/bigchaindb:master
       start
     - gem install lolcat
-    - sudo apt-get install cowsay
+    - gem install cowsay
     - npm install -g codecov
 
 script: yarn test
