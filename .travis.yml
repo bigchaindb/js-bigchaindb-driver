@@ -20,7 +20,6 @@ before_install:
       -e BIGCHAINDB_DATABASE_HOST=172.17.0.1
       bigchaindb/bigchaindb:master
       start
-    - gem install lolcat
     - gem install cowsay
     - npm install -g codecov
 
