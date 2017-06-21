@@ -7,18 +7,17 @@ export default class Connection {
         this.headers = headers
     }
 
-    getApiUrls(endpoints) {
-        // TODO: Use camel case
-        return {
-            'blocks': `${this.path}blocks`,
-            'blocks_detail': `${this.path}blocks/%(blockId)s`,
-            'outputs': `${this.path}outputs`,
-            'statuses': `${this.path}statuses`,
-            'transactions': `${this.path}transactions`,
-            'transactions_detail': `${this.path}transactions/%(txId)s`,
-            'search_assets': `${this.path}assets`,
-            'votes': `${this.path}votes`
-        }[endpoints]
+    getApiUrls(endpoint) {
+        return this.path + {
+            'blocks': 'blocks',
+            'blocksDetail': 'blocks/%(blockId)s',
+            'outputs': 'outputs',
+            'statuses': 'statuses',
+            'transactions': 'transactions',
+            'transactionsDetail': 'transactions/%(transactionId)s',
+            'assets': 'assets',
+            'votes': 'votes'
+        }[endpoint]
     }
 
     _req(path, options = {}) {
@@ -32,7 +31,7 @@ export default class Connection {
      * @param blockId
      */
     getBlock(blockId) {
-        return this._req(this.getApiUrls('blocks_detail'), {
+        return this._req(this.getApiUrls('blocksDetail'), {
             urlTemplateSpec: {
                 blockId
             }
@@ -41,37 +40,37 @@ export default class Connection {
 
     /**
      * @public
-     * @param tx_id
+     * @param transactionId
      */
-    getStatus(tx_id) { // eslint-disable-line camelcase
+    getStatus(transactionId) {
         return this._req(this.getApiUrls('statuses'), {
             query: {
-                tx_id
+                transaction_id: transactionId
             }
         })
     }
 
     /**
      * @public
-     * @param txId
+     * @param transactionId
      */
-    getTransaction(txId) {
-        return this._req(this.getApiUrls('transactions_detail'), {
+    getTransaction(transactionId) {
+        return this._req(this.getApiUrls('transactionsDetail'), {
             urlTemplateSpec: {
-                txId
+                transactionId
             }
         })
     }
 
     /**
      * @public
-     * @param tx_id
+     * @param transactionId
      * @param status
      */
-    listBlocks({ tx_id, status }) {
+    listBlocks(transactionId, status) {
         return this._req(this.getApiUrls('blocks'), {
             query: {
-                tx_id,
+                transaction_id: transactionId,
                 status
             }
         })
@@ -79,28 +78,33 @@ export default class Connection {
 
     /**
      * @public
-     * @param public_key
-     * @param unspent
+     * @param publicKey
+     * @param spent
      * @param onlyJsonResponse
      */
-    listOutputs({ public_key, unspent }, onlyJsonResponse = true) {
+    listOutputs(publicKey, spent, onlyJsonResponse = true) {
+        const query = {
+            public_key: publicKey
+        }
+        // NOTE: If `spent` is not defined, it must not be included in the
+        // query parameters.
+        if (spent !== undefined) {
+            query.spent = spent.toString()
+        }
         return this._req(this.getApiUrls('outputs'), {
-            query: {
-                public_key,
-                unspent
-            }
+            query
         }, onlyJsonResponse)
     }
 
     /**
      * @public
-     * @param asset_id
+     * @param assetId
      * @param operation
      */
-    listTransactions({ asset_id, operation }) {
+    listTransactions(assetId, operation) {
         return this._req(this.getApiUrls('transactions'), {
             query: {
-                asset_id,
+                asset_id: assetId,
                 operation
             }
         })
@@ -108,12 +112,12 @@ export default class Connection {
 
     /**
      * @public
-     * @param block_id
+     * @param blockId
      */
-    listVotes(block_id) { // eslint-disable-line camelcase
+    listVotes(blockId) {
         return this._req(this.getApiUrls('votes'), {
             query: {
-                block_id
+                block_id: blockId
             }
         })
     }
@@ -128,12 +132,10 @@ export default class Connection {
             const timer = setInterval(() => {
                 this.getStatus(txId)
                     .then((res) => {
-                        console.log('Fetched transaction status:', res) // eslint-disable-line no-console
                         if (res.status === 'valid') {
                             clearInterval(timer)
                             this.getTransaction(txId)
                                 .then((res_) => {
-                                    console.log('Fetched transaction:', res_) // eslint-disable-line no-console
                                     resolve(res_)
                                 })
                         }
@@ -162,12 +164,12 @@ export default class Connection {
     /**
      * @public
      *
-     * @param transaction
+     * @param search
      */
-    searchAssets(query) {
-        return this.req(this.getApiUrls('search_assets'), {
+    searchAssets(search) {
+        return this._req(this.getApiUrls('assets'), {
             query: {
-                text_search: query
+                search
             }
         })
     }
