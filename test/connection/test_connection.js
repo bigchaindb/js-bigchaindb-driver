@@ -59,7 +59,7 @@ test('Get block for a block id', t => {
 })
 
 
-test('Get status for a transaction', t => {
+test('Get status for a transaction id', t => {
     const expectedPath = 'path'
     const transactionId = 'abc'
 
@@ -104,6 +104,27 @@ test('Get list of blocks for a transaction id', t => {
             query: {
                 transaction_id: transactionId,
                 status
+            }
+        }
+    ))
+})
+
+
+test('Get list of transactions for an asset id', t => {
+    const expectedPath = 'path'
+    const assetId = 'abc'
+    const operation = 'operation'
+
+    conn._req = sinon.spy()
+    conn.getApiUrls = sinon.stub().returns(expectedPath)
+
+    conn.listTransactions(assetId, operation)
+    t.truthy(conn._req.calledWith(
+        expectedPath,
+        {
+            query: {
+                asset_id: assetId,
+                operation
             }
         }
     ))

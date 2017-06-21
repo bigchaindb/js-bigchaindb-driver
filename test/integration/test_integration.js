@@ -294,3 +294,24 @@ test('Search blocks containing a transaction', t => {
         ))
         .then(transactions => t.truthy(transactions.length === 1))
 })
+
+
+test('Search transaction containing an asset', t => {
+    const conn = new Connection(API_PATH)
+
+    const createTx = Transaction.makeCreateTransaction(
+        asset(),
+        metaData,
+        [aliceOutput],
+        alice.publicKey
+    )
+    const createTxSigned = Transaction.signTransaction(
+        createTx,
+        alice.privateKey
+    )
+
+    return conn.postTransaction(createTxSigned)
+        .then(({ id }) => conn.pollStatusAndFetchTransaction(id, 'CREATE'))
+        .then(({ id }) => conn.listTransactions(id))
+        .then(transactions => t.truthy(transactions.length === 1))
+})

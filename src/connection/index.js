@@ -98,14 +98,13 @@ export default class Connection {
 
     /**
      * @public
-     * @param asset_id
+     * @param assetId
      * @param operation
      */
-    // TODO: Use camel case for parameters
-    listTransactions({ asset_id, operation }) {
+    listTransactions(assetId, operation) {
         return this._req(this.getApiUrls('transactions'), {
             query: {
-                asset_id,
+                asset_id: assetId,
                 operation
             }
         })
