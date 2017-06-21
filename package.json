@@ -24,8 +24,11 @@
     "release-minor": "./node_modules/release-it/bin/release.js minor --src.tagName='v%s' --github.release --npm.publish --non-interactive",
     "release-major": "./node_modules/release-it/bin/release.js major --src.tagName='v%s' --github.release --npm.publish --non-interactive",
     "prepublishOnly": "npm update && npm run build",
-    "precommit": "npm run lint",
+    "precommit": "lint-staged",
     "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov"
+  },
+  "lint-staged": {
+    "*.js": ["eslint"]
   },
   "devDependencies": {
     "ava": "^0.19.1",
@@ -46,6 +49,7 @@
     "eslint-config-ascribe": "^3.0.4",
     "eslint-plugin-import": "^2.2.0",
     "husky": "^0.13.4",
+    "lint-staged": "^4.0.0",
     "nyc": "^11.0.2",
     "release-it": "^2.7.3",
     "rimraf": "^2.5.4",
