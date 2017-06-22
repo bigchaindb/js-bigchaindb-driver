@@ -308,3 +308,8 @@ test('Search transaction containing an asset', t => {
         .then(({ id }) => conn.listTransactions(id))
         .then(transactions => t.truthy(transactions.length === 1))
 })
+
+
+test('Content-Type cannot be set', t => {
+    t.throws(() => new Connection(API_PATH, { 'Content-Type': 'application/json' }), Error)
+})

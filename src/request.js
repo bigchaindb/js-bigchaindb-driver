@@ -24,6 +24,7 @@ export default function request(url, config = {}, onlyJsonResponse = true) {
             'Content-Type': 'application/json'
         })
     }
+
     if (!url) {
         return Promise.reject(new Error('Request was not given a url.'))
     }
