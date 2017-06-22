@@ -16,31 +16,31 @@ const PATHS = {
 
 const OUTPUTS = [
     {
-        filename: PRODUCTION ? 'bundle.window.min.js' : 'bundle.window.js',
+        filename: PRODUCTION ? 'bigchaindb-driver.window.min.js' : 'bigchaindb-driver.window.js',
         library: 'BigchainDB',
         libraryTarget: 'window',
         path: PATHS.BUNDLE,
     },
     {
-        filename: PRODUCTION ? 'bundle.umd.min.js' : 'bundle.umd.js',
+        filename: PRODUCTION ? 'bigchaindb-driver.umd.min.js' : 'bigchaindb-driver.umd.js',
         library: 'bigchaindb-driver',
         libraryTarget: 'umd',
         path: PATHS.BUNDLE,
     },
     {
-        filename: PRODUCTION ? 'bundle.cjs.min.js' : 'bundle.cjs.js',
+        filename: PRODUCTION ? 'bigchaindb-driver.cjs.min.js' : 'bigchaindb-driver.cjs.js',
         library: 'bigchaindb-driver',
         libraryTarget: 'commonjs',
         path: PATHS.BUNDLE,
     },
     {
-        filename: PRODUCTION ? 'bundle.cjs2.min.js' : 'bundle.cjs2.js',
+        filename: PRODUCTION ? 'bigchaindb-driver.cjs2.min.js' : 'bigchaindb-driver.cjs2.js',
         library: 'bigchaindb-driver',
         libraryTarget: 'commonjs2',
         path: PATHS.BUNDLE,
     },
     {
-        filename: PRODUCTION ? 'bundle.amd.min.js' : 'bundle.amd.js',
+        filename: PRODUCTION ? 'bigchaindb-driver.amd.min.js' : 'bigchaindb-driver.amd.js',
         library: 'bigchaindb-driver',
         libraryTarget: 'amd',
         path: PATHS.BUNDLE,
