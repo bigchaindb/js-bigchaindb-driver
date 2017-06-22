@@ -17,14 +17,14 @@
 
 ## Contents
 
-* [Node.js Installation and Usage](#node.js-installation-and-usage)
+* [Installation and Usage with package managers (npm/yarn)](#installation-and-usage-with-package-managers-npmyarn)
    * [Example: Create a transaction](#example-create-a-transaction)
-* [Browser Installation and Usage](#browser-installation-and-usage)
+* [Use a pre-built image (browser only)](#use-a-pre-built-image-browser-only)
 * [Documentation](#bigchaindb-documentation)
 * [Authors](#authors)
 * [License](#license)
 
-## Node.js Installation and Usage
+## Installation and Usage with package managers (npm/yarn)
 
 ```bash
 npm install bigchaindb-driver
@@ -75,7 +75,7 @@ conn.postTransaction(txSigned)
     .then((res) => console.log('Transaction status:', res.status))
 ```
 
-## Browser Installation and Usage
+## Use a pre-built image (browser only)
 
 ```html
 <!DOCTYPE html>
