@@ -9,7 +9,7 @@ function makeTransactionTemplate() {
         'inputs': [],
         'metadata': null,
         'asset': null,
-        'version': '0.9',
+        'version': '1.0',
     }
 }
 
