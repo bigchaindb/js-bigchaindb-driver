@@ -9,7 +9,8 @@ import clone from 'clone'
  * @return {string} a canonically serialized Transaction
  */
 export default function serializeTransactionIntoCanonicalString(transaction) {
-    // BigchainDB signs fulfillments by serializing transactions into a "canonical" format where
+    // BigchainDB signs fulfillments by serializing transactions into a
+    // "canonical" format where
     const tx = clone(transaction)
     // TODO: set fulfillments to null
     // Sort the keys
