@@ -84,7 +84,7 @@ conn.postTransaction(txSigned)
         <meta charset="utf-8">
         <title>HTML5 boilerplate – all you really need…</title>
         <!-- Adjust version to your needs -->
-        <script src="https://unpkg.com/bigchaindb-driver@0.1.1/dist/browser/bundle.window.min.js"></script>
+        <script src="https://unpkg.com/bigchaindb-driver@0.1.1/dist/browser/bigchaindb-driver.window.min.js"></script>
         <script>
 
             // BigchainDB server instance or IPDB (e.g. https://test.ipdb.io/api/v1/)
