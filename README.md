@@ -17,21 +17,20 @@
 
 ## Contents
 
-* [Installation](#installation)
+* [Node.js Installation and Usage](#node.js-installation-and-usage)
    * [Example: Create a transaction](#example-create-a-transaction)
+* [Browser Installation and Usage](#browser-installation-and-usage)
 * [Documentation](#bigchaindb-documentation)
 * [Authors](#authors)
 * [License](#license)
 
-## Node.js
-
-### Installation
+## Node.js Installation and Usage
 
 ```bash
 npm install bigchaindb-driver
 ```
 
-#### Example: Create a transaction
+### Example: Create a transaction
 
 ```js
 import * as driver from 'bigchaindb-driver'
@@ -76,9 +75,7 @@ conn.postTransaction(txSigned)
     .then((res) => console.log('Transaction status:', res.status))
 ```
 
-## Browser
-
-### Installation and Usage
+## Browser Installation and Usage
 
 ```html
 <!DOCTYPE html>
@@ -128,13 +125,11 @@ conn.postTransaction(txSigned)
             conn.postTransaction(txSigned)
                 .then(() => conn.getStatus(txSigned.id))
                 .then((res) => console.log('Transaction status:', res.status))
-                    </script>
+            // Check console for the transaction's status
+        </script>
     </head>
-
     <body id="home">
-
     <h1>Hello BigchainDB</h1>
-
     </body>
 </html>
 ```
