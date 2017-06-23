@@ -1,10 +1,19 @@
 import request from '../request'
 
 
+const HEADER_BLACKLIST = ['content-type']
+
+
 export default class Connection {
-    constructor(path, headers) {
+    constructor(path, headers = {}) {
         this.path = path
-        this.headers = headers
+        this.headers = Object.assign({}, headers)
+
+        Object.keys(headers).forEach(header => {
+            if (HEADER_BLACKLIST.includes(header.toLowerCase())) {
+                throw new Error(`Header ${header} is reserved and cannot be set.`)
+            }
+        })
     }
 
     getApiUrls(endpoint) {

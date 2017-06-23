@@ -68,7 +68,7 @@ const tx = driver.Transaction.makeCreateTransaction(
 const txSigned = driver.Transaction.signTransaction(tx, alice.privateKey)
 
 // Send the transaction off to BigchainDB
-let conn = new driver.Connection(API_PATH, { 'Content-Type': 'application/json' })
+let conn = new driver.Connection(API_PATH)
 
 conn.postTransaction(txSigned)
     .then(() => conn.getStatus(txSigned.id))
@@ -120,7 +120,7 @@ conn.postTransaction(txSigned)
             const txSigned = BigchainDB.Transaction.signTransaction(tx, alice.privateKey)
 
             // Send the transaction off to BigchainDB
-            let conn = new BigchainDB.Connection(API_PATH, { 'Content-Type': 'application/json' })
+            let conn = new BigchainDB.Connection(API_PATH)
 
             conn.postTransaction(txSigned)
                 .then(() => conn.getStatus(txSigned.id))
