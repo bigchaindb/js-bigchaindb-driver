@@ -19,21 +19,34 @@ test('Ed25519 condition encoding', t => {
 
 test('Threshold condition encoding', t => {
     const publicKey = '4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS'
+    const ed25519 = Transaction.makeEd25519Condition(publicKey, false)
     const condition = Transaction.makeThresholdCondition(
-            1, [Transaction.makeEd25519Condition(publicKey, false)])
+            1, [ed25519, ed25519])
+    const output = Transaction.makeOutput(condition)
     const target = {
-        details: {
-            type: 'threshold-sha-256',
-            threshold: 1,
-            subfulfillments: [{
-                type: 'ed25519-sha-256',
-                public_key: publicKey,
-                signature: null,
-            }]
+        condition: {
+            details: {
+                type: 'threshold-sha-256',
+                threshold: 1,
+                subfulfillments: [
+                    {
+                        type: 'ed25519-sha-256',
+                        public_key: publicKey,
+                        signature: null,
+                    },
+                    {
+                        type: 'ed25519-sha-256',
+                        public_key: publicKey,
+                        signature: null,
+                    }
+                ]
+            },
+            uri: 'ni:///sha-256;xTeBhQj7ae5Tym7cp83fwtkesQnhdwNwDEMIYwnf2g0?fpt=threshold-sha-256&cost=133120&subtypes=ed25519-sha-256',
         },
-        uri: 'ni:///sha-256;VBIfZSoBprUQy-LVNAzaZ2q-eyWbrcPKtBg1PuNXIpQ?fpt=threshold-sha-256&cost=132096&subtypes=ed25519-sha-256'
+        amount: '1',
+        public_keys: [publicKey]
     }
-    t.deepEqual(target, condition)
+    t.deepEqual(target, output)
 })
 
 

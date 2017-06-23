@@ -17,6 +17,7 @@ import {
 test('Create valid output with default amount', t => {
     const condition = {
         details: {
+            type: 'ed25519-sha-256',
             public_key: 'abc'
         }
     }
@@ -33,6 +34,7 @@ test('Create valid output with default amount', t => {
 test('Create valid output with custom amount', t => {
     const condition = {
         details: {
+            type: 'ed25519-sha-256',
             public_key: 'abc'
         }
     }

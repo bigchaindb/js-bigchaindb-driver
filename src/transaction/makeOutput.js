@@ -10,10 +10,20 @@ export default function makeOutput(condition, amount = '1') {
     if (typeof amount !== 'string') {
         throw new TypeError('`amount` must be of type string')
     }
+    const publicKeys = []
+    const getPublicKeys = details => {
+        if (details.type === 'ed25519-sha-256') {
+            if (!publicKeys.includes(details.public_key)) {
+                publicKeys.push(details.public_key)
+            }
+        } else if (details.type === 'threshold-sha-256') {
+            details.subfulfillments.map(getPublicKeys)
+        }
+    }
+    getPublicKeys(condition.details)
     return {
-        'amount': amount,
         condition,
-        'public_keys': condition.details.hasOwnProperty('public_key') ?
-            [condition.details.public_key] : [],
+        'amount': amount,
+        'public_keys': publicKeys,
     }
 }
