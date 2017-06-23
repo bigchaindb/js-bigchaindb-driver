@@ -11,7 +11,7 @@
   "license": "Apache-2.0",
   "author": "BigchainDB",
   "main": "./dist/node/index.js",
-  "browser": "./dist/browser/bundle.min.js",
+  "browser": "./dist/browser/bigchaindb-driver.cjs2.min.js",
   "scripts": {
     "lint": "eslint ./",
     "build": "npm run clean && npm run build:cjs && npm run build:dist",
@@ -29,7 +29,9 @@
     "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov"
   },
   "lint-staged": {
-    "*.js": ["eslint"]
+    "*.js": [
+      "eslint"
+    ]
   },
   "devDependencies": {
     "ava": "^0.19.1",

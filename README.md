@@ -17,13 +17,14 @@
 
 ## Contents
 
-* [Installation](#installation)
+* [Installation and Usage with package managers (npm/yarn)](#installation-and-usage-with-package-managers-npmyarn)
    * [Example: Create a transaction](#example-create-a-transaction)
+* [Use a pre-built image (browser only)](#use-a-pre-built-image-browser-only)
 * [Documentation](#bigchaindb-documentation)
 * [Authors](#authors)
 * [License](#license)
 
-## Installation
+## Installation and Usage with package managers (npm/yarn)
 
 ```bash
 npm install bigchaindb-driver
@@ -72,6 +73,65 @@ let conn = new driver.Connection(API_PATH, { 'Content-Type': 'application/json' 
 conn.postTransaction(txSigned)
     .then(() => conn.getStatus(txSigned.id))
     .then((res) => console.log('Transaction status:', res.status))
+```
+
+## Use a pre-built image (browser only)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>HTML5 boilerplate – all you really need…</title>
+        <!-- Adjust version to your needs -->
+        <script src="https://unpkg.com/bigchaindb-driver@0.1.1/dist/browser/bigchaindb-driver.window.min.js"></script>
+        <script>
+
+            // BigchainDB server instance or IPDB (e.g. https://test.ipdb.io/api/v1/)
+            const API_PATH = 'http://localhost:9984/api/v1/'
+
+            // Create a new user with a public-private key pair
+            // (or a whole bunch of them, nobody's counting)
+            const alice = new BigchainDB.Ed25519Keypair()
+
+            // Construct a transaction payload
+            // `BigchainDB.Transaction.makeCreateTransaction()`: create a new asset
+            // `BigchainDB.Transaction.makeTransferTransaction()`: transfer an existing asset
+            const tx = BigchainDB.Transaction.makeCreateTransaction(
+                { assetMessage: 'My very own asset...' },
+                { metaDataMessage: 'wrapped in a transaction' },
+                // A transaction needs an output
+                // `BigchainDB.Transaction.makeOutput()`: requires a crypto-condition
+                // `BigchainDB.Transaction.makeEd25519Condition()`: simple public key output
+                [ BigchainDB.Transaction.makeOutput(
+                        BigchainDB.Transaction.makeEd25519Condition(alice.publicKey))
+                ],
+                alice.publicKey
+            )
+
+            // Optional: You've got everything you need, except for an asset
+            // and metadata. Maybe define them here, any JSON-serializable object
+            // will do
+
+            // Ok, now that you have a transaction, you need to *sign* it
+            // cause, you know... cryptography and ¯\_(ツ)_/¯
+
+            // Sign/fulfill the transaction with private keys
+            const txSigned = BigchainDB.Transaction.signTransaction(tx, alice.privateKey)
+
+            // Send the transaction off to BigchainDB
+            let conn = new BigchainDB.Connection(API_PATH, { 'Content-Type': 'application/json' })
+
+            conn.postTransaction(txSigned)
+                .then(() => conn.getStatus(txSigned.id))
+                .then((res) => console.log('Transaction status:', res.status))
+            // Check console for the transaction's status
+        </script>
+    </head>
+    <body id="home">
+    <h1>Hello BigchainDB</h1>
+    </body>
+</html>
 ```
 
 ## BigchainDB Documentation
