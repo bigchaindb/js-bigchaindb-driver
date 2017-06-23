@@ -33,46 +33,40 @@ npm install bigchaindb-driver
 ### Example: Create a transaction
 
 ```js
-import * as driver from 'bigchaindb-driver'
+const driver = require('bigchaindb-driver')
 
 // BigchainDB server instance or IPDB (e.g. https://test.ipdb.io/api/v1/)
 const API_PATH = 'http://localhost:9984/api/v1/'
 
-// Create a new user with a public-private key pair
-// (or a whole bunch of them, nobody's counting)
+// Create a new keypair.
 const alice = new driver.Ed25519Keypair()
 
 // Construct a transaction payload
-// `driver.Transaction.makeCreateTransaction()`: create a new asset
-// `driver.Transaction.makeTransferTransaction()`: transfer an existing asset
 const tx = driver.Transaction.makeCreateTransaction(
-    { assetMessage: 'My very own asset...' },
-    { metaDataMessage: 'wrapped in a transaction' },
+    // Define the asset to store, in this example it is the current temperature
+    // (in Celsius) for the city of Berlin.
+    { city: 'Berlin, DE', temperature: 22, datetime: new Date().toString() },
+
+    // Metadata contains information about the transaction itself
+    // (can be `null` if not needed)
+    { what: 'My first BigchainDB transaction' },
+
     // A transaction needs an output
-    // `driver.Transaction.makeOutput()`: requires a crypto-condition
-    // `driver.Transaction.makeEd25519Condition()`: simple public key output
     [ driver.Transaction.makeOutput(
             driver.Transaction.makeEd25519Condition(alice.publicKey))
     ],
     alice.publicKey
 )
 
-// Optional: You've got everything you need, except for an asset
-// and metadata. Maybe define them here, any JSON-serializable object
-// will do
-
-// Ok, now that you have a transaction, you need to *sign* it
-// cause, you know... cryptography and ¯\_(ツ)_/¯
-
-// Sign/fulfill the transaction with private keys
+// Sign the transaction with private keys
 const txSigned = driver.Transaction.signTransaction(tx, alice.privateKey)
 
 // Send the transaction off to BigchainDB
-let conn = new driver.Connection(API_PATH)
+const conn = new driver.Connection(API_PATH)
 
 conn.postTransaction(txSigned)
-    .then(() => conn.getStatus(txSigned.id))
-    .then((res) => console.log('Transaction status:', res.status))
+    .then(() => conn.pollStatusAndFetchTransaction(txSigned.id))
+    .then(retrievedTx => console.log('Transaction', retrievedTx.id, 'successfully posted.'))
 ```
 
 ## Use a pre-built image (browser only)
@@ -82,54 +76,54 @@ conn.postTransaction(txSigned)
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>HTML5 boilerplate – all you really need…</title>
+        <title>BigchainDB boilerplate</title>
         <!-- Adjust version to your needs -->
-        <script src="https://unpkg.com/bigchaindb-driver@0.1.1/dist/browser/bigchaindb-driver.window.min.js"></script>
-        <script>
+        <script src="https://unpkg.com/bigchaindb-driver@0.2.0/dist/browser/bigchaindb-driver.window.min.js"></script>
 
+        <script>
             // BigchainDB server instance or IPDB (e.g. https://test.ipdb.io/api/v1/)
             const API_PATH = 'http://localhost:9984/api/v1/'
 
-            // Create a new user with a public-private key pair
-            // (or a whole bunch of them, nobody's counting)
+            // Create a new keypair.
             const alice = new BigchainDB.Ed25519Keypair()
 
             // Construct a transaction payload
-            // `BigchainDB.Transaction.makeCreateTransaction()`: create a new asset
-            // `BigchainDB.Transaction.makeTransferTransaction()`: transfer an existing asset
             const tx = BigchainDB.Transaction.makeCreateTransaction(
-                { assetMessage: 'My very own asset...' },
-                { metaDataMessage: 'wrapped in a transaction' },
+                // Define the asset to store, in this example it is the current temperature
+                // (in Celsius) for the city of Berlin.
+                { city: 'Berlin, DE', temperature: 22, datetime: new Date().toString() },
+
+                // Metadata contains information about the transaction itself
+                // (can be `null` if not needed)
+                { what: 'My first BigchainDB transaction' },
+
                 // A transaction needs an output
-                // `BigchainDB.Transaction.makeOutput()`: requires a crypto-condition
-                // `BigchainDB.Transaction.makeEd25519Condition()`: simple public key output
                 [ BigchainDB.Transaction.makeOutput(
                         BigchainDB.Transaction.makeEd25519Condition(alice.publicKey))
                 ],
                 alice.publicKey
             )
 
-            // Optional: You've got everything you need, except for an asset
-            // and metadata. Maybe define them here, any JSON-serializable object
-            // will do
-
-            // Ok, now that you have a transaction, you need to *sign* it
-            // cause, you know... cryptography and ¯\_(ツ)_/¯
-
-            // Sign/fulfill the transaction with private keys
+            // Sign the transaction with private keys
             const txSigned = BigchainDB.Transaction.signTransaction(tx, alice.privateKey)
 
             // Send the transaction off to BigchainDB
             let conn = new BigchainDB.Connection(API_PATH)
 
             conn.postTransaction(txSigned)
-                .then(() => conn.getStatus(txSigned.id))
-                .then((res) => console.log('Transaction status:', res.status))
+                .then(() => conn.pollStatusAndFetchTransaction(txSigned.id))
+                .then(res => {
+                    const elem = document.getElementById('lastTransaction')
+                    elem.href = API_PATH + 'transactions/' + txSigned.id
+                    elem.innerText = txSigned.id
+                    console.log('Transaction', txSigned.id, 'accepted')
+                })
             // Check console for the transaction's status
         </script>
     </head>
     <body id="home">
-    <h1>Hello BigchainDB</h1>
+        <h1>Hello BigchainDB</h1>
+        <p>Your transaction id is: <a id="lastTransaction" target="_blank"><em>processing</em></a></p>
     </body>
 </html>
 ```
