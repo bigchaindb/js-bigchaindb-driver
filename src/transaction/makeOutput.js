@@ -13,7 +13,7 @@ export default function makeOutput(condition, amount = '1') {
     const publicKeys = []
     const getPublicKeys = details => {
         if (details.type === 'ed25519-sha-256') {
-            if (publicKeys.indexOf(details.public_key) === -1) {
+            if (!publicKeys.includes(details.public_key)) {
                 publicKeys.push(details.public_key)
             }
         } else if (details.type === 'threshold-sha-256') {
