@@ -9,7 +9,6 @@ test('Ed25519 condition encoding', t => {
         details: {
             type: 'ed25519-sha-256',
             public_key: publicKey,
-            signature: null,
         },
         uri: 'ni:///sha-256;uLdVX7FEjLWVDkAkfMAkEqPPwFqZj7qfiGE152t_x5c?fpt=ed25519-sha-256&cost=131072'
     }
@@ -28,16 +27,14 @@ test('Threshold condition encoding', t => {
             details: {
                 type: 'threshold-sha-256',
                 threshold: 1,
-                subfulfillments: [
+                subconditions: [
                     {
                         type: 'ed25519-sha-256',
                         public_key: publicKey,
-                        signature: null,
                     },
                     {
                         type: 'ed25519-sha-256',
                         public_key: publicKey,
-                        signature: null,
                     }
                 ]
             },
