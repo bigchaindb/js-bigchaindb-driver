@@ -85,7 +85,7 @@ test('Create TRANSFER transaction based on CREATE transaction', t => {
         [aliceOutput],
         [makeInputTemplate(
             [alice.publicKey],
-            { output: 0, transaction_id: createTx.id }
+            { output_index: 0, transaction_id: createTx.id }
         )]
     ]
 
@@ -113,7 +113,7 @@ test('Create TRANSFER transaction based on TRANSFER transaction', t => {
         [aliceOutput],
         [makeInputTemplate(
             [alice.publicKey],
-            { output: 0, transaction_id: transferTx.id }
+            { output_index: 0, transaction_id: transferTx.id }
         )]
     ]
 

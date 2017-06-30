@@ -33,7 +33,7 @@ export default function makeTransferTransaction(
     const inputs = outputIndices.map((outputIndex) => {
         const fulfilledOutput = unspentTransaction.outputs[outputIndex]
         const transactionLink = {
-            'output': outputIndex,
+            'output_index': outputIndex,
             'transaction_id': unspentTransaction.id,
         }
 
