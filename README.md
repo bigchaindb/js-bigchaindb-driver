@@ -13,7 +13,7 @@
 | BigchainDB Server | BigchainDB JavaScript Driver |
 | ----------------- |------------------------------|
 | `0.10`            | `0.1.x`                      |
-| `1.0`             | `0.2.x`                      |
+| `1.0`             | `0.3.x`                      |
 
 
 ## Contents
