@@ -76,7 +76,7 @@
     "query-string": "^4.3.4",
     "sprintf-js": "^1.0.3",
     "tweetnacl": "^1.0.0",
-    "yarn": "^0.24.5"
+    "yarn": "^0.27.5"
   },
   "keywords": [
     "bigchaindb",
