@@ -30,12 +30,8 @@ export default function request(url, config = {}, onlyJsonResponse = true) {
     }
 
     return baseRequest(apiUrl, requestConfig)
-        .then((res) => onlyJsonResponse ? res.json() : // eslint-disable-line no-confusing-arrow
-        {
-            json: res.json(),
-            url: res.url
-        })
-        .catch((err) => {
+        .then(res => (onlyJsonResponse ? res.json() : { json: res.json(), url: res.url }))
+        .catch(err => {
             console.error(err)
             throw err
         })

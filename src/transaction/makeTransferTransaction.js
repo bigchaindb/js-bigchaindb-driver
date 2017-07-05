@@ -25,11 +25,11 @@ import makeTransaction from './makeTransaction'
 // TODO:
 // - Make `metadata` optional argument
 export default function makeTransferTransaction(
-        unspentTransaction,
-        metadata,
-        outputs,
-        ...outputIndices
-    ) {
+    unspentTransaction,
+    metadata,
+    outputs,
+    ...outputIndices
+) {
     const inputs = outputIndices.map((outputIndex) => {
         const fulfilledOutput = unspentTransaction.outputs[outputIndex]
         const transactionLink = {
@@ -42,7 +42,7 @@ export default function makeTransferTransaction(
 
     const assetLink = {
         'id': unspentTransaction.operation === 'CREATE' ? unspentTransaction.id
-                                                        : unspentTransaction.asset.id
+            : unspentTransaction.asset.id
     }
 
     return makeTransaction('TRANSFER', assetLink, metadata, outputs, inputs)
