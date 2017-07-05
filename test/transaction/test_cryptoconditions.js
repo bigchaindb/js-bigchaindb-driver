@@ -76,7 +76,10 @@ test('CryptoConditions JSON load', t => {
         subconditions: [{
             type: 'ed25519-sha-256',
             public_key: 'a'
+        },
+        {
+            hash: 'a'
         }],
     })
-    t.truthy(cond.subconditions.length === 1)
+    t.truthy(cond.subconditions.length === 2)
 })
