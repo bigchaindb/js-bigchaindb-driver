@@ -35,7 +35,7 @@ export default function ccJsonify(fulfillment) {
             'details': {
                 'type': 'threshold-sha-256',
                 'threshold': fulfillment.threshold,
-                'subfulfillments': fulfillment.subconditions.map((subcondition) => {
+                'subconditions': fulfillment.subconditions.map((subcondition) => {
                     const subconditionJson = ccJsonify(subcondition.body)
                     return subconditionJson.details
                 })
@@ -48,7 +48,6 @@ export default function ccJsonify(fulfillment) {
         jsonBody.details.type = 'ed25519-sha-256'
 
         if ('publicKey' in fulfillment) {
-            jsonBody.details.signature = null
             jsonBody.details.public_key = base58.encode(fulfillment.publicKey)
         }
     }

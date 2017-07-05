@@ -17,7 +17,7 @@ export default function makeOutput(condition, amount = '1') {
                 publicKeys.push(details.public_key)
             }
         } else if (details.type === 'threshold-sha-256') {
-            details.subfulfillments.map(getPublicKeys)
+            details.subconditions.map(getPublicKeys)
         }
     }
     getPublicKeys(condition.details)

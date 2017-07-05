@@ -22,12 +22,12 @@ export default function ccJsonLoad(conditionJson) {
         if (conditionJson.type === 'threshold-sha-256') {
             fulfillment = new cc.ThresholdSha256()
             fulfillment.threshold = conditionJson.threshold
-            conditionJson.subfulfillments.forEach((subfulfillmentJson) => {
-                const subfulfillment = ccJsonLoad(subfulfillmentJson)
-                if ('getConditionUri' in subfulfillment) {
-                    fulfillment.addSubfulfillment(subfulfillment)
-                } else if ('serializeUri' in subfulfillment) {
-                    fulfillment.addSubcondition(subfulfillment)
+            conditionJson.subconditions.forEach((subconditionJson) => {
+                const subcondition = ccJsonLoad(subconditionJson)
+                if ('getConditionUri' in subcondition) {
+                    fulfillment.addSubfulfillment(subcondition)
+                } else if ('serializeUri' in subcondition) {
+                    fulfillment.addSubcondition(subcondition)
                 }
             })
         }
@@ -35,9 +35,6 @@ export default function ccJsonLoad(conditionJson) {
         if (conditionJson.type === 'ed25519-sha-256') {
             fulfillment = new cc.Ed25519Sha256()
             fulfillment.publicKey = new Buffer(base58.decode(conditionJson.public_key))
-            if (conditionJson.signature) {
-                fulfillment.signature = new Buffer(base58.decode(conditionJson.signature))
-            }
         }
         return fulfillment
     }
