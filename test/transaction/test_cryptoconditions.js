@@ -67,3 +67,16 @@ test('Fulfillment correctly formed', t => {
                                     txCreate.outputs[0].condition.uri,
                                     new Buffer(msg)))
 })
+
+
+test('CryptoConditions JSON load', t => {
+    const cond = Transaction.ccJsonLoad({
+        type: 'threshold-sha-256',
+        threshold: 1,
+        subconditions: [{
+            type: 'ed25519-sha-256',
+            public_key: 'a'
+        }],
+    })
+    t.truthy(cond.subconditions.length === 1)
+})
