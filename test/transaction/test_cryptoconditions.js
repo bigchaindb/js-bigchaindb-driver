@@ -83,3 +83,16 @@ test('CryptoConditions JSON load', t => {
     })
     t.truthy(cond.subconditions.length === 2)
 })
+
+
+test('CryptoConditions JSON load', t => {
+    const cond = Transaction.ccJsonLoad({
+        type: 'threshold-sha-256',
+        threshold: 1,
+        subconditions: [{
+            type: 'ed25519-sha-256',
+            public_key: 'a'
+        }],
+    })
+    t.truthy(cond.subconditions.length === 1)
+})
