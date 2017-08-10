@@ -14,6 +14,7 @@ help:
 
 .PHONY: help Makefile
 
+<<<<<<< 6416718102ec9ad956a1e44936afc96350e09601
 .PHONY: clean
 clean:
 	rm -rf $(BUILDDIR)/*
@@ -30,3 +31,9 @@ html:
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+=======
+# Catch-all target: route all unknown targets to Sphinx using the new
+# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
+%: Makefile
+	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+>>>>>>> Moved docs from personal repo to official js Driver repo
