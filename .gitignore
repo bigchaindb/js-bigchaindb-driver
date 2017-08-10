@@ -19,4 +19,5 @@ coverage.lcov
 .nyc_output
 yarn.lock
 
-docs/_build/
+docs/build/
+docs/source/_build/
