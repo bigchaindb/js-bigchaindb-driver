@@ -20,4 +20,3 @@ coverage.lcov
 yarn.lock
 
 docs/build/
-docs/source/_build/
