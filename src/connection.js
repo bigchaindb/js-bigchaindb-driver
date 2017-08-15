@@ -89,8 +89,9 @@ export default class Connection {
      * @public
      * @param publicKey
      * @param spent
+     * @param onlyJsonResponse
      */
-    listOutputs(publicKey, spent) {
+    listOutputs(publicKey, spent, onlyJsonResponse = true) {
         const query = {
             public_key: publicKey
         }
@@ -101,7 +102,7 @@ export default class Connection {
         }
         return this._req(this.getApiUrls('outputs'), {
             query
-        })
+        }, onlyJsonResponse)
     }
 
     /**
@@ -158,6 +159,7 @@ export default class Connection {
 
     /**
      * @public
+     *
      * @param transaction
      */
     postTransaction(transaction) {
@@ -170,6 +172,7 @@ export default class Connection {
 
     /**
      * @public
+     *
      * @param search
      */
     searchAssets(search) {
