@@ -30,7 +30,7 @@ export default function request(url, config = {}) {
     }
 
     return baseRequest(apiUrl, requestConfig)
-        .then(res => (onlyJsonResponse ? res.json() : { json: res.json(), url: res.url }))
+        .then(res => (res.json()))
         .catch(err => {
             console.error(err)
             throw err
