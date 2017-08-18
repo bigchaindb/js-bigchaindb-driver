@@ -30,7 +30,7 @@ export default function request(url, config = {}) {
     }
 
     return baseRequest(apiUrl, requestConfig)
-        .then(res => (res.json()))
+        .then(res => res.json())
         .catch(err => {
             console.error(err)
             throw err
