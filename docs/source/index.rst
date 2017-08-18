@@ -19,7 +19,7 @@ Here is text and start quote::
 Guide
 ^^^^^
 
-Section test
+Section testing
 
 
 Indices and tables
