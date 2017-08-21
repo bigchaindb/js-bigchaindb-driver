@@ -12,7 +12,7 @@ const DEFAULT_REQUEST_CONFIG = {
  * Small wrapper around js-utility-belt's request that provides url resolving,
  * default settings, and response handling.
  */
-export default function request(url, config = {}, onlyJsonResponse = true) {
+export default function request(url, config = {}) {
     // Load default fetch configuration and remove any falsy query parameters
     const requestConfig = Object.assign({}, DEFAULT_REQUEST_CONFIG, config, {
         query: config.query && sanitize(config.query)
@@ -30,7 +30,7 @@ export default function request(url, config = {}, onlyJsonResponse = true) {
     }
 
     return baseRequest(apiUrl, requestConfig)
-        .then(res => (onlyJsonResponse ? res.json() : { json: res.json(), url: res.url }))
+        .then(res => res.json())
         .catch(err => {
             console.error(err)
             throw err
