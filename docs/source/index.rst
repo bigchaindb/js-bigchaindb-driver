@@ -7,6 +7,7 @@ BigchainDB Javascript Driver Documentation
 	← Back to All BigchainDB Docs <https://bigchaindb.readthedocs.io/en/latest/index.html>
 	readme
 	quickstart
+	usage
 
 
 Another header
