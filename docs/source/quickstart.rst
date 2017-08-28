@@ -1,4 +1,9 @@
-Quickstart
-==========
+=========================
+Quickstart / Installation
+=========================
 
-Quickstart comes here
+Installation with package manager npm:
+
+.. code-block:: bash
+
+    $ npm install bigchaindb-driver
