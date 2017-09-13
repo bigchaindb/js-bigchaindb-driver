@@ -26,6 +26,25 @@ Next, we define a constant containing the API path.
 
 	const API_PATH = 'http://localhost:9984/api/v1/'
 
+Create Connection With BigchainDB
+---------------------------------
+
+A simpel connection with BigchainDB can be established like this.
+
+.. code-block:: js
+
+	const conn = new driver.Connection(API_PATH)
+
+It is also possible to connect to a BigchainDB node of the IPDB test net.
+To do so, you need to pass the **app_id and app_key**. 
+
+.. code-block:: js 
+
+	let bdb = new driver.Connection('https://test.ipdb.io/api/v1/', { 
+		app_id: 'dgi829l9',
+		app_key: 'u008ik1bf83b43ce3a95uu0727e66fb9'
+	})
+
 Cryptographic Identities Generation
 -----------------------------------
 Alice and Bob are represented by public/private key pairs. The private key is
@@ -340,6 +359,6 @@ Divisible Assets
 ----------------
 
 
-TODO:
-- Add lexer: https://stackoverflow.com/questions/4259105/which-sphinx-code-block-language-to-use-for-json
-- Add divisible assets example
+.. TODO:
+.. - Add lexer: https://stackoverflow.com/questions/4259105/which-sphinx-code-block-language-to-use-for-json
+.. - Add divisible assets example
