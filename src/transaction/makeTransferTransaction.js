@@ -5,45 +5,41 @@ import makeTransaction from './makeTransaction'
 /**
  * @public
  * Generate a `TRANSFER` transaction holding the `asset`, `metadata`, and `outputs`, that fulfills
- * the `fulfilledOutputs` of `unspentTransaction`.
- * @param {object} unspentTransaction Previous Transaction you have control over (i.e. can fulfill
- *                                    its Output Condition)
- * @param {object} metadata Metadata for the Transaction
+ * the `fulfilledOutputs` of each `unspentTransaction`.
+ * @param {object[]} unspentOutputs Array of unspent Transactions' Outputs.
+ *                                  Each item contains Transaction itself
+ *                                  and index of unspent Output for that Transaction.
  * @param {object[]} outputs Array of Output objects to add to the Transaction.
  *                           Think of these as the recipients of the asset after the transaction.
  *                           For `TRANSFER` Transactions, this should usually just be a list of
  *                           Outputs wrapping Ed25519 Conditions generated from the public keys of
  *                           the recipients.
- * @param {...number} OutputIndices Indices of the Outputs in `unspentTransaction` that this
- *                                     Transaction fulfills.
- *                                     Note that listed public keys listed must be used (and in
- *                                     the same order) to sign the Transaction
- *                                     (`signTransaction()`).
+ * @param {object} metadata Metadata for the Transaction - optional
  * @returns {object} Unsigned transaction -- make sure to call signTransaction() on it before
  *                   sending it off!
  */
-// TODO:
-// - Make `metadata` optional argument
 export default function makeTransferTransaction(
-    unspentTransaction,
-    metadata,
+    unspentOutputs,
     outputs,
-    ...outputIndices
+    metadata
 ) {
-    const inputs = outputIndices.map((outputIndex) => {
-        const fulfilledOutput = unspentTransaction.outputs[outputIndex]
+    const inputs = unspentOutputs.map((unspentOutput) => {
+        const { tx, output_index } = unspentOutput
+        const fulfilledOutput = tx.outputs[output_index]
         const transactionLink = {
-            'output_index': outputIndex,
-            'transaction_id': unspentTransaction.id,
+            'output_index': output_index,
+            'transaction_id': tx.id,
         }
 
         return makeInputTemplate(fulfilledOutput.public_keys, transactionLink)
     })
 
     const assetLink = {
-        'id': unspentTransaction.operation === 'CREATE' ? unspentTransaction.id
-            : unspentTransaction.asset.id
+        'id': unspentOutputs[0].tx.operation === 'CREATE' ? unspentOutputs[0].tx.id
+            : unspentOutputs[0].tx.asset.id
     }
 
-    return makeTransaction('TRANSFER', assetLink, metadata, outputs, inputs)
+    const meta = metadata || null
+
+    return makeTransaction('TRANSFER', assetLink, meta, outputs, inputs)
 }
