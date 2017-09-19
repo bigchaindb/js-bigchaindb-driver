@@ -17,10 +17,9 @@ export const createTx = Transaction.makeCreateTransaction(
     alice.publicKey
 )
 export const transferTx = Transaction.makeTransferTransaction(
-    createTx,
-    metaData,
+    [{ tx: createTx, output_index: 0 }],
     [aliceOutput],
-    0
+    metaData
 )
 
 export const bob = new Ed25519Keypair()
