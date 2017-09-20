@@ -8,13 +8,13 @@ of the node or cluster you want to connect to.
 
 This example guides you through creating and transferring an asset.
 We walk through the code explaining its use, some pieces are left out
-because they have no real use (e.g. defenition of global variable)
+because they have no real use (e.g. definition of global variable)
 *Full working code* can be found at the bottom of this document.
 The following code are just snippets.
 
 Getting Started
 ---------------
-We begin by creating an object of BigchainDB driver:
+We begin by importing the BigchainDB driver:
 
 .. code-block:: js
 
@@ -29,7 +29,7 @@ Next, we define a constant containing the API path.
 Create Connection With BigchainDB
 ---------------------------------
 
-A simpel connection with BigchainDB can be established like this.
+A simple connection with BigchainDB can be established like this.
 
 .. code-block:: js
 
@@ -107,6 +107,17 @@ transaction:
 		alice.publicKey
 	)
 
+Transaction needs an array of Output objects.
+Think of these as the recipients of the asset after the transaction.
+For `CREATE` Transactions, this should usually just be a list of
+Outputs wrapping Ed25519 Conditions generated from the issuers' public
+keys (so that the issuers are the recipients of the created asset).
+
+``alice.publicKey`` can be considered as the Input for the transaction. 
+Each input spends/transfers a previous output by satisfying/fulfilling 
+the crypto-conditions on that output. A CREATE transaction should have 
+exactly one input. A TRANSFER transaction should have at least one input (i.e. ≥1). 
+
 Sign the transaction with private key of Alice to fulfill it:
 
 .. code-block:: js
@@ -148,14 +159,14 @@ Imagine some time goes by, during which Alice is happy with her bicycle, and
 one day, she meets Bob, who is interested in acquiring her bicycle. The timing
 is good for Alice as she had been wanting to get a new bicycle.
 
-To transfer the bicycle (asset) to Bob, Alice must consume the transaction in
+To transfer the bicycle (asset) to Bob, Alice must consume the transaction's output in
 which the Bicycle asset was created.
 
 Alice could retrieve the transaction:
 
 .. code-block:: js
 
-	driver.Connection.getTransaction(txCreateAliceSimpleSigned.id)
+	conn.getTransaction(txCreateAliceSimpleSigned.id)
 
 First, let's prepare the transaction to be transferred. 
 
@@ -189,7 +200,7 @@ And sent over to a BigchainDB node:
 
 .. code-block:: js
 
-	conn.postTransaction(txTransferBobSigned, API_PATH)
+	conn.postTransaction(txTransferBobSigned)
 
 Check the status again:
 
@@ -231,8 +242,8 @@ Let’s perform a text search for all assets that contain the word 'Bicycle Inc.
 
 .. code-block:: js
 
-	let assets = conn.searchAssets('Bicycle Inc.')
-    		.then((assets) => console.log('Found assets with serial number Bicycle Inc.:', assets))
+	conn.searchAssets('Bicycle Inc.')
+    		.then(assets => console.log('Found assets with serial number Bicycle Inc.:', assets))
 
 Which leads to following result: 
 
@@ -332,27 +343,19 @@ Recap: Asset Creation & Transfer
 			console.log('Posting signed transaction: ', txTransferBobSigned)
 
 			// Post and poll status
-			return conn.postTransaction(txTransferBobSigned, API_PATH)
+			return conn.postTransaction(txTransferBobSigned)
 		})
-		.then((res) => {
+		.then(res => {
 			console.log('Response from BDB server:', res)
 			return conn.pollStatusAndFetchTransaction(txTransferBobSigned.id)
 		})
-		.then((tx) => {
+		.then(tx => {
 			console.log('Is Bob the owner?', tx['outputs'][0]['public_keys'][0] == bob.publicKey)
 			console.log('Was Alice the previous owner?', txTransferBobSigned['inputs'][0]['owners_before'][0] == alice.publicKey )
 		})
-		.then(() => {
-			// Search for asset based on the serial number of the bicycle
-			let assets = conn.searchAssets('Bicycle Inc.')
-				.then((assets) => console.log('Found assets with serial number Bicycle Inc.:', assets))
-		})
-		.then(() => {
-			// Search for asset based on the serial number of the bicycle
-			let assets = conn.searchAssets('Bicycle Inc.')
-				.then((assets) => console.log('Found assets with serial number Bicycle Inc.:', assets))
-		})
-
+		// Search for asset based on the serial number of the bicycle
+		.then(() => conn.searchAssets('Bicycle Inc.'))
+		.then(assets => console.log('Found assets with serial number Bicycle Inc.:', assets))
 
 
 Divisible Assets
