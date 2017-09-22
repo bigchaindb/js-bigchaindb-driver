@@ -9,21 +9,6 @@ BigchainDB Javascript Driver Documentation
 	quickstart
 	usage
 
-
-Another header
-==============
-
-Here is text and start quote::
-
-	print 'hello'
-	>> hello
-
-Guide
-^^^^^
-
-Section testing
-
-
 Indices and tables
 ==================
 
