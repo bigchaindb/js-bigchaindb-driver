@@ -5,7 +5,9 @@ BigchainDB Javascript Driver Documentation
 	:maxdepth: 2
 	
 	← Back to All BigchainDB Docs <https://bigchaindb.readthedocs.io/en/latest/index.html>
+	readme
 	quickstart
+	usage
 
 
 Another header
