@@ -8,7 +8,7 @@
 [![Build Status](https://travis-ci.org/bigchaindb/js-bigchaindb-driver.svg?branch=master)](https://travis-ci.org/bigchaindb/js-bigchaindb-driver)
 [![Greenkeeper badge](https://badges.greenkeeper.io/bigchaindb/js-bigchaindb-driver.svg)](https://greenkeeper.io/)
 
-- Documentation: https://docs.bigchaindb.com/projects/js-driver/en/latest/
+- Documentation: https://docs.bigchaindb.com/projects/js-driver/en/latest/usage.html
 
 ## Compatibility
 
