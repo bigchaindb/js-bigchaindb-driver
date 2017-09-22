@@ -339,7 +339,7 @@ Recap: Asset Creation & Transfer
 				0)
 			
 			// Sign with alice's private key
-			txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey)
+			let txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey)
 			console.log('Posting signed transaction: ', txTransferBobSigned)
 
 			// Post and poll status
