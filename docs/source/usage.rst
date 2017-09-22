@@ -122,7 +122,7 @@ Sign the transaction with private key of Alice to fulfill it:
 
 .. code-block:: js
 
-	const txCreateAliceSimpleSigned = driver.Transaction.signTransaction(txCreateAliceSimple, alice.privateKey)
+	driver.Transaction.signTransaction(txCreateAliceSimple, alice.privateKey)
 
 And sent over to a BigchainDB node:
 
@@ -194,7 +194,7 @@ Fulfill transaction by signing it with Alice's private key.
 
 .. code-block:: js
 
-	txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey);
+	driver.Transaction.signTransaction(txTransferBob, alice.privateKey);
 
 And sent over to a BigchainDB node:
 
@@ -357,11 +357,12 @@ Recap: Asset Creation & Transfer
 		.then(() => conn.searchAssets('Bicycle Inc.'))
 		.then(assets => console.log('Found assets with serial number Bicycle Inc.:', assets))
 
-
 Divisible Assets
 ----------------
 
+Yet to come!
 
 .. TODO:
 .. - Add lexer: https://stackoverflow.com/questions/4259105/which-sphinx-code-block-language-to-use-for-json
 .. - Add divisible assets example
+.. - Add more readable code with promises possibly.
