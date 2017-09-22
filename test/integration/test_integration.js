@@ -59,10 +59,9 @@ test('Valid TRANSFER transaction with single Ed25519 input', t => {
         .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
         .then(() => {
             const transferTx = Transaction.makeTransferTransaction(
-                createTxSigned,
-                metaData,
+                [{ tx: createTxSigned, output_index: 0 }],
                 [aliceOutput],
-                0
+                metaData
             )
             const transferTxSigned = Transaction.signTransaction(
                 transferTx,
@@ -92,11 +91,9 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs', t => {
         .then(({ 'id': txId }) => conn.pollStatusAndFetchTransaction(txId))
         .then(() => {
             const transferTx = Transaction.makeTransferTransaction(
-                createTxSigned,
-                metaData,
+                [{ tx: createTxSigned, output_index: 0 }, { tx: createTxSigned, output_index: 1 }],
                 [Transaction.makeOutput(aliceCondition, '2')],
-                0,
-                1
+                metaData
             )
             const transferTxSigned = Transaction.signTransaction(
                 transferTx,
@@ -134,10 +131,9 @@ test('Search for spent and unspent outputs of a given public key', t => {
 
     // We spent output 1 (of 0, 1)
     const transferTx = Transaction.makeTransferTransaction(
-        createTxSigned,
-        metaData,
+        [{ tx: createTxSigned, output_index: 1 }],
         [trentOutput],
-        1
+        metaData
     )
     const transferTxSigned = Transaction.signTransaction(
         transferTx,
@@ -177,10 +173,9 @@ test('Search for unspent outputs for a given public key', t => {
 
     // We spent output 1 (of 0, 1, 2)
     const transferTx = Transaction.makeTransferTransaction(
-        createTxSigned,
-        metaData,
+        [{ tx: createTxSigned, output_index: 1 }],
         [trentOutput],
-        1
+        metaData
     )
     const transferTxSigned = Transaction.signTransaction(
         transferTx,
@@ -220,10 +215,9 @@ test('Search for spent outputs for a given public key', t => {
 
     // We spent output 1 (of 0, 1, 2)
     const transferTx = Transaction.makeTransferTransaction(
-        createTxSigned,
-        metaData,
+        [{ tx: createTxSigned, output_index: 1 }],
         [trentOutput],
-        1
+        metaData
     )
     const transferTxSigned = Transaction.signTransaction(
         transferTx,
