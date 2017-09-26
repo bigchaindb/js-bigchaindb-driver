@@ -76,7 +76,7 @@ export default function baseRequest(url, { jsonBody, query, urlTemplateSpec, ...
             if (!(res && res.ok)) {
                 const errorObject = {
                     message: 'HTTP Error: Requested page not reachable',
-                    status: (res.status) + ' ' + (res.statusText),
+                    status: `${res.status} ${res.statusText}`,
                     requestURI: res.url
                 }
                 throw errorObject
