@@ -74,7 +74,11 @@ export default function baseRequest(url, { jsonBody, query, urlTemplateSpec, ...
             // If status is not a 2xx (based on Response.ok), assume it's an error
             // See https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch/fetch
             if (!(res && res.ok)) {
-                throw res
+                throw {
+                    message: "HTTP Error: Couldn't reach requested webpage",
+                    status: res.status + " " + res.statusText,
+                    requestURI: res.url
+                }
             }
             return res
         })
