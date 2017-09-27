@@ -347,11 +347,11 @@ Recap: Asset Creation & Transfer
 		})
 		.then(res => {
 			console.log('Response from BDB server:', res)
-			return conn.pollStatusAndFetchTransaction(txTransferBobSigned.id)
+			return conn.pollStatusAndFetchTransaction(res.id)
 		})
 		.then(tx => {
 			console.log('Is Bob the owner?', tx['outputs'][0]['public_keys'][0] == bob.publicKey)
-			console.log('Was Alice the previous owner?', txTransferBobSigned['inputs'][0]['owners_before'][0] == alice.publicKey )
+			console.log('Was Alice the previous owner?', tx['inputs'][0]['owners_before'][0] == alice.publicKey )
 		})
 		// Search for asset based on the serial number of the bicycle
 		.then(() => conn.searchAssets('Bicycle Inc.'))
