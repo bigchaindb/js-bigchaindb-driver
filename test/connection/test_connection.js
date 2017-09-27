@@ -9,13 +9,13 @@ const conn = new Connection(API_PATH)
 
 test('payload thrown at incorrect API_PATH', t => {
     const path = 'http://localhost:9984/api/wrong/'
-    const conn = new Connection(path)
+    const connection = new Connection(path)
     const target = {
         message: 'HTTP Error: Requested page not reachable',
         status: '404 NOT FOUND',
         requestURI: 'http://localhost:9984/api/wrong/transactionId'
     }
-    t.deepEqual(target, conn.getTransaction("transactionId"))
+    t.deepEqual(target, connection.getTransaction('transactionId'))
 })
 
 test('generate API URLS', t => {
