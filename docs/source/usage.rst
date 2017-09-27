@@ -212,7 +212,7 @@ Bob is the new owner:
 
 .. code-block:: js
 
-	console.log('Is Bob the owner?', tx['outputs'][0]['public_keys'][0] == bob.publicKey)
+	console.log('Is Bob the owner?', txTransferBobSigned['outputs'][0]['public_keys'][0] == bob.publicKey)
 	// Output: true
 
 Alice is the former owner:
