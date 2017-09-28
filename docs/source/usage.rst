@@ -357,8 +357,8 @@ Recap: Asset Creation & Transfer
 		.then(() => conn.searchAssets('Bicycle Inc.'))
 		.then(assets => console.log('Found assets with serial number Bicycle Inc.:', assets))
 
-Seed Functionality 
-------------------
+Seed Functionality Ed25519Keypair
+---------------------------------
 
 BigchainDB JavaScript driver allows you to create a keypair based on a seed.
 The constructor accepts a 32 byte seed. One of the ways to create a seed from 
