@@ -74,7 +74,10 @@ export default function baseRequest(url, { jsonBody, query, urlTemplateSpec, ...
             // If status is not a 2xx (based on Response.ok), assume it's an error
             // See https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch/fetch
             if (!(res && res.ok)) {
-                throw res
+                return res.json().then(json => {
+                    const error = new Error(json.message || res.statusText)
+                    return Promise.reject(Object.assign(error, { res }))
+                })
             }
             return res
         })
