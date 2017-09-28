@@ -357,6 +357,25 @@ Recap: Asset Creation & Transfer
 		.then(() => conn.searchAssets('Bicycle Inc.'))
 		.then(assets => console.log('Found assets with serial number Bicycle Inc.:', assets))
 
+Seed Functionality 
+------------------
+
+BigchainDB JavaScript driver allows you to create a keypair based on a seed.
+The constructor accepts a 32 byte seed. One of the ways to create a seed from 
+a string (e.g. a passphrase) is the one used by ``bip39``, specifically the function ``mnemonicToSeed``.
+
+Install bip39 with npm: ``npm install bip39``
+
+Next, require ``bip39`` in your file like this: ``var bip39 = require('bip39')``
+
+At last, we can create the keypair based on a string. The function will transform the string to a byte array.
+As our constructor ``Ed25519Keypair()`` only accepts a seed of 32 bytes, we slice the first 32 bytes: ``slice(0,32)``.
+
+.. code-block:: js
+
+	var keypair = new driver.Ed25519Keypair(bip39.mnemonicToSeed("yourString").slice(0, 32))
+
+
 Divisible Assets
 ----------------
 
