@@ -7,18 +7,21 @@ import { Connection } from '../../src'
 const API_PATH = 'http://localhost:9984/api/v1/'
 const conn = new Connection(API_PATH)
 
-test('payload thrown at incorrect API_PATH', t => {
+test('Payload thrown at incorrect API_PATH', t => {
     const path = 'http://localhost:9984/api/wrong/'
     const connection = new Connection(path)
     const target = {
         message: 'HTTP Error: Requested page not reachable',
         status: '404 NOT FOUND',
-        requestURI: 'http://localhost:9984/api/wrong/transactionId'
+        requestURI: 'http://localhost:9984/api/wrong/transactions/transactionId'
     }
-    t.deepEqual(target, connection.getTransaction('transactionId'))
+    connection.getTransaction('transactionId')
+        .catch(error => {
+            t.deepEqual(target, error)
+        })
 })
 
-test('generate API URLS', t => {
+test('Generate API URLS', t => {
     const endpoints = {
         'blocks': 'blocks',
         'blocksDetail': 'blocks/%(blockId)s',
