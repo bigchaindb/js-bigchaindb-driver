@@ -469,9 +469,9 @@ All transactions are printed to the console. To use this piece of code, you will
 
 .. code-block:: js
 
-	const WebSocket = require('ws');
+	const WebSocket = require('ws')
 
-	const ws = new WebSocket('ws://localhost:9985/api/v1/streams/valid_transactions');
+	const ws = new WebSocket('ws://localhost:9985/api/v1/streams/valid_transactions')
 
 	ws.on('open', () => {
 		console.log("CONNECTED")
