@@ -357,6 +357,113 @@ Recap: Asset Creation & Transfer
 		.then(() => conn.searchAssets('Bicycle Inc.'))
 		.then(assets => console.log('Found assets with serial number Bicycle Inc.:', assets))
 
+
+Websocket Event Stream API Usage
+--------------------------------
+
+The Event Stream API enables new ways to interact with BigchainDB, making it possible for your application to subscribe to all newly–confirmed transactions that are happening in the system.
+Below piece of code can be opened in your web browser. It will connect to your websocket (change it at ``var wsUri``). This web page will display all validated transactions.
+
+.. code-block:: html
+
+	<!DOCTYPE html>
+	<meta charset="utf-8" />
+	<title>WebSocket BigchainDB</title>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<!-- Websocket Script -->
+	<script language="javascript" type="text/javascript">
+
+	var wsUri = "ws://localhost:9985/api/v1/streams/valid_transactions";
+	var output;
+	var alertbox;
+
+	function init()
+	{
+		output = document.getElementById("output");
+		alertbox = document.getElementById("alert-box");
+		setWebSocket();
+	}
+
+	function setWebSocket()
+	{
+		websocket = new WebSocket(wsUri);
+		websocket.onopen = function(evt) { onOpen(evt) };
+		websocket.onclose = function(evt) { onClose(evt) };
+		websocket.onmessage = function(evt) { onMessage(evt) };
+		websocket.onerror = function(evt) { onError(evt) };
+	}
+
+	function onOpen(evt)
+	{
+		writeAlertMessage("CONNECTED");
+	}
+
+	function onClose(evt)
+	{
+		writeAlertMessage("DISCONNECTED");
+	}
+
+	function onMessage(evt)
+	{
+		writeToScreen('<a href="#" class="list-group-item"><h4 class="list-group-item-heading">Valid Transaction</h4><p class="list-group-item-text">' + evt.data + '</p></a>');
+	}
+
+	function onError(evt)
+	{
+		writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+	}
+
+	function closeConnection(evt)
+	{
+		websocket.close()
+	}
+
+	function writeToScreen(message)
+	{
+		var pre = document.createElement("p");
+		pre.style.wordWrap = "break-word";
+		pre.innerHTML = message;
+		output.appendChild(pre);
+	}
+
+	function writeAlertMessage(message)
+	{
+		var alert = document.createElement("div");
+		alert.className = "alert alert-success";
+		alert.setAttribute("role", "alert");
+		alert.innerHTML = message;
+		alertbox.appendChild(alert);
+	}
+
+	/* Initialize websocket and attach all events */
+	window.addEventListener("load", init, false);
+
+	/* Event called on closing browser or refreshing page to close connection */
+	window.addEventListener("beforeunload", closeConnection, false);
+
+	</script>
+
+	<!-- HTML Template -->
+	<div class="container">
+		<h2>WebSocket API Stream Valid Transactions BigchainDB</h2>
+		<div id="alert-box"></div>
+
+		<!-- Div for attachting all outputs -->
+		<div id="output" class="list-group"></div>
+	</div>
+
+
+
+
 Divisible Assets
 ----------------
 
