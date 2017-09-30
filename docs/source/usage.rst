@@ -464,6 +464,26 @@ Below piece of code can be opened in your web browser. It will connect to your w
 	</div>
 
 
+Besides that, a NodeJs version has been created to display the validated transactions. 
+All transactions are printed to the console. To use this piece of code, you will need the ``ws`` (WebSocket package) through npm: ``npm install --save ws``.
+
+.. code-block:: js
+
+	const WebSocket = require('ws');
+
+	const ws = new WebSocket('ws://localhost:9985/api/v1/streams/valid_transactions');
+
+	ws.on('open', () => {
+		console.log("CONNECTED")
+	});
+
+	ws.on('message', (data) => {
+		let json = JSON.parse(data)
+		console.log("\nTransactionId: ", json.transaction_id)
+		console.log("AssetId: ", json.asset_id)
+		console.log("BlockId: ", json.block_id)
+	});
+
 
 
 Divisible Assets
