@@ -455,6 +455,8 @@ Below piece of code can be opened in your web browser. It will connect to your w
 	<!-- HTML Template -->
 	<div class="container">
 		<h2>WebSocket API Stream Valid Transactions BigchainDB</h2>
+
+		<!-- Box for displaying all alerts -->
 		<div id="alert-box"></div>
 
 		<!-- Div for attachting all outputs -->
