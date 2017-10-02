@@ -1,8 +1,6 @@
 {
     "presets": [
-        "@ava/stage-4",
-        "@ava/transform-test-files",
-        "es2015-no-commonjs"
+      ["env"]
     ],
 
     "plugins": [

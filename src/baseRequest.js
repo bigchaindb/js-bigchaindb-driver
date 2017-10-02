@@ -1,4 +1,3 @@
-import { Promise } from 'es6-promise'
 import fetchPonyfill from 'fetch-ponyfill'
 import { vsprintf } from 'sprintf-js'
 

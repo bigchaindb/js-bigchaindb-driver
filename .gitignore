@@ -20,3 +20,5 @@ coverage.lcov
 yarn.lock
 
 docs/build/
+
+.DS_Store

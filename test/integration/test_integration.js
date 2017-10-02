@@ -1,4 +1,5 @@
 import test from 'ava'
+import Nightmare from 'nightmare'
 import { Ed25519Keypair, Transaction, Connection } from '../../src'
 
 import {
@@ -10,6 +11,20 @@ import {
     asset,
     metaData
 } from '../constants'
+
+const path = require('path')
+
+const nightmare = Nightmare()
+
+test('JavaScript Page', async t => {
+    const result = await nightmare
+        .goto(`file:///${path.resolve(__dirname, '..', '..')}/test_frameworks/javascript/index.html`)
+        .inject('js', './dist/browser/bigchaindb-driver.window.min.js')
+        .click('#button')
+        .wait('#data')
+        .evaluate(() => document.querySelector('#data').innerText)
+    t.true(result.includes('Transaction'))
+})
 
 const API_PATH = 'http://localhost:9984/api/v1/'
 
