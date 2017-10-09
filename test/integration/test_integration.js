@@ -14,17 +14,9 @@ import {
 
 const path = require('path')
 
-const nightmare = Nightmare()
-
-test('JavaScript Page', async t => {
-    const result = await nightmare
-        .goto(`file:///${path.resolve(__dirname, '..', '..')}/test_frameworks/javascript/index.html`)
-        .inject('js', './dist/browser/bigchaindb-driver.window.min.js')
-        .click('#button')
-        .wait('#data')
-        .evaluate(() => document.querySelector('#data').innerText)
-    t.true(result.includes('Transaction'))
-})
+const nightmare1 = Nightmare()
+const nightmare2 = Nightmare()
+const nightmare3 = Nightmare()
 
 const API_PATH = 'http://localhost:9984/api/v1/'
 
@@ -327,4 +319,40 @@ test('Search transaction containing an asset', t => {
 
 test('Content-Type cannot be set', t => {
     t.throws(() => new Connection(API_PATH, { 'Content-Type': 'application/json' }), Error)
+})
+
+
+test('JavaScript Page', async t => {
+    const result = await nightmare1
+        .goto(`file:///${path.resolve(__dirname, '..', '..')}/test_frameworks/javascript/index.html`)
+        .inject('js', './dist/browser/bigchaindb-driver.window.min.js')
+        .wait('#button')
+        .click('#button')
+        .wait('#data')
+        .evaluate(() => document.querySelector('#data').innerText)
+    t.true(result.includes('Transaction'))
+})
+
+
+// execute "npm run start" in /test_frameworks/react-app
+test('React Page', async t => {
+    const result = await nightmare2
+        .goto('http://localhost:8080/')
+        .wait('#button')
+        .click('#button')
+        .wait('#data')
+        .evaluate(() => document.querySelector('#data').innerText)
+    t.true(result.includes('Transaction'))
+})
+
+
+// execute "npm run start" in /test_frameworks/angular
+test('Angular Page', async t => {
+    const result = await nightmare3
+        .goto('http://localhost:4200/')
+        .wait('#button')
+        .click('#button')
+        .wait('#data')
+        .evaluate(() => document.querySelector('#data').innerText)
+    t.true(result.includes('Transaction'))
 })
