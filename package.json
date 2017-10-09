@@ -67,7 +67,7 @@
     "core-js": "^2.5.1",
     "decamelize": "^1.2.0",
     "fetch-ponyfill": "^4.1.0",
-    "five-bells-condition": "file:../five-bells-condition-ORIGINAL/five-bells-condition-5.0.1.tgz",
+    "five-bells-condition": "^5.0.1",
     "js-sha3": "^0.6.1",
     "json-stable-stringify": "^1.0.1",
     "query-string": "^5.0.0",
