@@ -64,7 +64,7 @@ that represents a bicycle:
 
 .. code-block:: js
 
-	assetdata = {
+	const assetdata = {
 		'bicycle': {
 			'serial_number': 'abcd1234',
 			'manufacturer': 'Bicycle Inc.',
@@ -86,7 +86,7 @@ For example, the bicycle will be transferred on earth which is metadata:
 
 .. code-block:: js
 
-	metadata = {'planet': 'earth'}
+	const metadata = {'planet': 'earth'}
 
 Asset Creation
 --------------
@@ -288,7 +288,7 @@ Recap: Asset Creation & Transfer
 
 	// Define the asset to store, in this example
 	// we store a bicycle with its serial number and manufacturer
-	assetdata = {
+	const assetdata = {
 		'bicycle': {
 			'serial_number': 'cde',
 			'manufacturer': 'Bicycle Inc.',
@@ -298,7 +298,7 @@ Recap: Asset Creation & Transfer
 	// Metadata contains information about the transaction itself
 	// (can be `null` if not needed)
 	// E.g. the bicycle is fabricated on earth
-	metadata = {'planet': 'earth'}
+	const metadata = {'planet': 'earth'}
 
 	// Construct a transaction payload
 	const txCreateAliceSimple = driver.Transaction.makeCreateTransaction(
