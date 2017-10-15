@@ -64,7 +64,7 @@ that represents a bicycle:
 
 .. code-block:: js
 
-	assetdata = {
+	const assetdata = {
 		'bicycle': {
 			'serial_number': 'abcd1234',
 			'manufacturer': 'Bicycle Inc.',
@@ -86,7 +86,7 @@ For example, the bicycle will be transferred on earth which is metadata:
 
 .. code-block:: js
 
-	metadata = {'planet': 'earth'}
+	const metadata = {'planet': 'earth'}
 
 Asset Creation
 --------------
@@ -288,7 +288,7 @@ Recap: Asset Creation & Transfer
 
 	// Define the asset to store, in this example
 	// we store a bicycle with its serial number and manufacturer
-	assetdata = {
+	const assetdata = {
 		'bicycle': {
 			'serial_number': 'cde',
 			'manufacturer': 'Bicycle Inc.',
@@ -298,7 +298,7 @@ Recap: Asset Creation & Transfer
 	// Metadata contains information about the transaction itself
 	// (can be `null` if not needed)
 	// E.g. the bicycle is fabricated on earth
-	metadata = {'planet': 'earth'}
+	const metadata = {'planet': 'earth'}
 
 	// Construct a transaction payload
 	const txCreateAliceSimple = driver.Transaction.makeCreateTransaction(
@@ -356,6 +356,7 @@ Recap: Asset Creation & Transfer
 		// Search for asset based on the serial number of the bicycle
 		.then(() => conn.searchAssets('Bicycle Inc.'))
 		.then(assets => console.log('Found assets with serial number Bicycle Inc.:', assets))
+    
 
 Ed25519Keypair Seed Functionality 
 ---------------------------------
@@ -380,6 +381,136 @@ You can use the ``Ed25519Keypair()`` constructor as well without seed.
 .. code-block:: js
 
 	var keypair = new driver.Ed25519Keypair()
+
+
+Difference unspent and spent output
+-----------------------------------
+An unspent output is simply an output of a transaction which isn't yet an input of another transaction.
+So, if we transfer an asset, the output becomes spent, because it becomes the input of the transfer transaction. 
+The transfer transactions its output becomes unspent now until he transfers the asset again to somebody else.
+
+We will demonstrate this with a piece of code where we transfer a bicycle from Alice to Bob, 
+and further we transfer it from Bob to Chris. Expectations:
+
+* Output for Alice is spent 
+* Output for Bob is spent
+* Output for Chris is unspent (he is the last person in transaction chain)
+
+.. code-block:: js
+
+	const driver = require('bigchaindb-driver')
+	const API_PATH = 'http://localhost:9984/api/v1/'
+	const conn = new driver.Connection(API_PATH)	
+		
+	const alice = new driver.Ed25519Keypair()
+	const bob = new driver.Ed25519Keypair()
+	const chris = new driver.Ed25519Keypair()
+
+	console.log('Alice: ', alice.publicKey)
+	console.log('Bob: ', bob.publicKey)
+	console.log('Chris: ', chris.publicKey)
+
+	// Define the asset to store, in this example
+	// we store a bicycle with its serial number and manufacturer
+	assetdata = {
+		'bicycle': {
+			'serial_number': 'cde',
+			'manufacturer': 'Bicycle Inc.',
+		}
+	}
+
+	var txTransferBobSigned;
+
+	// Construct a transaction payload
+	const txCreateAliceSimple = driver.Transaction.makeCreateTransaction(
+		assetdata,
+		{'meta': 'meta'},
+		// A transaction needs an output
+		[ driver.Transaction.makeOutput(
+				driver.Transaction.makeEd25519Condition(alice.publicKey))
+		],
+		alice.publicKey
+	)
+
+	// Sign the transaction with private keys of Alice to fulfill it
+	const txCreateAliceSimpleSigned = driver.Transaction.signTransaction(txCreateAliceSimple, alice.privateKey)
+	console.log('\n\nPosting signed create transaction for Alice:\n', txCreateAliceSimpleSigned)
+
+	conn.postTransaction(txCreateAliceSimpleSigned)
+		// Check status of transaction every 0.5 seconds until fulfilled
+		.then(() => conn.pollStatusAndFetchTransaction(txCreateAliceSimpleSigned.id))
+
+		// Transfer bicycle from Alice to Bob
+		.then(() => {
+			const txTransferBob = driver.Transaction.makeTransferTransaction(
+				txCreateAliceSimpleSigned,
+				{'newOwner': 'Bob'},
+				[driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey))], 
+				0)
+			
+			// Sign with alice's private key
+			txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey)
+			console.log('\n\nPosting signed transaction to Bob:\n', txTransferBobSigned)
+
+			// Post and poll status
+			return conn.postTransaction(txTransferBobSigned)
+		})
+		.then(res => conn.pollStatusAndFetchTransaction(res.id))
+
+		// Second transfer of bicycle from Bob to Chris
+		.then(tx => {
+			const txTransferChris = driver.Transaction.makeTransferTransaction(
+				txTransferBobSigned,
+				{'newOwner': 'Chris'},
+				[driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(chris.publicKey))], 
+				0)
+			
+			// Sign with bob's private key
+			let txTransferChrisSigned = driver.Transaction.signTransaction(txTransferChris, bob.privateKey)
+			console.log('\n\nPosting signed transaction to Chris:\n', txTransferChrisSigned)
+
+			// Post and poll status
+			return conn.postTransaction(txTransferChrisSigned)
+		})
+		.then(res => conn.pollStatusAndFetchTransaction(res.id))
+		.then(() => conn.listOutputs(alice.publicKey, true))
+		.then(listSpentOutputs => {
+			console.log("\nSpent outputs for Alice: ", listSpentOutputs.length) // Spent outputs: 1
+			return conn.listOutputs(alice.publicKey, false)
+		})
+		.then(listUnspentOutputs => {
+			console.log("Unspent outputs for Alice: ", listUnspentOutputs.length) // Unspent outputs: 0
+			return conn.listOutputs(bob.publicKey, true)
+		})
+		.then(listSpentOutputs => {
+			console.log("\nSpent outputs for Bob: ", listSpentOutputs.length) // Spent outputs: 1
+			return conn.listOutputs(bob.publicKey, false)
+		})
+		.then(listUnspentOutputs => {
+			console.log("Unspent outputs for Bob: ", listUnspentOutputs.length) // Unspent outputs: 0
+			return conn.listOutputs(chris.publicKey, true)
+		})
+		.then(listSpentOutputs => {
+			console.log("\nSpent outputs for Chris: ", listSpentOutputs.length) // Spent outputs: 0
+			return conn.listOutputs(chris.publicKey, false)
+		})
+		.then(listUnspentOutputs => {
+			console.log("Unspent outputs for Chris: ", listUnspentOutputs.length) // Unspent outputs: 1
+		})
+		.catch(res => {console.log(res)})
+
+Output of above code looks like this. As you can see, Chris has no spent output, but one unspent output. 
+
+.. code-block:: js
+
+	Spent outputs for Alice:  1
+	Unspent outputs for Alice:  0
+
+	Spent outputs for Bob:  1
+	Unspent outputs for Bob:  0
+
+	Spent outputs for Chris:  0
+	Unspent outputs for Chris:  1
 
 Divisible Assets
 ----------------
