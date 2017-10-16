@@ -8,6 +8,7 @@ BigchainDB Javascript Driver Documentation
 	readme
 	quickstart
 	usage
+	advanced
 
 Indices and tables
 ==================
