@@ -490,7 +490,97 @@ Output of above code looks like this. As you can see, Chris has no spent output,
 Divisible Assets
 ----------------
 
-Yet to come!
+All assets in BigchainDB become implicitly divisible if a transaction contains more than one of that asset (we’ll see how this happens shortly).
+
+Let's assume we have created a token to pay each other for small transactions like a beer or some food between friends.
+
+.. code-block:: js
+
+	const token = {
+		'value': '1 euro'
+	}
+
+Let's create the asset. Note that we give an extra parameter to the ``makeOutput()`` function.
+We give it the parameter ``'4'`` to indicate that we want to create 4 tokens. 
+**Pay attention to give the function a String instead of a plain Number.**
+
+.. code-block:: js
+
+	const txCreateAliceDivisible = driver.Transaction.makeCreateTransaction(
+		token,
+		{metaDataMessage: 'I am specific to this create transaction'},
+		[driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(alice.publicKey), '4')],
+		alice.publicKey
+	)
+
+Alice goes dining at Bob and Carly. She decides to give a small fee to Bob and Carly.
+Alice decides to issue 4 tokens as a payment for her food: one to Bob, two to Carly and one to herself.
+Why one to herself? If you decide to fulfill an output, you have to spend all tokens.
+So if you want to keep one token for yourself, you have to transfer it to yourself.
+As you can see, we fulfill the first output of the create transaction (it's 0 because we start counting from 0).
+This gives us 4 tokens to transfer.
+
+.. code-block:: js
+
+	const txTransferDivisible = driver.Transaction.makeTransferTransaction(
+		txCreateAliceDivisibleSigned,
+		{
+			metaDataMessage: 'I am specific to this transfer transaction'
+		},
+		[
+			driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(carly.publicKey), '2'),
+			driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey), '1'),
+			driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(alice.publicKey), '1')
+		], 0);
+
+To make the use of the last parameter of ``makeTransferTransaction()`` function more clear, we will do another transfer.
+We will fulfill the first and second output of the create transaction (0, 1) because Carly and Bob decide to redistribute some money.
+
+* Output 0 represents 2 tokens for Carly
+* Output 1 represents 1 token for Bob 
+
+This gives us 3 tokens to redistribute. I want to give 1 token to Carly and 2 tokens Alice.
+
+.. code-block:: js
+
+	const txTransferDivisibleInputs = driver.Transaction.makeTransferTransaction(
+		txTransferDivisibleSigned,
+		{
+			metaDataMessage: 'I am specific to this transfer transaction'
+		},
+		[
+			driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(carly.publicKey), '1'),
+			driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(alice.publicKey), '2')
+		], 0, 1)
+
+Because we want to fulfill two outputs (Carly and Bob), we have to sign the transfer transaction in the same order:
+
+.. code-block:: js
+
+	const txTransferDivisibleInputsSigned = driver.Transaction.signTransaction(
+		txTransferDivisibleInputs,
+		carly.privateKey, bob.privateKey)
+
+Here is a better overview of the flow of the tokens.
+
++-----------+------------+-----------------+
+| **Owner** | **Amount** | **Transaction** |
++===========+============+=================+
+| ``Alice`` |   4        | ``CREATE``      |
++-----------+------------+-----------------+
+| ``Alice`` |   1        | ``TRANSFER 1``  |
++-----------+------------+-----------------+
+| ``Bob``   |   1        | ``TRANSFER 1``  |
++-----------+------------+-----------------+
+| ``Carly`` |   2        | ``TRANSFER 1``  |
++-----------+------------+-----------------+
+| ``Alice`` |   3        | ``TRANSFER 2``  |
++-----------+------------+-----------------+
+| ``Bob``   |   0        | ``TRANSFER 2``  |
++-----------+------------+-----------------+
+| ``Carly`` |   1        | ``TRANSFER 2``  |
++-----------+------------+-----------------+
+
 
 .. TODO:
 .. - Add lexer: https://stackoverflow.com/questions/4259105/which-sphinx-code-block-language-to-use-for-json
