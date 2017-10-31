@@ -107,6 +107,74 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs', t => {
 })
 
 
+test('Valid TRANSFER transaction with multiple Ed25519 inputs from different transactions', t => {
+    const conn = new Connection(API_PATH)
+    const carol = new Ed25519Keypair()
+    const carolCondition = Transaction.makeEd25519Condition(carol.publicKey)
+    const carolOutput = Transaction.makeOutput(carolCondition)
+    const trent = new Ed25519Keypair()
+    const trentCondition = Transaction.makeEd25519Condition(trent.publicKey)
+    const trentOutput = Transaction.makeOutput(trentCondition)
+    const eli = new Ed25519Keypair()
+    const eliCondition = Transaction.makeEd25519Condition(eli.publicKey)
+
+    const createTx = Transaction.makeCreateTransaction(
+        asset(),
+        metaData,
+        [aliceOutput, bobOutput],
+        alice.publicKey
+    )
+    const createTxSigned = Transaction.signTransaction(
+        createTx,
+        alice.privateKey
+    )
+
+    return conn.postTransaction(createTxSigned)
+        .then(({ 'id': txId }) => conn.pollStatusAndFetchTransaction(txId))
+        .then(() => {
+            const transferTx1 = Transaction.makeTransferTransaction(
+                [{ tx: createTxSigned, output_index: 0 }],
+                [carolOutput],
+                metaData
+            )
+            const transferTxSigned1 = Transaction.signTransaction(
+                transferTx1,
+                alice.privateKey
+            )
+            const transferTx2 = Transaction.makeTransferTransaction(
+                [{ tx: createTxSigned, output_index: 1 }],
+                [trentOutput],
+                metaData
+            )
+            const transferTxSigned2 = Transaction.signTransaction(
+                transferTx2,
+                bob.privateKey
+            )
+
+            return conn.postTransaction(transferTxSigned1)
+                .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+                .then(conn.postTransaction(transferTxSigned2))
+                .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+                .then(() => {
+                    const transferTxMultipleInputs = Transaction.makeTransferTransaction(
+                        [{ tx: transferTxSigned1, output_index: 0 },
+                            { tx: transferTxSigned2, output_index: 0 }],
+                        [Transaction.makeOutput(eliCondition, '2')],
+                        metaData
+                    )
+                    const transferTxSignedMultipleInputs = Transaction.signTransaction(
+                        transferTxMultipleInputs,
+                        carol.privateKey,
+                        trent.privateKey
+                    )
+                    return conn.postTransaction(transferTxSignedMultipleInputs)
+                        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+                        .then(resTx => t.truthy(resTx))
+                })
+        })
+})
+
+
 test('Search for spent and unspent outputs of a given public key', t => {
     const conn = new Connection(API_PATH)
     const carol = new Ed25519Keypair()
