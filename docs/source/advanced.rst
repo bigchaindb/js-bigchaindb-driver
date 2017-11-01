@@ -14,7 +14,7 @@ First, we create an asset registering the bicycle:
     const txCreateAliceSimple = driver.Transaction.makeCreateTransaction(
         {'asset': 'bicycle'},
         {'purchase_price': '€240'},
-        [ 
+        [
             driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(alice.publicKey))
         ],
         alice.publicKey
@@ -29,10 +29,10 @@ So, Alice needs a crypto conditions that defines that she or her daughter can si
 We need to define a threshold as well. This defines how many persons have to sign the transaction to ``TRANSFER`` it.
 In this case, we define two subconditions with the public keys from Alice and Carly. Next, we set the threshold to **one**.
 This means that just one of the subconditions has to sign the transaction to transfer it.
-This can be the mother Alice, or Carly herself. 
+This can be the mother Alice, or Carly herself.
 
 .. code-block:: js
-    
+
     // Create condition for Alice and Carly
     let subConditionFrom = driver.Transaction.makeEd25519Condition(alice.publicKey, false)
     let subConditionTo = driver.Transaction.makeEd25519Condition(carly.publicKey, false)
@@ -47,11 +47,10 @@ This can be the mother Alice, or Carly herself.
     output.public_keys = [carly.publicKey]
 
     let transaction = driver.Transaction.makeTransferTransaction(
-        txCreateAliceSimpleSigned,
-        {'meta': 'Transfer to new user with conditions'},
-        [output],
-        0
-    );
+  		[{ tx: txCreateAliceSimpleSigned, output_index: 0 }],
+      [output],
+  		{'meta': 'Transfer to new user with conditions'}
+  	);
 
     // Add alice as previous owner
     transaction.inputs[0].owners_before = [alice.publicKey]
