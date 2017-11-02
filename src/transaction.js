@@ -7,8 +7,6 @@ import ccJsonify from './utils/ccJsonify'
 import sha256Hash from './sha256Hash'
 
 export default class Transaction {
-    constructor() { }
-    
     /**
      * @public
      * Canonically serializes a transaction into a string by sorting the keys
@@ -25,11 +23,11 @@ export default class Transaction {
     }
 
     makeInputTemplate(publicKeys = [], fulfills = null, fulfillment = null) {
-    return {
-        fulfillment,
-        fulfills,
-        'owners_before': publicKeys,
-    }
+        return {
+            fulfillment,
+            fulfills,
+            'owners_before': publicKeys,
+        }
     }
 
     hashTransaction(transaction) {
@@ -37,7 +35,7 @@ export default class Transaction {
         const tx = { ...transaction }
         delete tx.id
 
-        return sha256Hash(serializeTransactionIntoCanonicalString(tx))
+        return sha256Hash(this.serializeTransactionIntoCanonicalString(tx))
     }
 
     makeTransactionTemplate() {
@@ -53,7 +51,7 @@ export default class Transaction {
     }
 
     makeTransaction(operation, asset, metadata = null, outputs = [], inputs = []) {
-        const tx = makeTransactionTemplate()
+        const tx = this.makeTransactionTemplate()
         tx.operation = operation
         tx.asset = asset
         tx.metadata = metadata
@@ -88,14 +86,15 @@ export default class Transaction {
         const assetDefinition = {
             'data': asset || null,
         }
-        const inputs = issuers.map((issuer) => makeInputTemplate([issuer]))
+        const inputs = issuers.map((issuer) => this.makeInputTemplate([issuer]))
 
-        return makeTransaction('CREATE', assetDefinition, metadata, outputs, inputs)
+        return this.makeTransaction('CREATE', assetDefinition, metadata, outputs, inputs)
     }
 
     /**
      * @public
-     * Create an Ed25519 Cryptocondition from an Ed25519 public key to put into an Output of a Transaction
+     * Create an Ed25519 Cryptocondition from an Ed25519 public key 
+     * to put into an Output of a Transaction
      * @param {string} publicKey base58 encoded Ed25519 public key for the recipient of the Transaction
      * @param {boolean} [json=true] If true returns a json object otherwise a crypto-condition type
      * @returns {object} Ed25519 Condition (that will need to wrapped in an Output)
@@ -116,7 +115,8 @@ export default class Transaction {
     /**
      * @public
      * Create an Output from a Condition.
-     * Note: Assumes the given Condition was generated from a single public key (e.g. a Ed25519 Condition)
+     * Note: Assumes the given Condition was generated from a
+     * single public key (e.g. a Ed25519 Condition)
      * @param {object} condition Condition (e.g. a Ed25519 Condition from `makeEd25519Condition()`)
      * @param {string} amount Amount of the output
      * @returns {object} An Output usable in a Transaction
@@ -169,19 +169,19 @@ export default class Transaction {
      * @returns {object} Sha256 Threshold Condition (that will need to wrapped in an Output)
      */
     makeThresholdCondition(threshold, subconditions = [], json = true) {
-    const thresholdCondition = new cc.ThresholdSha256()
-    thresholdCondition.threshold = threshold
+        const thresholdCondition = new cc.ThresholdSha256()
+        thresholdCondition.threshold = threshold
 
-    subconditions.forEach((subcondition) => {
-        // TODO: add support for Condition and URIs
-        thresholdCondition.addSubfulfillment(subcondition)
-    })
+        subconditions.forEach((subcondition) => {
+            // TODO: add support for Condition and URIs
+            thresholdCondition.addSubfulfillment(subcondition)
+        })
 
-    if (json) {
-        return ccJsonify(thresholdCondition)
-    }
+        if (json) {
+            return ccJsonify(thresholdCondition)
+        }
 
-    return thresholdCondition
+        return thresholdCondition
     }
 
     /**
@@ -219,7 +219,7 @@ export default class Transaction {
                 'transaction_id': unspentTransaction.id,
             }
 
-            return makeInputTemplate(fulfilledOutput.public_keys, transactionLink)
+            return this.makeInputTemplate(fulfilledOutput.public_keys, transactionLink)
         })
 
         const assetLink = {
@@ -227,7 +227,7 @@ export default class Transaction {
                 : unspentTransaction.asset.id
         }
 
-        return makeTransaction('TRANSFER', assetLink, metadata, outputs, inputs)
+        return this.makeTransaction('TRANSFER', assetLink, metadata, outputs, inputs)
     }
 
     /**
@@ -247,7 +247,7 @@ export default class Transaction {
         signedTx.inputs.forEach((input, index) => {
             const privateKey = privateKeys[index]
             const privateKeyBuffer = new Buffer(base58.decode(privateKey))
-            const serializedTransaction = serializeTransactionIntoCanonicalString(transaction)
+            const serializedTransaction = this.serializeTransactionIntoCanonicalString(transaction)
             const ed25519Fulfillment = new cc.Ed25519Sha256()
             ed25519Fulfillment.sign(new Buffer(serializedTransaction), privateKeyBuffer)
             const fulfillmentUri = ed25519Fulfillment.serializeUri()
