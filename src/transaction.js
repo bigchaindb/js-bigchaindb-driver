@@ -49,7 +49,7 @@ export default class Transaction {
             'asset': null,
             'version': '1.0',
         }
-        return this.txTemplate
+        return txTemplate
     }
 
     makeTransaction(operation, asset, metadata = null, outputs = [], inputs = []) {
