@@ -23,11 +23,12 @@ export default class Transaction {
     }
 
     makeInputTemplate(publicKeys = [], fulfills = null, fulfillment = null) {
-        return {
+        const inputTemplate = {
             fulfillment,
             fulfills,
             'owners_before': publicKeys,
         }
+        return inputTemplate
     }
 
     hashTransaction(transaction) {
@@ -39,7 +40,7 @@ export default class Transaction {
     }
 
     makeTransactionTemplate() {
-        return {
+        const txTemplate = {
             'id': null,
             'operation': null,
             'outputs': [],
@@ -48,6 +49,7 @@ export default class Transaction {
             'asset': null,
             'version': '1.0',
         }
+        return txTemplate
     }
 
     makeTransaction(operation, asset, metadata = null, outputs = [], inputs = []) {
