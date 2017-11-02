@@ -16,10 +16,10 @@ export default class Transaction {
     serializeTransactionIntoCanonicalString(transaction) {
         // BigchainDB signs fulfillments by serializing transactions into a
         // "canonical" format where
-        const tx = clone(transaction)
+        const tx = this.clone(transaction)
         // TODO: set fulfillments to null
         // Sort the keys
-        return stableStringify(this.tx, (a, b) => (a.key > b.key ? 1 : -1))
+        return stableStringify(tx, (a, b) => (a.key > b.key ? 1 : -1))
     }
 
     makeInputTemplate(publicKeys = [], fulfills = null, fulfillment = null) {
