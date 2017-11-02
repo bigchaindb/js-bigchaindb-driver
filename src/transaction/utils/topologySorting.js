@@ -2,13 +2,14 @@ import toposort from 'toposort'
 
 function generateGraph(txs) {
     const graph = []
-    for (const tx of txs) {
-        for (const input of tx.inputs) {
-            if (!!input.fulfills) {
+    txs.forEach(tx => {
+        tx.inputs.forEach(input => {
+            if (input.fulfills) {
                 graph.push([tx.id, input.fulfills.transaction_id])
             }
-        }
-    }
+        })
+    })
+
     return graph
 }
 
