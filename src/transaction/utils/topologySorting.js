@@ -2,8 +2,8 @@ import toposort from 'toposort'
 
 function generateGraph(txs) {
     const graph = []
-    for (var tx of txs) {
-        for (var input of tx.inputs) {
+    for (const tx of txs) {
+        for (const input of tx.inputs) {
             if (!!input.fulfills) {
                 graph.push([tx.id, input.fulfills.transaction_id])
             }
