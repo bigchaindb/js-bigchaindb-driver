@@ -100,7 +100,7 @@ export default class Transaction {
      * @returns {object} Ed25519 Condition (that will need to wrapped in an Output)
      */
     makeEd25519Condition(publicKey, json = true) {
-        const publicKeyBuffer = new Buffer(base58.decode(publicKey))
+        const publicKeyBuffer = new Buffer(this.base58.decode(publicKey))
 
         const ed25519Fulfillment = new cc.Ed25519Sha256()
         ed25519Fulfillment.setPublicKey(publicKeyBuffer)
@@ -135,7 +135,7 @@ export default class Transaction {
                 details.subconditions.map(getPublicKeys)
             }
         }
-        getPublicKeys(condition.details)
+        this.getPublicKeys(condition.details)
         return {
             condition,
             'amount': amount,
@@ -155,7 +155,7 @@ export default class Transaction {
         sha256Fulfillment.preimage = new Buffer(preimage)
 
         if (json) {
-            return ccJsonify(sha256Fulfillment)
+            return this.ccJsonify(sha256Fulfillment)
         }
         return sha256Fulfillment
     }
@@ -178,7 +178,7 @@ export default class Transaction {
         })
 
         if (json) {
-            return ccJsonify(thresholdCondition)
+            return this.ccJsonify(thresholdCondition)
         }
 
         return thresholdCondition
