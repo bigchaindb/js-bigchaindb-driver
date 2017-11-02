@@ -2,8 +2,6 @@ import test from 'ava'
 import sinon from 'sinon'
 
 import { Transaction } from '../../src'
-import * as makeTransaction from '../../src/transaction/makeTransaction' // eslint-disable-line
-import makeInputTemplate from '../../src/transaction/makeInputTemplate'
 
 import {
     alice,
@@ -70,7 +68,7 @@ test('makeOutput throws TypeError with incorrect amount type', t => {
 
 
 test('Create TRANSFER transaction based on CREATE transaction', t => {
-    sinon.spy(makeTransaction, 'default')
+    sinon.spy(Transaction.makeTransaction, 'default')
 
     Transaction.makeTransferTransaction(
         createTx,
@@ -83,7 +81,7 @@ test('Create TRANSFER transaction based on CREATE transaction', t => {
         { id: createTx.id },
         metaData,
         [aliceOutput],
-        [makeInputTemplate(
+        [Transaction.makeInputTemplate(
             [alice.publicKey],
             { output_index: 0, transaction_id: createTx.id }
         )]
@@ -92,13 +90,13 @@ test('Create TRANSFER transaction based on CREATE transaction', t => {
     // NOTE: `src/transaction/makeTransaction` is `export default`, hence we
     // can only mock `makeTransaction.default` with a hack:
     // See: https://stackoverflow.com/a/33676328/1263876
-    t.truthy(makeTransaction.default.calledWith(...expected))
-    makeTransaction.default.restore()
+    t.truthy(Transaction.makeTransaction.default.calledWith(...expected))
+    Transaction.makeTransaction.default.restore()
 })
 
 
 test('Create TRANSFER transaction based on TRANSFER transaction', t => {
-    sinon.spy(makeTransaction, 'default')
+    sinon.spy(Transaction.makeTransaction, 'default')
 
     Transaction.makeTransferTransaction(
         transferTx,
@@ -111,12 +109,12 @@ test('Create TRANSFER transaction based on TRANSFER transaction', t => {
         { id: transferTx.asset.id },
         metaData,
         [aliceOutput],
-        [makeInputTemplate(
+        [Transaction.makeInputTemplate(
             [alice.publicKey],
             { output_index: 0, transaction_id: transferTx.id }
         )]
     ]
 
-    t.truthy(makeTransaction.default.calledWith(...expected))
-    makeTransaction.default.restore()
+    t.truthy(Transaction.makeTransaction.default.calledWith(...expected))
+    Transaction.makeTransaction.default.restore()
 })
