@@ -1,3 +1,4 @@
+import makeFulfillment from './makeFulfillment'
 import makeInputTemplate from './makeInputTemplate'
 import makeTransaction from './makeTransaction'
 
@@ -25,7 +26,8 @@ export default function makeCreateTransaction(asset, metadata, outputs, ...issue
     const assetDefinition = {
         'data': asset || null,
     }
-    const inputs = issuers.map((issuer) => makeInputTemplate([issuer]))
+    const inputs = issuers.map((issuer) => makeInputTemplate([issuer], null,
+        makeFulfillment([issuer])))
 
     return makeTransaction('CREATE', assetDefinition, metadata, outputs, inputs)
 }

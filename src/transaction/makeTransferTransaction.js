@@ -1,3 +1,4 @@
+import makeFulfillment from './makeFulfillment'
 import makeInputTemplate from './makeInputTemplate'
 import makeTransaction from './makeTransaction'
 
@@ -36,14 +37,14 @@ export default function makeTransferTransaction(
             'output_index': outputIndex,
             'transaction_id': unspentTransaction.id,
         }
-
-        return makeInputTemplate(fulfilledOutput.public_keys, transactionLink)
+        return makeInputTemplate(fulfilledOutput.public_keys, transactionLink,
+            makeFulfillment(outputs[outputIndex].public_keys))
     })
-
     const assetLink = {
         'id': unspentTransaction.operation === 'CREATE' ? unspentTransaction.id
             : unspentTransaction.asset.id
     }
+    const makeT = makeTransaction('TRANSFER', assetLink, metadata, outputs, inputs)
 
-    return makeTransaction('TRANSFER', assetLink, metadata, outputs, inputs)
+    return makeT
 }

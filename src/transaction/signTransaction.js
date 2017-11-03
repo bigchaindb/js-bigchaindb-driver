@@ -21,14 +21,20 @@ import serializeTransactionIntoCanonicalString from './serializeTransactionIntoC
 export default function signTransaction(transaction, ...privateKeys) {
     const signedTx = clone(transaction)
     signedTx.inputs.forEach((input, index) => {
-        const privateKey = privateKeys[index]
-        const privateKeyBuffer = new Buffer(base58.decode(privateKey))
-        const serializedTransaction = serializeTransactionIntoCanonicalString(transaction)
-        const ed25519Fulfillment = new cc.Ed25519Sha256()
-        ed25519Fulfillment.sign(new Buffer(serializedTransaction), privateKeyBuffer)
-        const fulfillmentUri = ed25519Fulfillment.serializeUri()
+        console.log('inpuuuuut', input)
 
-        input.fulfillment = fulfillmentUri
+        if (input.fulfillment.type === 'ed25519-sha-256') {
+            transaction.inputs[0].fulfillment = null
+            const privateKey = privateKeys[index]
+            const privateKeyBuffer = new Buffer(base58.decode(privateKey))
+            const serializedTransaction = serializeTransactionIntoCanonicalString(transaction)
+            const ed25519Fulfillment = new cc.Ed25519Sha256()
+            ed25519Fulfillment.sign(new Buffer(serializedTransaction), privateKeyBuffer)
+            const fulfillmentUri = ed25519Fulfillment.serializeUri()
+            input.fulfillment = fulfillmentUri
+        } else if (input.fulfillment.type === 'threshold-sha-256') {
+            input.fulfillment = 'fulfillmentUri'
+        }
     })
 
     return signedTx
