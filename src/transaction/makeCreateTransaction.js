@@ -26,8 +26,8 @@ export default function makeCreateTransaction(asset, metadata, outputs, ...issue
     const assetDefinition = {
         'data': asset || null,
     }
-    const inputs = issuers.map((issuer) => makeInputTemplate([issuer], null,
-        makeFulfillment([issuer])))
+    // Create transaction has 1 and just 1 input
+    const inputs = makeInputTemplate(issuers, null, makeFulfillment(issuers))
 
-    return makeTransaction('CREATE', assetDefinition, metadata, outputs, inputs)
+    return makeTransaction('CREATE', assetDefinition, metadata, outputs, [inputs])
 }
