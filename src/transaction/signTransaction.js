@@ -20,13 +20,14 @@ import serializeTransactionIntoCanonicalString from './serializeTransactionIntoC
  */
 export default function signTransaction(transaction, ...privateKeys) {
     const signedTx = clone(transaction)
-    signedTx.inputs.forEach((input, index) => {
-        console.log('inpuuuuut', input)
-        transaction.inputs[index].fulfillment = null // OJOOO
-        const serializedTransaction = serializeTransactionIntoCanonicalString(transaction)
-
+    transaction.inputs.forEach((input) => {
+        input.fulfillment = null // OJOOO
+    })
+    const serializedTransaction = serializeTransactionIntoCanonicalString(transaction)
+    signedTx.inputs.forEach((input) => {
         if (input.fulfillment.type === 'ed25519-sha-256') {
-            const privateKey = privateKeys[index] // TODO index is not correct here. just work for some cases
+            const privateKey = privateKeys[0]
+            privateKeys.splice(0, 1)
             const privateKeyBuffer = new Buffer(base58.decode(privateKey))
             const ed25519Fulfillment = new cc.Ed25519Sha256()
             ed25519Fulfillment.sign(new Buffer(serializedTransaction), privateKeyBuffer)
@@ -34,8 +35,9 @@ export default function signTransaction(transaction, ...privateKeys) {
             input.fulfillment = fulfillmentUri
         } else if (input.fulfillment.type === 'threshold-sha-256') {
             const thresholdFulfillment = new cc.ThresholdSha256()
-            input.fulfillment.subconditions.forEach((subcondition, indexSubcondition) => {
-                const privateKey = privateKeys[index + indexSubcondition] // TODO index is not correct here. just work for some cases
+            input.fulfillment.subconditions.forEach(() => {
+                const privateKey = privateKeys[0]
+                privateKeys.splice(0, 1)
                 const privateKeyBuffer = new Buffer(base58.decode(privateKey))
                 const ed25519subFulfillment = new cc.Ed25519Sha256()
                 ed25519subFulfillment.sign(new Buffer(serializedTransaction), privateKeyBuffer)

@@ -38,7 +38,7 @@ export default function makeTransferTransaction(
             'transaction_id': unspentTransaction.id,
         }
         return makeInputTemplate(fulfilledOutput.public_keys, transactionLink,
-            makeFulfillment(outputs[outputIndex].public_keys))
+            makeFulfillment(fulfilledOutput.public_keys))
     })
     const assetLink = {
         'id': unspentTransaction.operation === 'CREATE' ? unspentTransaction.id

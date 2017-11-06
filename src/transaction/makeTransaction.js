@@ -26,7 +26,9 @@ export default function makeTransaction(operation, asset, metadata = null, outpu
     tx.outputs = outputs
 
     // Hashing must be done after, as the hash is of the Transaction (up to now)
-    tx.inputs[0].fulfillment = null
+    tx.inputs.forEach((input) => {
+        input.fulfillment = null
+    })
     tx.id = hashTransaction(tx)
     tx.inputs = realInputs
     return tx
