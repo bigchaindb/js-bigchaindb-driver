@@ -22,7 +22,7 @@ export default function makeTransaction(operation, asset, metadata = null, outpu
     tx.operation = operation
     tx.asset = asset
     tx.metadata = metadata
-    tx.inputs = inputs
+    tx.inputs = realInputs
     tx.outputs = outputs
 
     // Hashing must be done after, as the hash is of the Transaction (up to now)
@@ -30,6 +30,6 @@ export default function makeTransaction(operation, asset, metadata = null, outpu
         input.fulfillment = null
     })
     tx.id = hashTransaction(tx)
-    tx.inputs = realInputs
+    tx.inputs = inputs
     return tx
 }

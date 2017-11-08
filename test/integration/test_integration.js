@@ -42,6 +42,24 @@ test('Valid CREATE transaction', t => {
 })
 
 
+test('Valid CREATE transaction with Threshold input', t => {
+    const conn = new Connection(API_PATH)
+
+    const tx = Transaction.makeCreateTransaction(
+        asset(),
+        metaData,
+        [aliceOutput],
+        alice.publicKey,
+        bob.publicKey
+    )
+    const txSigned = Transaction.signTransaction(tx, alice.privateKey, bob.privateKey)
+
+    return conn.postTransaction(txSigned)
+        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+        .then(resTx => t.truthy(resTx))
+})
+
+
 test('Valid TRANSFER transaction with single Ed25519 input', t => {
     const conn = new Connection(API_PATH)
     const createTx = Transaction.makeCreateTransaction(
@@ -109,6 +127,39 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs', t => {
         })
 })
 
+test('Valid TRANSFER transaction with Threshold input', t => {
+    const conn = new Connection(API_PATH)
+    const createTx = Transaction.makeCreateTransaction(
+        asset(),
+        metaData,
+        [aliceOutput],
+        alice.publicKey,
+        bob.publicKey
+    )
+    const createTxSigned = Transaction.signTransaction(
+        createTx,
+        alice.privateKey,
+        bob.privateKey
+    )
+
+    return conn.postTransaction(createTxSigned)
+        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+        .then(() => {
+            const transferTx = Transaction.makeTransferTransaction(
+                createTxSigned,
+                metaData,
+                [aliceOutput],
+                0
+            )
+            const transferTxSigned = Transaction.signTransaction(
+                transferTx,
+                alice.privateKey
+            )
+            return conn.postTransaction(transferTxSigned)
+                .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+                .then(resTx => t.truthy(resTx))
+        })
+})
 
 test('Search for spent and unspent outputs of a given public key', t => {
     const conn = new Connection(API_PATH)
@@ -214,7 +265,6 @@ test('Search for spent outputs for a given public key', t => {
     )
     const createTxSigned = Transaction.signTransaction(
         createTx,
-        carol.privateKey,
         carol.privateKey
     )
 

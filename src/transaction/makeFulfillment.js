@@ -1,4 +1,4 @@
-export default function createFulfillment(issuers = []) {
+export default function makeFulfillment(issuers = []) {
     if (issuers.length === 1) {
         const fulfillment = {
             type: 'ed25519-sha-256',

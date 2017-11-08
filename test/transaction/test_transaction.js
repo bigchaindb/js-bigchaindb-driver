@@ -4,6 +4,7 @@ import sinon from 'sinon'
 import { Transaction } from '../../src'
 import * as makeTransaction from '../../src/transaction/makeTransaction' // eslint-disable-line
 import makeInputTemplate from '../../src/transaction/makeInputTemplate'
+import makeFulfillment from '../../src/transaction/makeFulfillment'
 
 import {
     alice,
@@ -85,7 +86,8 @@ test('Create TRANSFER transaction based on CREATE transaction', t => {
         [aliceOutput],
         [makeInputTemplate(
             [alice.publicKey],
-            { output_index: 0, transaction_id: createTx.id }
+            { output_index: 0, transaction_id: createTx.id },
+            makeFulfillment([alice.publicKey])
         )]
     ]
 
@@ -113,7 +115,8 @@ test('Create TRANSFER transaction based on TRANSFER transaction', t => {
         [aliceOutput],
         [makeInputTemplate(
             [alice.publicKey],
-            { output_index: 0, transaction_id: transferTx.id }
+            { output_index: 0, transaction_id: transferTx.id },
+            makeFulfillment([alice.publicKey])
         )]
     ]
 

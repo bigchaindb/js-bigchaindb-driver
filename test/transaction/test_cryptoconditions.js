@@ -62,9 +62,7 @@ test('Fulfillment correctly formed', t => {
         [0]
     )
     const txSigned = Transaction.signTransaction(txTransfer, alice.privateKey)
-    txTransfer.inputs.forEach((input) => {
-        input.fulfillment = null // OJOOO
-    })
+
     const msg = Transaction.serializeTransactionIntoCanonicalString(txTransfer)
     t.truthy(cc.validateFulfillment(txSigned.inputs[0].fulfillment,
         txCreate.outputs[0].condition.uri,
