@@ -34,16 +34,26 @@ export default function signTransaction(transaction, ...privateKeys) {
             const fulfillmentUri = ed25519Fulfillment.serializeUri()
             input.fulfillment = fulfillmentUri
         } else if (input.fulfillment.type === 'threshold-sha-256') {
+            // Not valid for more than one input with m-of-n signatures where m < n.
             const thresholdFulfillment = new cc.ThresholdSha256()
-            input.fulfillment.subconditions.forEach(() => {
-                const privateKey = privateKeys[0]
-                privateKeys.splice(0, 1)
-                const privateKeyBuffer = new Buffer(base58.decode(privateKey))
+            // m represents the number of signatures needed for this input
+            let m = 0
+            input.fulfillment.subconditions.forEach((subcdt) => {
                 const ed25519subFulfillment = new cc.Ed25519Sha256()
-                ed25519subFulfillment.sign(new Buffer(serializedTransaction), privateKeyBuffer)
+                if (privateKeys.length > 0) {
+                    m++
+                    const privateKey = privateKeys[0]
+                    privateKeys.splice(0, 1)
+                    const privateKeyBuffer = new Buffer(base58.decode(privateKey))
+                    ed25519subFulfillment.sign(new Buffer(serializedTransaction), privateKeyBuffer)
+                } else {
+                    // All conditions are needed as the "circuit definition" is needed.
+                    const publicKeyBuffer = new Buffer(base58.decode(subcdt.public_key))
+                    ed25519subFulfillment.setPublicKey(publicKeyBuffer)
+                }
                 thresholdFulfillment.addSubfulfillmentUri(ed25519subFulfillment)
             })
-            thresholdFulfillment.setThreshold(1) // defaults to subconditions.length
+            thresholdFulfillment.setThreshold(m)
             const fulfillmentUri = thresholdFulfillment.serializeUri()
             input.fulfillment = fulfillmentUri
         }
