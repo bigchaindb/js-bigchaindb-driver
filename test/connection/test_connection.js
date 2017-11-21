@@ -219,3 +219,18 @@ test('Get asset for text', t => {
         { query: { search } }
     ))
 })
+
+
+test('Get metadata for text', t => {
+    const expectedPath = 'path'
+    const search = 'abc'
+
+    conn._req = sinon.spy()
+    conn.getApiUrls = sinon.stub().returns(expectedPath)
+
+    conn.searchMetadata(search)
+    t.truthy(conn._req.calledWith(
+        expectedPath,
+        { query: { search } }
+    ))
+})
