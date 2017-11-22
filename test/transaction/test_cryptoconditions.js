@@ -56,10 +56,9 @@ test('Fulfillment correctly formed', t => {
         alice.publicKey
     )
     const txTransfer = Transaction.makeTransferTransaction(
-        txCreate,
-        {},
+        [{ tx: txCreate, output_index: 0 }],
         [Transaction.makeOutput(Transaction.makeEd25519Condition(alice.publicKey))],
-        [0]
+        {}
     )
     const msg = Transaction.serializeTransactionIntoCanonicalString(txTransfer)
     const txSigned = Transaction.signTransaction(txTransfer, alice.privateKey)

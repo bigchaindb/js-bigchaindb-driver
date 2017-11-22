@@ -73,10 +73,9 @@ test('Create TRANSFER transaction based on CREATE transaction', t => {
     sinon.spy(makeTransaction, 'default')
 
     Transaction.makeTransferTransaction(
-        createTx,
-        metaData,
+        [{ tx: createTx, output_index: 0 }],
         [aliceOutput],
-        0
+        metaData
     )
     const expected = [
         'TRANSFER',
@@ -101,10 +100,9 @@ test('Create TRANSFER transaction based on TRANSFER transaction', t => {
     sinon.spy(makeTransaction, 'default')
 
     Transaction.makeTransferTransaction(
-        transferTx,
-        metaData,
+        [{ tx: transferTx, output_index: 0 }],
         [aliceOutput],
-        0
+        metaData
     )
     const expected = [
         'TRANSFER',

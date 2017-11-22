@@ -36,11 +36,11 @@ A simple connection with BigchainDB can be established like this.
 	const conn = new driver.Connection(API_PATH)
 
 It is also possible to connect to a BigchainDB node of the IPDB test net.
-To do so, you need to pass the **app_id and app_key**. 
+To do so, you need to pass the **app_id and app_key**.
 
-.. code-block:: js 
+.. code-block:: js
 
-	let bdb = new driver.Connection('https://test.ipdb.io/api/v1/', { 
+	let bdb = new driver.Connection('https://test.ipdb.io/api/v1/', {
 		app_id: 'dgi829l9',
 		app_key: 'u008ik1bf83b43ce3a95uu0727e66fb9'
 	})
@@ -71,10 +71,10 @@ that represents a bicycle:
 		}
 	}
 
-We'll suppose that the bike belongs to Alice, and that it eventually will be 
+We'll suppose that the bike belongs to Alice, and that it eventually will be
 transferred to Bob.
 
-In general, you are free to define any JSON object you which to store for the 
+In general, you are free to define any JSON object you which to store for the
 ``'data'`` property (assetdata).
 
 Metadata Definition (*optional*)
@@ -91,11 +91,11 @@ For example, the bicycle will be transferred on earth which is metadata:
 Asset Creation
 --------------
 
-We're now ready to create the digital asset. First, let's make a 'CREATE' 
+We're now ready to create the digital asset. First, let's make a 'CREATE'
 transaction:
 
 .. code-block:: js
-	
+
 	const txCreateAliceSimple = driver.Transaction.makeCreateTransaction(
    		assetdata,
    		metadata,
@@ -113,10 +113,10 @@ For `CREATE` Transactions, this should usually just be a list of
 Outputs wrapping Ed25519 Conditions generated from the issuers' public
 keys (so that the issuers are the recipients of the created asset).
 
-``alice.publicKey`` can be considered as the Input for the transaction. 
-Each input spends/transfers a previous output by satisfying/fulfilling 
-the crypto-conditions on that output. A CREATE transaction should have 
-exactly one input. A TRANSFER transaction should have at least one input (i.e. ≥1). 
+``alice.publicKey`` can be considered as the Input for the transaction.
+Each input spends/transfers a previous output by satisfying/fulfilling
+the crypto-conditions on that output. A CREATE transaction should have
+exactly one input. A TRANSFER transaction should have at least one input (i.e. ≥1).
 
 Sign the transaction with private key of Alice to fulfill it:
 
@@ -142,7 +142,7 @@ To check the status of the transaction:
 
 	conn.getStatus(txCreateAliceSimpleSigned.id)
 
-It is also possible to check the status every 0.5 seconds 
+It is also possible to check the status every 0.5 seconds
 with use of the transaction ``id``:
 
 .. code-block:: js
@@ -168,29 +168,28 @@ Alice could retrieve the transaction:
 
 	conn.getTransaction(txCreateAliceSimpleSigned.id)
 
-First, let's prepare the transaction to be transferred. 
+First, let's prepare the transaction to be transferred.
 
 .. code-block:: js
 
 	const txTransferBob = driver.Transaction.makeTransferTransaction(
-		// signedTx to transfer
-		txCreateAliceSimpleSigned,
+		// signedTx to transfer and output index
+		[{ tx: txCreateAliceSimpleSigned, output_index: 0 }],
+
+		[driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey))],
 
 		// metadata
-		{price: '100 euro'},
-
-		[driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey))], 
-		0
+		{price: '100 euro'}
 	);
 
 The function ``makeTransferTransaction()`` needs following parameters:
 
-- Unspent transaction: Previous transaction you have control over (i.e. can fulfill its Output Condition)
-- Metadata for transaction (e.g. price of sold bike)
+- Unspent outputs: Array of `unspent transactions outputs`. Each item contains `Transaction` itself and index of `unspent output` for that `Transaction`.
 - Array of output objects to add to the transaction: Think of these as the recipients of the asset after the transaction. For `TRANSFER` transactions, this should usually just be a list of outputs wrapping Ed25519 conditions generated from the public keys of the recipients.
-- Indices of the outputs in `unspent transaction` that this transaction fulfills.
+- Metadata for transaction (e.g. price of sold bike)
 
-Fulfill transaction by signing it with Alice's private key. 
+
+Fulfill transaction by signing it with Alice's private key.
 
 .. code-block:: js
 
@@ -245,9 +244,9 @@ Let’s perform a text search for all assets that contain the word 'Bicycle Inc.
 	conn.searchAssets('Bicycle Inc.')
     		.then(assets => console.log('Found assets with serial number Bicycle Inc.:', assets))
 
-Which leads to following result: 
+Which leads to following result:
 
-.. code-block:: js 
+.. code-block:: js
 
 	[
 	   {
@@ -331,13 +330,13 @@ Recap: Asset Creation & Transfer
 		// Transfer bicycle to Bob
 		.then(() => {
 			const txTransferBob = driver.Transaction.makeTransferTransaction(
-				// signedTx to transfer
-				txCreateAliceSimpleSigned,
+				// signedTx to transfer and output index
+				[{ tx: txCreateAliceSimpleSigned, output_index: 0 }],
+				[driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey))],
 				// metadata
-				{price: '100 euro'},
-				[driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey))], 
-				0)
-			
+				{price: '100 euro'}
+			)
+
 			// Sign with alice's private key
 			let txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey)
 			console.log('Posting signed transaction: ', txTransferBobSigned)
@@ -356,13 +355,13 @@ Recap: Asset Creation & Transfer
 		// Search for asset based on the serial number of the bicycle
 		.then(() => conn.searchAssets('Bicycle Inc.'))
 		.then(assets => console.log('Found assets with serial number Bicycle Inc.:', assets))
-    
 
-Ed25519Keypair Seed Functionality 
+
+Ed25519Keypair Seed Functionality
 ---------------------------------
 
-BigchainDB JavaScript driver allows you to create a keypair based on a seed. 
-The constructor accepts a 32 byte seed. One of the ways to create a seed from 
+BigchainDB JavaScript driver allows you to create a keypair based on a seed.
+The constructor accepts a 32 byte seed. One of the ways to create a seed from
 a string (e.g. a passphrase) is the one used by ``bip39``, specifically the function ``mnemonicToSeed``.
 
 Install bip39 with npm: ``npm install bip39``
@@ -490,7 +489,7 @@ Below piece of code can be opened in your web browser. It will connect to your w
 	</div>
 
 
-Besides that, a NodeJs version has been created to display the validated transactions. 
+Besides that, a NodeJs version has been created to display the validated transactions.
 All transactions are printed to the console. To use this piece of code, you will need the ``ws`` (WebSocket package) through npm: ``npm install --save ws``.
 
 .. code-block:: js
@@ -514,13 +513,13 @@ All transactions are printed to the console. To use this piece of code, you will
 Difference unspent and spent output
 -----------------------------------
 An unspent output is simply an output of a transaction which isn't yet an input of another transaction.
-So, if we transfer an asset, the output becomes spent, because it becomes the input of the transfer transaction. 
+So, if we transfer an asset, the output becomes spent, because it becomes the input of the transfer transaction.
 The transfer transactions its output becomes unspent now until he transfers the asset again to somebody else.
 
-We will demonstrate this with a piece of code where we transfer a bicycle from Alice to Bob, 
+We will demonstrate this with a piece of code where we transfer a bicycle from Alice to Bob,
 and further we transfer it from Bob to Chris. Expectations:
 
-* Output for Alice is spent 
+* Output for Alice is spent
 * Output for Bob is spent
 * Output for Chris is unspent (he is the last person in transaction chain)
 
@@ -528,8 +527,8 @@ and further we transfer it from Bob to Chris. Expectations:
 
 	const driver = require('bigchaindb-driver')
 	const API_PATH = 'http://localhost:9984/api/v1/'
-	const conn = new driver.Connection(API_PATH)	
-		
+	const conn = new driver.Connection(API_PATH)
+
 	const alice = new driver.Ed25519Keypair()
 	const bob = new driver.Ed25519Keypair()
 	const chris = new driver.Ed25519Keypair()
@@ -571,11 +570,11 @@ and further we transfer it from Bob to Chris. Expectations:
 		// Transfer bicycle from Alice to Bob
 		.then(() => {
 			const txTransferBob = driver.Transaction.makeTransferTransaction(
-				txCreateAliceSimpleSigned,
-				{'newOwner': 'Bob'},
-				[driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey))], 
-				0)
-			
+				[{ tx: txCreateAliceSimpleSigned, output_index: 0 }],
+				[driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey))],
+				{'newOwner': 'Bob'}
+			)
+
 			// Sign with alice's private key
 			txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey)
 			console.log('\n\nPosting signed transaction to Bob:\n', txTransferBobSigned)
@@ -588,11 +587,11 @@ and further we transfer it from Bob to Chris. Expectations:
 		// Second transfer of bicycle from Bob to Chris
 		.then(tx => {
 			const txTransferChris = driver.Transaction.makeTransferTransaction(
-				txTransferBobSigned,
-				{'newOwner': 'Chris'},
-				[driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(chris.publicKey))], 
-				0)
-			
+				[{ tx: txTransferBobSigned, output_index: 0 }],
+				[driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(chris.publicKey))],
+				{'newOwner': 'Chris'}
+			)
+
 			// Sign with bob's private key
 			let txTransferChrisSigned = driver.Transaction.signTransaction(txTransferChris, bob.privateKey)
 			console.log('\n\nPosting signed transaction to Chris:\n', txTransferChrisSigned)
@@ -627,7 +626,7 @@ and further we transfer it from Bob to Chris. Expectations:
 		})
 		.catch(res => {console.log(res)})
 
-Output of above code looks like this. As you can see, Chris has no spent output, but one unspent output. 
+Output of above code looks like this. As you can see, Chris has no spent output, but one unspent output.
 
 .. code-block:: js
 
@@ -654,7 +653,7 @@ Let's assume we have created a token to pay each other for small transactions li
 	}
 
 Let's create the asset. Note that we give an extra parameter to the ``makeOutput()`` function.
-We give it the parameter ``'4'`` to indicate that we want to create 4 tokens. 
+We give it the parameter ``'4'`` to indicate that we want to create 4 tokens.
 **Pay attention to give the function a String instead of a plain Number.**
 
 .. code-block:: js
@@ -676,35 +675,36 @@ This gives us 4 tokens to transfer.
 .. code-block:: js
 
 	const txTransferDivisible = driver.Transaction.makeTransferTransaction(
-		txCreateAliceDivisibleSigned,
-		{
-			metaDataMessage: 'I am specific to this transfer transaction'
-		},
+		[{ tx: txCreateAliceDivisibleSigned, output_index: 0 }],
 		[
 			driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(carly.publicKey), '2'),
 			driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey), '1'),
 			driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(alice.publicKey), '1')
-		], 0);
+		],
+		{
+			metaDataMessage: 'I am specific to this transfer transaction'
+		}
+	);
 
 To make the use of the last parameter of ``makeTransferTransaction()`` function more clear, we will do another transfer.
 We will fulfill the first and second output of the create transaction (0, 1) because Carly and Bob decide to redistribute some money.
 
 * Output 0 represents 2 tokens for Carly
-* Output 1 represents 1 token for Bob 
+* Output 1 represents 1 token for Bob
 
 This gives us 3 tokens to redistribute. I want to give 1 token to Carly and 2 tokens Alice.
 
 .. code-block:: js
-
 	const txTransferDivisibleInputs = driver.Transaction.makeTransferTransaction(
-		txTransferDivisibleSigned,
-		{
-			metaDataMessage: 'I am specific to this transfer transaction'
-		},
+		[{ tx: txTransferDivisibleSigned, output_index: 0 }, { tx: txTransferDivisibleSigned, output_index: 1 }],
 		[
 			driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(carly.publicKey), '1'),
 			driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(alice.publicKey), '2')
-		], 0, 1)
+		],
+		{
+			metaDataMessage: 'I am specific to this transfer transaction'
+		}
+	);
 
 Because we want to fulfill two outputs (Carly and Bob), we have to sign the transfer transaction in the same order:
 
