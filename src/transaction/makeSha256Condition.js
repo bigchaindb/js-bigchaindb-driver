@@ -1,6 +1,6 @@
 import { Buffer } from 'buffer'
 
-import cc from 'five-bells-condition'
+import cc from 'js-crypto-conditions'
 
 import ccJsonify from './utils/ccJsonify'
 
