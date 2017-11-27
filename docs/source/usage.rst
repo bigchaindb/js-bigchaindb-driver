@@ -188,7 +188,6 @@ The function ``makeTransferTransaction()`` needs following parameters:
 - Array of output objects to add to the transaction: Think of these as the recipients of the asset after the transaction. For `TRANSFER` transactions, this should usually just be a list of outputs wrapping Ed25519 conditions generated from the public keys of the recipients.
 - Metadata for transaction (e.g. price of sold bike)
 
-
 Fulfill transaction by signing it with Alice's private key.
 
 .. code-block:: js
@@ -227,6 +226,10 @@ Querying for Assets
 
 BigchainDB allows you to query for assets using simple text search. This search is applied to all the strings inside the asset payload and returns all the assets that match a given text search string.
 
+BigchainDB also allows you to query for metadata, but there are some differences. The response of the text search call, beside retrieving the asset or metadata in each case, it consist of:
+ - In the assets search the call returns the asset id which is the same id of the transaction that created the asset.
+ - In the metadata search the call returns the transaction id that contains this metadata.
+
 Let’s assume that we created 3 assets that look like this:
 
 .. code-block:: js
@@ -264,7 +267,49 @@ Which leads to following result:
 	]
 
 
-This call returns all the assets that match the string 'Bicycle Inc.', sorted by text score, as well as the asset id. This is the same id of the transaction that created the asset.
+This call returns all the assets that match the string 'Bicycle Inc.', sorted by text score, as well as the asset id.
+
+
+Querying for Metadata
+-------------------
+
+Similar as querying for assets, in BigchainDB you can query for metadata using simple text search.
+This search is applied to all the strings inside the metadata payload and returns all the metadata payloads that match a given text search string.
+
+Having 3 metadata objets that look like this:
+
+.. code-block:: js
+
+	metadata = [
+	   {'state': {'price': 145, 'eur/us': '1.32'}},
+	   {'state': {'price': 236, 'eur/us': '1.15'}},
+	   {'state': {'price': 102, 'eur/us': '1.32'}},
+	]
+
+Let’s perform a text search for all metadata that contains the word '1.32':
+
+.. code-block:: js
+
+	conn.searchMetadata('Bicycle Inc.')
+    		.then(assets => console.log('Found assets with serial number Bicycle Inc.:', assets))
+
+Which leads to following result:
+
+.. code-block:: js
+
+	[
+	   {
+		'metadata': {'state': {'price': 145, 'eur/us': '1.32'}},
+		'id': '14045a0e27ea971f8ac88762d2d74518d3a21f3f0fcd9d8a9a3b644b689cf3eb'
+	   },
+	   {
+		'metadata': {'state': {'price': 102, 'eur/us': '1.32'}},
+		'id': '6dd91f4700b3f66c55c50be009018e96f026d37f565d042d1aedfb322623d17d'
+	   }
+	]
+
+
+This call returns all the metadata objects that match the string '1.32', sorted by text score, as well as the transaction id corresponding to each metadata object.
 
 
 

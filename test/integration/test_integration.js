@@ -326,6 +326,29 @@ test('Search for an asset', t => {
 })
 
 
+test('Search for metadata', t => {
+    const conn = new Connection(API_PATH)
+
+    const createTx = Transaction.makeCreateTransaction(
+        asset(),
+        metaData,
+        [aliceOutput],
+        alice.publicKey
+    )
+    const createTxSigned = Transaction.signTransaction(
+        createTx,
+        alice.privateKey
+    )
+
+    return conn.postTransaction(createTxSigned)
+        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+        .then(() => conn.searchMetadata(createTxSigned.metadata.message))
+        .then(assets => t.truthy(
+            assets.pop(),
+            createTxSigned.metadata.message
+        ))
+})
+
 test('Search blocks containing a transaction', t => {
     const conn = new Connection(API_PATH)
 
