@@ -1,7 +1,7 @@
 import { Buffer } from 'buffer'
 
 import base58 from 'bs58'
-import cc from 'js-crypto-conditions'
+import cc from 'crypto-conditions'
 
 import ccJsonify from './utils/ccJsonify'
 

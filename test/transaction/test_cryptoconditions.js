@@ -1,5 +1,5 @@
 import test from 'ava'
-import cc from 'js-crypto-conditions'
+import cc from 'crypto-conditions'
 import { Ed25519Keypair, Transaction } from '../../src'
 
 
