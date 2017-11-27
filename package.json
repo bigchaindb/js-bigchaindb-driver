@@ -21,10 +21,10 @@
     "clean": "rimraf dist/bundle dist/node",
     "test": "npm run lint && nyc ava test/ && npm run thanks && npm run report-coverage",
     "thanks": "cowsay Hi, thanks for your interest in BigchainDB. We appreciate your contribution!",
-    "release": "./node_modules/release-it/bin/release.js --src.tagName='v%s' --github.release --npm.publish --non-interactive",
-    "release-minor": "./node_modules/release-it/bin/release.js minor --src.tagName='v%s' --github.release --npm.publish --non-interactive",
-    "release-major": "./node_modules/release-it/bin/release.js major --src.tagName='v%s' --github.release --npm.publish --non-interactive",
-    "prepublishOnly": "npm update && npm run build",
+    "release": "./node_modules/release-it/bin/release-it.js --src.tagName='v%s' --github.release --npm.publish --non-interactive",
+    "release-minor": "./node_modules/release-it/bin/release-it.js minor --src.tagName='v%s' --github.release --npm.publish --non-interactive",
+    "release-major": "./node_modules/release-it/bin/release-it.js major --src.tagName='v%s' --github.release --npm.publish --non-interactive",
+    "prepublishOnly": "npm run build",
     "precommit": "lint-staged",
     "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov"
   },
@@ -34,7 +34,7 @@
     ]
   },
   "devDependencies": {
-    "ava": "^0.22.0",
+    "ava": "^0.23.0",
     "babel-cli": "^6.22.2",
     "babel-eslint": "^8.0.0",
     "babel-loader": "^7.0.0",
@@ -52,9 +52,9 @@
     "eslint-config-ascribe": "^3.0.4",
     "eslint-plugin-import": "^2.2.0",
     "husky": "^0.14.0",
-    "lint-staged": "^4.0.0",
+    "lint-staged": "^5.0.0",
     "nyc": "^11.0.2",
-    "release-it": "^3.0.0",
+    "release-it": "^5.0.0",
     "rimraf": "^2.5.4",
     "sinon": "^4.0.0",
     "webpack": "^3.0.0"
