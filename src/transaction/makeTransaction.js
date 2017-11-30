@@ -1,6 +1,3 @@
-import hashTransaction from './hashTransaction'
-
-
 function makeTransactionTemplate() {
     return {
         'id': null,
@@ -21,8 +18,5 @@ export default function makeTransaction(operation, asset, metadata = null, outpu
     tx.metadata = metadata
     tx.inputs = inputs
     tx.outputs = outputs
-
-    // Hashing must be done after, as the hash is of the Transaction (up to now)
-    tx.id = hashTransaction(tx)
     return tx
 }

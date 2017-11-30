@@ -2,6 +2,7 @@ import { Buffer } from 'buffer'
 import base58 from 'bs58'
 import cc from 'crypto-conditions'
 import clone from 'clone'
+import hashTransaction from './hashTransaction'
 
 import serializeTransactionIntoCanonicalString from './serializeTransactionIntoCanonicalString'
 
@@ -31,5 +32,6 @@ export default function signTransaction(transaction, ...privateKeys) {
         input.fulfillment = fulfillmentUri
     })
 
+    signedTx.id = hashTransaction(signedTx)
     return signedTx
 }
