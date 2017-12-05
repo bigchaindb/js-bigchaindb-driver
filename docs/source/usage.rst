@@ -292,7 +292,7 @@ Let’s perform a text search for all metadata that contains the word '1.32':
 
 .. code-block:: js
 
-	conn.searchMetadata('Bicycle Inc.')
+	conn.searchMetadata('1.32')
     		.then(assets => console.log('Found assets with serial number Bicycle Inc.:', assets))
 
 Which leads to following result:
