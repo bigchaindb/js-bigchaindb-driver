@@ -34,3 +34,21 @@ Compatibility Matrix
 +-----------------------+----------------------------------+
 | ``1.0``               | ``0.3.x``                        |
 +-----------------------+----------------------------------+
+| ``1.3``               | ``3.1.x``                        |
++-----------------------+----------------------------------+
+
+
+Older versions
+--------------------
+For versions below 3.2, the transfer transaction is like this:
+
+.. code-block:: js
+
+	const createTranfer = BigchainDB.Transaction.makeTransferTransaction(
+	    txCreated,
+	    metadata, [BigchainDB.Transaction.makeOutput(
+	        BigchainDB.Transaction.makeEd25519Condition(alice.publicKey))],
+	    0
+	)
+
+	const signedTransfer = BigchainDB.Transaction.signTransaction(createTranfer, keypair.privateKey)
