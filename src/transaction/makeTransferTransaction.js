@@ -24,10 +24,10 @@ export default function makeTransferTransaction(
     metadata
 ) {
     const inputs = unspentOutputs.map((unspentOutput) => {
-        const { tx, output_index } = unspentOutput
-        const fulfilledOutput = tx.outputs[output_index]
+        const { tx, outputIndex } = unspentOutput
+        const fulfilledOutput = tx.outputs[outputIndex]
         const transactionLink = {
-            'output_index': output_index,
+            'output_index': outputIndex,
             'transaction_id': tx.id,
         }
 
