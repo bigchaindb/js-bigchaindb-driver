@@ -34,3 +34,49 @@ Compatibility Matrix
 +-----------------------+----------------------------------+
 | ``1.0``               | ``0.3.x``                        |
 +-----------------------+----------------------------------+
+| ``1.3``               | ``3.x.x``                        |
++-----------------------+----------------------------------+
+
+
+Older versions
+--------------------
+For versions below 3.2, a transfer transaction looked like:
+
+.. code-block:: js
+
+	const createTranfer = BigchainDB.Transaction.makeTransferTransaction(
+	    txCreated,
+	    metadata, [BigchainDB.Transaction.makeOutput(
+	        BigchainDB.Transaction.makeEd25519Condition(alice.publicKey))],
+	    0
+	)
+
+	const signedTransfer = BigchainDB.Transaction.signTransaction(createTranfer, keypair.privateKey)
+
+
+In order to upgrade and do it compatible with the new driver version, this transaction should be now:
+
+.. code-block:: js
+
+	const createTranfer = BigchainDB.Transaction.makeTransferTransaction(
+		[{ tx: txCreated, output_index: 0 }],
+		[aliceOutput],
+		metaData
+	)
+
+   const signedTransfer = BigchainDB.Transaction.signTransaction(createTranfer, keypair.privateKey)
+
+
+The upgrade allows to create transfer transaction spending outputs that belong to different transactions.
+So for instance is now possible to create a transfer transaction spending two outputs from two different create transactions:
+
+
+.. code-block:: js
+
+	const createTranfer = BigchainDB.Transaction.makeTransferTransaction(
+		[{ tx: txCreated1, output_index: 0 }, { tx: txCreated2, output_index: 0 }],
+		[aliceOutput],
+		metaData
+	)
+
+   const signedTransfer = BigchainDB.Transaction.signTransaction(createTranfer, keypair.privateKey)

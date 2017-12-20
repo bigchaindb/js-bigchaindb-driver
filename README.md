@@ -16,8 +16,11 @@
 | BigchainDB Server | BigchainDB JavaScript Driver |
 | ----------------- |------------------------------|
 | `0.10`            | `0.1.x`                      |
-| `>= 1.0.0`        | `0.3.x`                      |
+| `1.0.0`        | `0.3.x`                      |
+| `>= 1.3.0`        | `3.x.x`                      |
 
+## Breaking changes
+Version 3.2 of BigchainDB JavaScript Driver introduces a new way of creating transfer transactions. Check [older versions](https://docs.bigchaindb.com/projects/js-driver/en/latest/readme.html#features)
 
 ## Contents
 

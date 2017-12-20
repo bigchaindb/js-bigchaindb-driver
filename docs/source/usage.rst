@@ -173,22 +173,20 @@ First, let's prepare the transaction to be transferred.
 .. code-block:: js
 
 	const txTransferBob = driver.Transaction.makeTransferTransaction(
-		// signedTx to transfer
-		txCreateAliceSimpleSigned,
-
-		// metadata
-		{price: '100 euro'},
+		// signedTx to transfer and output index
+		[{ tx: txCreateAliceSimpleSigned, output_index: 0 }],
 
 		[driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey))],
-		0
+
+		// metadata
+		{price: '100 euro'}
 	);
 
 The function ``makeTransferTransaction()`` needs following parameters:
 
-- Unspent transaction: Previous transaction you have control over (i.e. can fulfill its Output Condition)
-- Metadata for transaction (e.g. price of sold bike)
+- Unspent outputs: Array of `unspent transactions outputs`. Each item contains `Transaction` itself and index of `unspent output` for that `Transaction`.
 - Array of output objects to add to the transaction: Think of these as the recipients of the asset after the transaction. For `TRANSFER` transactions, this should usually just be a list of outputs wrapping Ed25519 conditions generated from the public keys of the recipients.
-- Indices of the outputs in `unspent transaction` that this transaction fulfills.
+- Metadata for transaction (e.g. price of sold bike)
 
 Fulfill transaction by signing it with Alice's private key.
 
@@ -377,12 +375,12 @@ Recap: Asset Creation & Transfer
 		// Transfer bicycle to Bob
 		.then(() => {
 			const txTransferBob = driver.Transaction.makeTransferTransaction(
-				// signedTx to transfer
-				txCreateAliceSimpleSigned,
-				// metadata
-				{price: '100 euro'},
+				// signedTx to transfer and output index
+				[{ tx: txCreateAliceSimpleSigned, output_index: 0 }],
 				[driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey))],
-				0)
+				// metadata
+				{price: '100 euro'}
+			)
 
 			// Sign with alice's private key
 			let txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey)
@@ -617,10 +615,10 @@ and further we transfer it from Bob to Chris. Expectations:
 		// Transfer bicycle from Alice to Bob
 		.then(() => {
 			const txTransferBob = driver.Transaction.makeTransferTransaction(
-				txCreateAliceSimpleSigned,
-				{'newOwner': 'Bob'},
+				[{ tx: txCreateAliceSimpleSigned, output_index: 0 }],
 				[driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey))],
-				0)
+				{'newOwner': 'Bob'}
+			)
 
 			// Sign with alice's private key
 			txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey)
@@ -634,10 +632,10 @@ and further we transfer it from Bob to Chris. Expectations:
 		// Second transfer of bicycle from Bob to Chris
 		.then(tx => {
 			const txTransferChris = driver.Transaction.makeTransferTransaction(
-				txTransferBobSigned,
-				{'newOwner': 'Chris'},
+				[{ tx: txTransferBobSigned, output_index: 0 }],
 				[driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(chris.publicKey))],
-				0)
+				{'newOwner': 'Chris'}
+			)
 
 			// Sign with bob's private key
 			let txTransferChrisSigned = driver.Transaction.signTransaction(txTransferChris, bob.privateKey)
@@ -722,15 +720,16 @@ This gives us 4 tokens to transfer.
 .. code-block:: js
 
 	const txTransferDivisible = driver.Transaction.makeTransferTransaction(
-		txCreateAliceDivisibleSigned,
-		{
-			metaDataMessage: 'I am specific to this transfer transaction'
-		},
+		[{ tx: txCreateAliceDivisibleSigned, output_index: 0 }],
 		[
 			driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(carly.publicKey), '2'),
 			driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey), '1'),
 			driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(alice.publicKey), '1')
-		], 0);
+		],
+		{
+			metaDataMessage: 'I am specific to this transfer transaction'
+		}
+	);
 
 To make the use of the last parameter of ``makeTransferTransaction()`` function more clear, we will do another transfer.
 We will fulfill the first and second output of the create transaction (0, 1) because Carly and Bob decide to redistribute some money.
@@ -741,16 +740,16 @@ We will fulfill the first and second output of the create transaction (0, 1) bec
 This gives us 3 tokens to redistribute. I want to give 1 token to Carly and 2 tokens Alice.
 
 .. code-block:: js
-
 	const txTransferDivisibleInputs = driver.Transaction.makeTransferTransaction(
-		txTransferDivisibleSigned,
-		{
-			metaDataMessage: 'I am specific to this transfer transaction'
-		},
+		[{ tx: txTransferDivisibleSigned, output_index: 0 }, { tx: txTransferDivisibleSigned, output_index: 1 }],
 		[
 			driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(carly.publicKey), '1'),
 			driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(alice.publicKey), '2')
-		], 0, 1)
+		],
+		{
+			metaDataMessage: 'I am specific to this transfer transaction'
+		}
+	);
 
 Because we want to fulfill two outputs (Carly and Bob), we have to sign the transfer transaction in the same order:
 
