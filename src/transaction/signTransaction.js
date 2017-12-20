@@ -25,8 +25,10 @@ export default function signTransaction(transaction, ...privateKeys) {
         const privateKey = privateKeys[index]
         const privateKeyBuffer = new Buffer(base58.decode(privateKey))
         const serializedTransaction = serializeTransactionIntoCanonicalString(transaction)
+        const transactionHash = input.fulfills ? serializedTransaction.concat(input.transaction_id)
+            .concat(input.output_index) : serializedTransaction
         const ed25519Fulfillment = new cc.Ed25519Sha256()
-        ed25519Fulfillment.sign(new Buffer(serializedTransaction), privateKeyBuffer)
+        ed25519Fulfillment.sign(new Buffer(transactionHash), privateKeyBuffer)
         const fulfillmentUri = ed25519Fulfillment.serializeUri()
 
         input.fulfillment = fulfillmentUri
