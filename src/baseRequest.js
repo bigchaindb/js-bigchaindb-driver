@@ -37,7 +37,9 @@ const fetch = fetchPonyfill(Promise)
  * @return {Promise}        Promise that will resolve with the response if its status was 2xx;
  *                          otherwise rejects with the response
  */
-export default function baseRequest(url, { jsonBody, query, urlTemplateSpec, ...fetchConfig } = {}) {
+export default function baseRequest(url, {
+    jsonBody, query, urlTemplateSpec, ...fetchConfig
+} = {}) {
     let expandedUrl = url
 
     if (urlTemplateSpec != null) {

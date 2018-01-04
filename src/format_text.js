@@ -84,9 +84,7 @@ export default function formatText(s, ...argv) {
             // If there's anything left to interpolate by the end then we've failed to interpolate
             // the entire replacement string.
             if (interpolationLeft.length) {
-                throw new SyntaxError(
-                    `[formatText] failed to parse named argument key: ${replacement}`
-                )
+                throw new SyntaxError(`[formatText] failed to parse named argument key: ${replacement}`)
             }
 
             return value

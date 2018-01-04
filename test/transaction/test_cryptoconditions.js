@@ -2,7 +2,6 @@ import test from 'ava'
 import cc from 'crypto-conditions'
 import { Ed25519Keypair, Transaction } from '../../src'
 
-
 test('Ed25519 condition encoding', t => {
     const publicKey = '4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS'
     const target = {
@@ -19,8 +18,7 @@ test('Ed25519 condition encoding', t => {
 test('Threshold condition encoding', t => {
     const publicKey = '4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS'
     const ed25519 = Transaction.makeEd25519Condition(publicKey, false)
-    const condition = Transaction.makeThresholdCondition(
-        1, [ed25519, ed25519])
+    const condition = Transaction.makeThresholdCondition(1, [ed25519, ed25519])
     const output = Transaction.makeOutput(condition)
     const target = {
         condition: {
@@ -62,9 +60,10 @@ test('Fulfillment correctly formed', t => {
     )
     const msg = Transaction.serializeTransactionIntoCanonicalString(txTransfer)
     const txSigned = Transaction.signTransaction(txTransfer, alice.privateKey)
-    t.truthy(cc.validateFulfillment(txSigned.inputs[0].fulfillment,
-        txCreate.outputs[0].condition.uri,
-        new Buffer(msg)))
+    t.truthy(cc.validateFulfillment(
+        txSigned.inputs[0].fulfillment, txCreate.outputs[0].condition.uri,
+        Buffer.from(msg)
+    ))
 })
 
 

@@ -13,7 +13,7 @@ export default function ccJsonLoad(conditionJson) {
         const condition = new cc.Condition()
         condition.type = conditionJson.type_id
         condition.bitmask = conditionJson.bitmask
-        condition.hash = new Buffer(base58.decode(conditionJson.hash))
+        condition.hash = Buffer.from(base58.decode(conditionJson.hash))
         condition.maxFulfillmentLength = parseInt(conditionJson.max_fulfillment_length, 10)
         return condition
     } else {
@@ -34,7 +34,7 @@ export default function ccJsonLoad(conditionJson) {
 
         if (conditionJson.type === 'ed25519-sha-256') {
             fulfillment = new cc.Ed25519Sha256()
-            fulfillment.publicKey = new Buffer(base58.decode(conditionJson.public_key))
+            fulfillment.publicKey = Buffer.from(base58.decode(conditionJson.public_key))
         }
         return fulfillment
     }
