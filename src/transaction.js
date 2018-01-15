@@ -13,10 +13,10 @@ export default class Transaction {
      * @param {object} (transaction)
      * @return {string} a canonically serialized Transaction
      */
-    serializeTransactionIntoCanonicalString(transaction) {
+    static serializeTransactionIntoCanonicalString(transaction) {
         // BigchainDB signs fulfillments by serializing transactions into a
         // "canonical" format where
-        const tx = this.clone(transaction)
+        const tx = clone(transaction)
         // TODO: set fulfillments to null
         // Sort the keys
         return stableStringify(tx, (a, b) => (a.key > b.key ? 1 : -1))
@@ -30,12 +30,12 @@ export default class Transaction {
         }
     }
 
-    hashTransaction(transaction) {
+    static hashTransaction(transaction) {
         // Safely remove any tx id from the given transaction for hashing
         const tx = { ...transaction }
         delete tx.id
 
-        return sha256Hash(this.serializeTransactionIntoCanonicalString(tx))
+        return sha256Hash(Transaction.serializeTransactionIntoCanonicalString(tx))
     }
 
     static makeTransactionTemplate() {
@@ -51,8 +51,8 @@ export default class Transaction {
         return txTemplate
     }
 
-    makeTransaction(operation, asset, metadata = null, outputs = [], inputs = []) {
-        const tx = this.makeTransactionTemplate()
+    static makeTransaction(operation, asset, metadata = null, outputs = [], inputs = []) {
+        const tx = Transaction.makeTransactionTemplate()
         tx.operation = operation
         tx.asset = asset
         tx.metadata = metadata
@@ -60,7 +60,7 @@ export default class Transaction {
         tx.outputs = outputs
 
         // Hashing must be done after, as the hash is of the Transaction (up to now)
-        tx.id = this.hashTransaction(tx)
+        tx.id = Transaction.hashTransaction(tx)
         return tx
     }
 
@@ -83,13 +83,13 @@ export default class Transaction {
      * @returns {object} Unsigned transaction -- make sure to call signTransaction() on it before
      *                   sending it off!
      */
-    makeCreateTransaction(asset, metadata, outputs, ...issuers) {
+    static makeCreateTransaction(asset, metadata, outputs, ...issuers) {
         const assetDefinition = {
             'data': asset || null,
         }
-        const inputs = issuers.map((issuer) => this.makeInputTemplate([issuer]))
+        const inputs = issuers.map((issuer) => Transaction.makeInputTemplate([issuer]))
 
-        return this.makeTransaction('CREATE', assetDefinition, metadata, outputs, inputs)
+        return Transaction.makeTransaction('CREATE', assetDefinition, metadata, outputs, inputs)
     }
 
     /**
@@ -100,8 +100,8 @@ export default class Transaction {
      * @param {boolean} [json=true] If true returns a json object otherwise a crypto-condition type
      * @returns {object} Ed25519 Condition (that will need to wrapped in an Output)
      */
-    makeEd25519Condition(publicKey, json = true) {
-        const publicKeyBuffer = Buffer.from(this.base58.decode(publicKey))
+    static makeEd25519Condition(publicKey, json = true) {
+        const publicKeyBuffer = Buffer.from(base58.decode(publicKey))
 
         const ed25519Fulfillment = new cc.Ed25519Sha256()
         ed25519Fulfillment.setPublicKey(publicKeyBuffer)
@@ -122,7 +122,7 @@ export default class Transaction {
      * @param {string} amount Amount of the output
      * @returns {object} An Output usable in a Transaction
      */
-    makeOutput(condition, amount = '1') {
+    static makeOutput(condition, amount = '1') {
         if (typeof amount !== 'string') {
             throw new TypeError('`amount` must be of type string')
         }
@@ -136,7 +136,7 @@ export default class Transaction {
                 details.subconditions.map(getPublicKeys)
             }
         }
-        this.getPublicKeys(condition.details)
+        getPublicKeys(condition.details)
         return {
             condition,
             'amount': amount,
@@ -151,12 +151,12 @@ export default class Transaction {
      * @param {boolean} [json=true] If true returns a json object otherwise a crypto-condition type
      * @returns {object} Preimage-Sha256 Condition (that will need to wrapped in an Output)
      */
-    makeSha256Condition(preimage, json = true) {
+    static makeSha256Condition(preimage, json = true) {
         const sha256Fulfillment = new cc.PreimageSha256()
         sha256Fulfillment.preimage = Buffer.from(preimage)
 
         if (json) {
-            return this.ccJsonify(sha256Fulfillment)
+            return ccJsonify(sha256Fulfillment)
         }
         return sha256Fulfillment
     }
@@ -169,7 +169,7 @@ export default class Transaction {
      * @param {boolean} [json=true] If true returns a json object otherwise a crypto-condition type
      * @returns {object} Sha256 Threshold Condition (that will need to wrapped in an Output)
      */
-    makeThresholdCondition(threshold, subconditions = [], json = true) {
+    static makeThresholdCondition(threshold, subconditions = [], json = true) {
         const thresholdCondition = new cc.ThresholdSha256()
         thresholdCondition.threshold = threshold
 
@@ -179,7 +179,7 @@ export default class Transaction {
         })
 
         if (json) {
-            return this.ccJsonify(thresholdCondition)
+            return ccJsonify(thresholdCondition)
         }
 
         return thresholdCondition
@@ -207,7 +207,7 @@ export default class Transaction {
      */
     // TODO:
     // - Make `metadata` optional argument
-    makeTransferTransaction(
+    static makeTransferTransaction(
         unspentOutputs,
         outputs,
         metadata
@@ -228,7 +228,7 @@ export default class Transaction {
                 : unspentOutputs[0].tx.asset.id
         }
 
-        return this.makeTransaction('TRANSFER', assetLink, metadata, outputs, inputs)
+        return Transaction.makeTransaction('TRANSFER', assetLink, metadata, outputs, inputs)
     }
 
     /**
@@ -243,12 +243,13 @@ export default class Transaction {
      *                                the `transaction`.
      * @returns {object} The signed version of `transaction`.
      */
-    signTransaction(transaction, ...privateKeys) {
+    static signTransaction(transaction, ...privateKeys) {
         const signedTx = clone(transaction)
         signedTx.inputs.forEach((input, index) => {
             const privateKey = privateKeys[index]
             const privateKeyBuffer = Buffer.from(base58.decode(privateKey))
-            const serializedTransaction = this.serializeTransactionIntoCanonicalString(transaction)
+            const serializedTransaction = Transaction
+                .serializeTransactionIntoCanonicalString(transaction)
             const ed25519Fulfillment = new cc.Ed25519Sha256()
             ed25519Fulfillment.sign(Buffer.from(serializedTransaction), privateKeyBuffer)
             const fulfillmentUri = ed25519Fulfillment.serializeUri()

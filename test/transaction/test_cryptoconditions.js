@@ -1,6 +1,6 @@
 import test from 'ava'
 import cc from 'crypto-conditions'
-import { Ed25519Keypair, Transaction } from '../../src'
+import { Ed25519Keypair, Transaction, ccJsonLoad } from '../../src'
 
 test('Ed25519 condition encoding', t => {
     const publicKey = '4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS'
@@ -68,7 +68,7 @@ test('Fulfillment correctly formed', t => {
 
 
 test('CryptoConditions JSON load', t => {
-    const cond = Transaction.ccJsonLoad({
+    const cond = ccJsonLoad({
         type: 'threshold-sha-256',
         threshold: 1,
         subconditions: [{
@@ -84,7 +84,7 @@ test('CryptoConditions JSON load', t => {
 
 
 test('CryptoConditions JSON load', t => {
-    const cond = Transaction.ccJsonLoad({
+    const cond = ccJsonLoad({
         type: 'threshold-sha-256',
         threshold: 1,
         subconditions: [{
