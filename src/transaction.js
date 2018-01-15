@@ -59,7 +59,6 @@ export default class Transaction {
         tx.inputs = inputs
         tx.outputs = outputs
 
-        // Hashing must be done after, as the hash is of the Transaction (up to now)
         tx.id = Transaction.hashTransaction(tx)
         return tx
     }
@@ -227,7 +226,6 @@ export default class Transaction {
             'id': unspentOutputs[0].tx.operation === 'CREATE' ? unspentOutputs[0].tx.id
                 : unspentOutputs[0].tx.asset.id
         }
-
         return Transaction.makeTransaction('TRANSFER', assetLink, metadata, outputs, inputs)
     }
 
