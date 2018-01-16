@@ -219,7 +219,7 @@ export default class Transaction {
                 'transaction_id': tx.id,
             }
 
-            return this.makeInputTemplate(fulfilledOutput.public_keys, transactionLink)
+            return Transaction.makeInputTemplate(fulfilledOutput.public_keys, transactionLink)
         })
 
         const assetLink = {
