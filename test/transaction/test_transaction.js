@@ -68,7 +68,7 @@ test('makeOutput throws TypeError with incorrect amount type', t => {
 
 
 test('Create TRANSFER transaction based on CREATE transaction', t => {
-    sinon.spy(Transaction.makeTransaction)
+    sinon.spy(Transaction, 'makeTransaction')
     Transaction.makeTransferTransaction(
         [{ tx: createTx, output_index: 0 }],
         [aliceOutput],
@@ -88,12 +88,12 @@ test('Create TRANSFER transaction based on CREATE transaction', t => {
     // can only mock `makeTransaction.default` with a hack:
     // See: https://stackoverflow.com/a/33676328/1263876
     t.truthy(Transaction.makeTransaction.calledWith(...expected))
-    Transaction.makeTransaction.default.restore()
+    Transaction.makeTransaction.restore()
 })
 
 
 test('Create TRANSFER transaction based on TRANSFER transaction', t => {
-    sinon.spy(Transaction.makeTransaction, 'default')
+    sinon.spy(Transaction, 'makeTransaction')
 
     Transaction.makeTransferTransaction(
         [{ tx: transferTx, output_index: 0 }],
@@ -111,6 +111,6 @@ test('Create TRANSFER transaction based on TRANSFER transaction', t => {
         )]
     ]
 
-    t.truthy(Transaction.makeTransaction.default.calledWith(...expected))
-    Transaction.makeTransaction.default.restore()
+    t.truthy(Transaction.makeTransaction.calledWith(...expected))
+    Transaction.makeTransaction.restore()
 })
