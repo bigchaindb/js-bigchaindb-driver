@@ -1,5 +1,5 @@
 import test from 'ava'
-import cc from 'five-bells-condition'
+import cc from 'crypto-conditions'
 import { Ed25519Keypair, Transaction } from '../../src'
 
 
@@ -56,16 +56,31 @@ test('Fulfillment correctly formed', t => {
         alice.publicKey
     )
     const txTransfer = Transaction.makeTransferTransaction(
-        txCreate,
-        {},
+        [{ tx: txCreate, output_index: 0 }],
         [Transaction.makeOutput(Transaction.makeEd25519Condition(alice.publicKey))],
-        [0]
+        {}
     )
     const msg = Transaction.serializeTransactionIntoCanonicalString(txTransfer)
     const txSigned = Transaction.signTransaction(txTransfer, alice.privateKey)
     t.truthy(cc.validateFulfillment(txSigned.inputs[0].fulfillment,
         txCreate.outputs[0].condition.uri,
         new Buffer(msg)))
+})
+
+
+test('CryptoConditions JSON load', t => {
+    const cond = Transaction.ccJsonLoad({
+        type: 'threshold-sha-256',
+        threshold: 1,
+        subconditions: [{
+            type: 'ed25519-sha-256',
+            public_key: 'a'
+        },
+        {
+            hash: 'a'
+        }],
+    })
+    t.truthy(cond.subconditions.length === 2)
 })
 
 

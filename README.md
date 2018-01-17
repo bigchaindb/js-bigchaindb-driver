@@ -2,6 +2,7 @@
 
 > Official JavaScript driver for [BigchainDB](https://github.com/bigchaindb/bigchaindb) with some naive helpers to get you on your way making transactions in Node.js and the browser.
 
+[![Join the chat at https://gitter.im/bigchaindb/js-bigchaindb-driver](https://badges.gitter.im/bigchaindb/js-bigchaindb-driver.svg)](https://gitter.im/bigchaindb/js-bigchaindb-driver?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![npm](https://img.shields.io/npm/v/bigchaindb-driver.svg)](https://www.npmjs.com/package/bigchaindb-driver)
 [![codecov](https://codecov.io/gh/bigchaindb/js-bigchaindb-driver/branch/master/graph/badge.svg)](https://codecov.io/gh/bigchaindb/js-bigchaindb-driver)
 [![js ascribe](https://img.shields.io/badge/js-ascribe-39BA91.svg)](https://github.com/ascribe/javascript)
@@ -15,8 +16,11 @@
 | BigchainDB Server | BigchainDB JavaScript Driver |
 | ----------------- |------------------------------|
 | `0.10`            | `0.1.x`                      |
-| `>= 1.0.0`        | `0.3.x`                      |
+| `1.0.0`        | `0.3.x`                      |
+| `>= 1.3.0`        | `3.x.x`                      |
 
+## Breaking changes
+Version 3.2 of BigchainDB JavaScript Driver introduces a new way of creating transfer transactions. Check [older versions](https://docs.bigchaindb.com/projects/js-driver/en/latest/readme.html#features)
 
 ## Contents
 

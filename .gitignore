@@ -8,6 +8,7 @@
 *.sublime-project
 *.sublime-workspace
 *.sublime-workspace
+.DS_Store
 
 .env
 
@@ -18,5 +19,6 @@ coverage
 coverage.lcov
 .nyc_output
 yarn.lock
-
+docs/build/
+docs/_build/
 docs/build/
