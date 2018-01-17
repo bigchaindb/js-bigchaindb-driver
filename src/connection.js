@@ -26,7 +26,7 @@ export default class Connection {
             'transactionsDetail': 'transactions/%(transactionId)s',
             'assets': 'assets',
             'metadata': 'metadata',
-            'assetsEx': 'assets/search'
+            'assetsEx': 'assets/search',
             'votes': 'votes'
         }[endpoint]
     }
@@ -193,9 +193,8 @@ export default class Connection {
         })
     }
 
-     /**
+    /**
      * @public
-     *
      * @param search
      */
     searchAssetsEx(search) {
@@ -204,4 +203,5 @@ export default class Connection {
                 search
             }
         })
+    }
 }
