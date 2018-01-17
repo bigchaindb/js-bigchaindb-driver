@@ -26,6 +26,7 @@ export default class Connection {
             'transactionsDetail': 'transactions/%(transactionId)s',
             'assets': 'assets',
             'metadata': 'metadata',
+            'assetsEx': 'assets/search'
             'votes': 'votes'
         }[endpoint]
     }
@@ -191,4 +192,16 @@ export default class Connection {
             }
         })
     }
+
+     /**
+     * @public
+     *
+     * @param search
+     */
+    searchAssetsEx(search) {
+        return this._req(this.getApiUrls('assetsEx'), {
+            query: {
+                search
+            }
+        })
 }
