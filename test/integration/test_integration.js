@@ -367,9 +367,7 @@ test('Search blocks containing a transaction', t => {
         .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
         .then(({ id }) => conn.listBlocks(id, 'VALID'))
         .then(blocks => conn.getBlock(blocks.pop()))
-        .then(({ block: { transactions } }) => transactions.filter(
-            ({ id }) => id === createTxSigned.id
-        ))
+        .then(({ block: { transactions } }) => transactions.filter(({ id }) => id === createTxSigned.id))
         .then(transactions => t.truthy(transactions.length === 1))
 })
 
