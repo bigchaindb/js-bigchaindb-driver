@@ -75,6 +75,7 @@
     "json-stable-stringify": "^1.0.1",
     "query-string": "^5.0.0",
     "sprintf-js": "^1.0.3",
+    "toposort": "^1.0.6",
     "tweetnacl": "^1.0.0"
   },
   "keywords": [
