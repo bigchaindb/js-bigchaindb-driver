@@ -1,6 +1,6 @@
-import bip39 from 'bip39'
+import bip39 from 'bip39' // eslint-disable-line import/no-unresolved
 
-const driver = require('bigchaindb-driver')
+const driver = require('bigchaindb-driver') // eslint-disable-line import/no-unresolved
 
 // ======== Create Keypair ======== //
 /**
