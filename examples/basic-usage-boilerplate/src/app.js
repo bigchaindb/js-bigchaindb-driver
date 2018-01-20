@@ -1,5 +1,5 @@
 // const driver = require('../../../src/index')
-import * as driver from 'bigchaindb-driver'
+const driver = require('bigchaindb-driver')
 
 // ======== Preparation ======== //
 const conn = new driver.Connection('https://test.bigchaindb.com/api/v1/', {
@@ -23,59 +23,39 @@ const metadata = { 'planet': 'earth' }
 const txCreateAliceSimple = driver.Transaction.makeCreateTransaction(
     assetdata,
     metadata,
-    [driver.Transaction.makeOutput(
-        driver.Transaction.makeEd25519Condition(alice.publicKey))
+    [
+        driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(alice.publicKey))
     ],
     alice.publicKey
 )
 
 const txCreateAliceSimpleSigned =
     driver.Transaction.signTransaction(txCreateAliceSimple, alice.privateKey)
-console.log(txCreateAliceSimpleSigned)
 
 // ======== Post Transaction and Fetch Result ======== //
 conn.postTransaction(txCreateAliceSimpleSigned)
     // Check status of transaction every 0.5 seconds until fulfilled
     .then(() => conn.pollStatusAndFetchTransaction(txCreateAliceSimpleSigned.id))
-    .then(retrievedTx => {
-        console.log('Transaction', retrievedTx.id, 'successfully posted.')
-        return retrievedTx
-    })
-
-    // Check status after transaction has completed (result: { 'status': 'valid' })
-    // If you check the status of a transaction before it's added to BigchainDB,
-    // BigchainDb will return that the transaction is still waiting in the 'backlog'
-    .then(() => conn.getStatus(txCreateAliceSimpleSigned.id))
-    .then(status => console.log('Retrieved status method 2: ', status))
 
 // ======== Transfer Bicycle to Bob ======== //
     .then(() => {
-        try {
-            console.log(txCreateAliceSimpleSigned)
-            const txTransferBob = driver.Transaction.makeTransferTransaction(
-                [{ tx: txCreateAliceSimpleSigned, output_index: 0 }],
-                [driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey))],
-                { price: '100 euro' }
-            )
+        const txTransferBob = driver.Transaction.makeTransferTransaction(
+            [{ tx: txCreateAliceSimpleSigned, output_index: 0 }],
+            [driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey))],
+            { price: '100 euro' }
+        )
 
-            // Sign transfer transaction with Alice's private key
-            const txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey)
-            console.log('Posting signed transaction: ', txTransferBobSigned)
-        } catch (err) {
-            console.log(err)
-        }
+        // Sign transfer transaction with Alice's private key
+        const txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey)
 
         return conn.postTransaction(txTransferBobSigned)
     })
-    .then(res => {
-        console.log('Response from BDB server:', res)
-        return conn.pollStatusAndFetchTransaction(res.id)
-    })
+    .then(res => conn.pollStatusAndFetchTransaction(res.id))
     .then(tx => {
-        console.log('Is Bob the owner?', tx.outputs[0].public_keys[0] === bob.publicKey)
-        console.log('Was Alice the previous owner?', tx.inputs[0].owners_before[0] === alice.publicKey)
+        console.log('Is Bob the owner?', tx.outputs[0].public_keys[0] === bob.publicKey) // eslint-disable-line no-console
+        console.log('Was Alice the previous owner?', tx.inputs[0].owners_before[0] === alice.publicKey) // eslint-disable-line no-console
     })
 
 // ======== Search Asset by Serial Number ======== //
     .then(() => conn.searchAssets('Bicycle Inc.'))
-    .then(assets => console.log('Found assets with serial number Bicycle Inc.:', assets))
+    .then(assets => console.log('Found assets with serial number Bicycle Inc.:', assets)) // eslint-disable-line no-console
