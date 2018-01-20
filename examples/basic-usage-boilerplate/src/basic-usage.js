@@ -1,10 +1,11 @@
 const driver = require('bigchaindb-driver')
+require('dotenv').config()
 
 
 // ======== Preparation ======== //
 const conn = new driver.Connection('https://test.bigchaindb.com/api/v1/', {
-    app_id: 'c17a9968',
-    app_key: '0b277b94893e7b0a5b4e6afd6bccb01d'
+    app_id: process.env.BIGCHAINDB_APP_ID,
+    app_key: process.env.BIGCHAINDB_APP_KEY
 })
 
 const alice = new driver.Ed25519Keypair()

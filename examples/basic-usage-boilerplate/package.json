@@ -9,8 +9,7 @@
     "start": "nodemon src/basic-usage.js --exec babel-node",
     "query-assets": "nodemon src/query-assets.js --exec babel-node",
     "seed-func": "nodemon src/seed-func.js --exec babel-node",
-    "basic-async": "nodemon src/basic-usage-async-await.js --exec babel-node",
-    "websocket": "nodemon src/websocket.js --exec babel-node"
+    "basic-async": "nodemon src/basic-usage-async-await.js --exec babel-node"
   },
   "author": "BigchainDB",
   "license": "MIT",
@@ -31,6 +30,7 @@
   "private": true,
   "dependencies": {
     "bigchaindb-driver": "^3.2.0",
-    "bip39": "^2.5.0"
+    "bip39": "^2.5.0",
+    "dotenv": "^4.0.0"
   }
 }
