@@ -1,5 +1,5 @@
-// const driver = require('../../../src/index')
 const driver = require('bigchaindb-driver')
+
 
 // ======== Preparation ======== //
 const conn = new driver.Connection('https://test.bigchaindb.com/api/v1/', {
@@ -19,6 +19,7 @@ const assetdata = {
 
 const metadata = { 'planet': 'earth' }
 
+
 // ======== Create Transaction Bicycle ======== //
 const txCreateAliceSimple = driver.Transaction.makeCreateTransaction(
     assetdata,
@@ -32,10 +33,12 @@ const txCreateAliceSimple = driver.Transaction.makeCreateTransaction(
 const txCreateAliceSimpleSigned =
     driver.Transaction.signTransaction(txCreateAliceSimple, alice.privateKey)
 
+
 // ======== Post Transaction and Fetch Result ======== //
 conn.postTransaction(txCreateAliceSimpleSigned)
     // Check status of transaction every 0.5 seconds until fulfilled
     .then(() => conn.pollStatusAndFetchTransaction(txCreateAliceSimpleSigned.id))
+
 
 // ======== Transfer Bicycle to Bob ======== //
     .then(() => {
@@ -55,6 +58,7 @@ conn.postTransaction(txCreateAliceSimpleSigned)
         console.log('Is Bob the owner?', tx.outputs[0].public_keys[0] === bob.publicKey) // eslint-disable-line no-console
         console.log('Was Alice the previous owner?', tx.inputs[0].owners_before[0] === alice.publicKey) // eslint-disable-line no-console
     })
+
 
 // ======== Search Asset by Serial Number ======== //
     .then(() => conn.searchAssets('Bicycle Inc.'))

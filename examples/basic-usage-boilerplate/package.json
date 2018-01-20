@@ -1,12 +1,13 @@
 {
   "name": "js-driver-bigchaindb-examples",
   "version": "1.0.0",
-  "main": "src/app.js",
+  "main": "src/basic-usage.js",
   "scripts": {
-    "start": "nodemon src/app.js --exec babel-node",
     "build": "npm run clean && babel src -d dist",
-    "serve": "node dist/app.js",
-    "clean": "rimraf ./dist"
+    "serve": "node dist/basic-usage.js",
+    "clean": "rimraf ./dist",
+    "start": "nodemon src/basic-usage.js --exec babel-node",
+    "query-assets": "nodemon src/query-assets.js --exec babel-node"
   },
   "author": "BigchainDB",
   "license": "MIT",
