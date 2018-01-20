@@ -783,10 +783,16 @@ Here is a better overview of the flow of the tokens.
 
 Topology Sorting
 ----------------
-It is possible to retrieve all transactions for a specific `asset_id`. 
-But, there is no guarantee that the transactions are listed in the correct order.
-We've provided a util method which helps you sorting these transactions in the correct order.
-The method uses inputs and outputs to build a so-called graph of transactions and returns an object with all ordered transactions.
+It is possible to retrieve all transactions for a specific `asset_id` with the API Endpoint_ `/transactions?asset_id`
+.. _Endpoint: https://docs.bigchaindb.com/projects/server/en/latest/http-client-server-api.html#get--api-v1-transactions?asset_id=asset_id&operation=CREATE|TRANSFER
+But, there is no guarantee that the transactions are listed in the correct order. We've provided a util method which helps you sorting these transactions in the correct order. The method uses inputs and outputs to build a so-called graph of transactions and returns an object with all ordered transactions.
+In code, it looks like this:
+
+.. code-block:: js
+
+	conn.listTransactions(tx.id, 'TRANSFER'))
+    .then(txArray => driver.Transaction.topsortTransactions(txArray))
+    .then(sortedTxs => console.log(sortedTxs))
 
 
 
