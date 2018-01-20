@@ -6,4 +6,4 @@ Installation with package manager npm:
 
 .. code-block:: bash
 
-    $ npm install bigchaindb-driver
+    $ npm install bigchaindb-driver --save
