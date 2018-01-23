@@ -1,3 +1,14 @@
+# Quick Notes
+`dotenv` is listed as a dependencies in `package.json`.
+If you want to use this, add a `.env` file to the root of this project (same level as this `README.md` file)
+and replace the variables to fit your specific config.
+
+```
+BIGCHAINDB_API_PATH=http://localhost:9984/api/v1/
+BIGCHAINDB_APP_ID=<your-app-id>
+BIGCHAINDB_APP_KEY=<your-app-key>
+```
+
 # Usage
 `npm install` -> Installs all required dependencies to run these examples.
 
@@ -13,14 +24,3 @@
 
 **Seed/Keypair Functionality**: Create keypair with bip39 library.
 -> `npm run seed-func`
-
-## Notes
-`dotenv` is listed as a dependencies in `package.json`.
-If you want to use this, add a `.env` file to the root of this project (same level as this `README.md` file)
-and replace the variables to fit your system.
-
-```
-BIGCHAINDB_API_PATH=http://localhost:9984/api/v1/
-BIGCHAINDB_APP_ID=<your-app-id>
-BIGCHAINDB_APP_KEY=<your-app-key>
-```
