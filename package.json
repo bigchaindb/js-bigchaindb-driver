@@ -65,16 +65,17 @@
     "buffer": "^5.0.2",
     "clone": "^2.1.0",
     "core-js": "^2.4.1",
+    "crypto-conditions": "^2.0.1",
     "decamelize": "^2.0.0",
     "es6-promise": "^4.0.5",
     "fetch-ponyfill": "^4.0.0",
-    "crypto-conditions": "^2.0.1",
     "isomorphic-fetch": "^2.2.1",
     "js-sha3": "^0.7.0",
     "js-utility-belt": "^1.5.0",
     "json-stable-stringify": "^1.0.1",
     "query-string": "^5.0.0",
     "sprintf-js": "^1.0.3",
+    "toposort": "^1.0.6",
     "tweetnacl": "^1.0.0"
   },
   "keywords": [

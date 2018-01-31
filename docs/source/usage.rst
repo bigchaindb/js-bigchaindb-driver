@@ -35,12 +35,14 @@ A simple connection with BigchainDB can be established like this.
 
 	const conn = new driver.Connection(API_PATH)
 
-It is also possible to connect to a BigchainDB node of the IPDB test net.
-To do so, you need to pass the **app_id and app_key**.
+Previously you could connect to IPDB testnet, but it has been shutdown.
+Today, you can create an account for the 'BigchainDB Testnet' here_.
+.. _here: https://testnet.bigchaindb.com/?utm_source=3Scale&utm_campaign=21a328d6cd-EMAIL_CAMPAIGN_2018_01_18&utm_medium=email&utm_term=0_b98508b5a9-21a328d6cd-67355241
+To use the tesnet, you need to pass the **app_id and app_key** to get access.
 
 .. code-block:: js
 
-	let bdb = new driver.Connection('https://test.ipdb.io/api/v1/', {
+	let bdb = new driver.Connection('https://test.bigchaindb.com/api/v1/', {
 		app_id: 'dgi829l9',
 		app_key: 'u008ik1bf83b43ce3a95uu0727e66fb9'
 	})
@@ -291,7 +293,7 @@ Let’s perform a text search for all metadata that contains the word '1.32':
 .. code-block:: js
 
 	conn.searchMetadata('1.32')
-    		.then(assets => console.log('Found assets with serial number Bicycle Inc.:', assets))
+    		.then(assets => console.log('Found assets with with metadata equal to "1.32"', assets))
 
 Which leads to following result:
 
@@ -778,6 +780,20 @@ Here is a better overview of the flow of the tokens.
 +-----------+------------+-----------------+
 | ``Carly`` |   1        | ``TRANSFER 2``  |
 +-----------+------------+-----------------+
+
+Topology Sorting
+----------------
+It is possible to retrieve all transactions for a specific `asset_id` with the API Endpoint_ `/transactions?asset_id`
+.. _Endpoint: https://docs.bigchaindb.com/projects/server/en/latest/http-client-server-api.html#get--api-v1-transactions?asset_id=asset_id&operation=CREATE|TRANSFER
+But, there is no guarantee that the transactions are listed in the correct order. We've provided a util method which helps you sorting these transactions in the correct order. The method uses inputs and outputs to build a so-called graph of transactions and returns an object with all ordered transactions.
+In code, it looks like this:
+
+.. code-block:: js
+
+	conn.listTransactions(tx.id, 'TRANSFER'))
+    .then(txArray => driver.Transaction.topsortTransactions(txArray))
+    .then(sortedTxs => console.log(sortedTxs))
+
 
 
 .. TODO:
