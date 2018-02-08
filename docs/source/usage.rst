@@ -40,9 +40,9 @@ To do so, you need to pass the **app_id and app_key**.
 
 .. code-block:: js
 
-	let bdb = new driver.Connection('https://test.ipdb.io/api/v1/', {
-		app_id: 'dgi829l9',
-		app_key: 'u008ik1bf83b43ce3a95uu0727e66fb9'
+	let bdb = new driver.Connection('https://test.bigchaindb.com/api/v1/', {
+		app_id: 'Get one from testnet.bigchaindb.com',
+		app_key: 'Get one from testnet.bigchaindb.com'
 	})
 
 Cryptographic Identities Generation
