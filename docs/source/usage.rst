@@ -35,7 +35,7 @@ A simple connection with BigchainDB can be established like this.
 
 	const conn = new driver.Connection(API_PATH)
 
-It is also possible to connect to a BigchainDB node of the IPDB test net.
+It is also possible to connect to a node of the BigchainDB test network.
 To do so, you need to pass the **app_id and app_key**.
 
 .. code-block:: js
@@ -320,7 +320,7 @@ Recap: Asset Creation & Transfer
 
 	const driver = require('bigchaindb-driver')
 
-	// BigchainDB server instance or IPDB (e.g. https://test.ipdb.io/api/v1/)
+	// BigchainDB server instance or testnetwork (e.g. https://test.bigchaindb.com/api/v1/)
 	const API_PATH = 'http://localhost:9984/api/v1/'
 
 	// Create a new keypair for Alice and Bob
