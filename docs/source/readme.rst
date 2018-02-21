@@ -80,7 +80,7 @@ transaction spending two outputs from two different create transactions:
 
 	const createTranfer = BigchainDB.Transaction.makeTransferTransaction(
 		[{ tx: txCreated1, output_index: 0 },
-			M{ tx: txCreated2, output_index: 0}],
+			{ tx: txCreated2, output_index: 0}],
 		[BigchainDB.Transaction.makeOutput(
         BigchainDB.Transaction.makeEd25519Condition(alice.publicKey))],
 		metaData
