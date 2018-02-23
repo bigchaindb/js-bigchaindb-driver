@@ -141,6 +141,9 @@ export default class Connection {
             const timer = setInterval(() => {
                 this.getStatus(txId)
                     .then((res) => {
+                        console.log(res)
+                        const a = this.listBlocks(txId, 'valid')
+                        console.log('listblock', a)
                         if (res.status === 'valid') {
                             clearInterval(timer)
                             this.getTransaction(txId)
