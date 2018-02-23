@@ -31,10 +31,7 @@ export default class Transaction {
     }
 
     static hashTransaction(transaction) {
-        // Safely remove any tx id from the given transaction for hashing
         const tx = { ...transaction }
-        delete tx.id
-
         return sha256Hash(Transaction.serializeTransactionIntoCanonicalString(tx))
     }
 
@@ -58,8 +55,6 @@ export default class Transaction {
         tx.metadata = metadata
         tx.inputs = inputs
         tx.outputs = outputs
-
-        tx.id = Transaction.hashTransaction(tx)
         return tx
     }
 
@@ -243,18 +238,32 @@ export default class Transaction {
      */
     static signTransaction(transaction, ...privateKeys) {
         const signedTx = clone(transaction)
+        // console.log('xxxxxxxxxx')
+        // console.log(transaction)
         signedTx.inputs.forEach((input, index) => {
+            // console.log('iiiinputttt', input)
             const privateKey = privateKeys[index]
             const privateKeyBuffer = Buffer.from(base58.decode(privateKey))
             const serializedTransaction = Transaction
                 .serializeTransactionIntoCanonicalString(transaction)
+            console.log('Does it have fulfills?', input.fulfills)
+            const transactionToHash = input.fulfills ? serializedTransaction
+                .concat(input.fulfills.transaction_id)
+                .concat(input.fulfills.output_index) : serializedTransaction
+            console.log('transaction fulfillment', transactionToHash)
+
+            const hashedTransaction = Transaction.hashTransaction(transactionToHash)
+            console.log('This is the normal', hashedTransaction)
+
             const ed25519Fulfillment = new cc.Ed25519Sha256()
-            ed25519Fulfillment.sign(Buffer.from(serializedTransaction), privateKeyBuffer)
+            ed25519Fulfillment.sign(Buffer.from(hashedTransaction), privateKeyBuffer)
             const fulfillmentUri = ed25519Fulfillment.serializeUri()
 
             input.fulfillment = fulfillmentUri
         })
 
+        signedTx.id = Transaction.hashTransaction(signedTx)
+        console.dir(signedTx, { depth: null, colors: true })
         return signedTx
     }
 }
