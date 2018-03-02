@@ -67,7 +67,7 @@
     "core-js": "^2.4.1",
     "decamelize": "^2.0.0",
     "es6-promise": "^4.0.5",
-    "fetch-ponyfill": "^5.0.0",
+    "fetch-ponyfill": "^6.0.0",
     "crypto-conditions": "^2.0.1",
     "isomorphic-fetch": "^2.2.1",
     "js-sha3": "^0.7.0",
