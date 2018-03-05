@@ -57,7 +57,7 @@
     "release-it": "^7.0.0",
     "rimraf": "^2.5.4",
     "sinon": "^4.0.0",
-    "webpack": "^3.0.0"
+    "webpack": "^4.0.0"
   },
   "dependencies": {
     "browser-resolve": "^1.11.2",
