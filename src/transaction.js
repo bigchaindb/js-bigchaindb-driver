@@ -38,7 +38,7 @@ export default class Transaction {
             'inputs': [],
             'metadata': null,
             'asset': null,
-            'version': '1.0',
+            'version': '2.0',
         }
         return txTemplate
     }
