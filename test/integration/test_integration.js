@@ -2,6 +2,7 @@ import test from 'ava'
 import { Ed25519Keypair, Transaction, Connection } from '../../src'
 
 import {
+    API_PATH,
     alice,
     aliceCondition,
     aliceOutput,
@@ -10,8 +11,6 @@ import {
     asset,
     metaData
 } from '../constants'
-
-const API_PATH = 'http://localhost:9984/api/v1/'
 
 
 test('Keypair is created', t => {
@@ -36,7 +35,7 @@ test('Valid CREATE transaction', t => {
     )
     const txSigned = Transaction.signTransaction(tx, alice.privateKey)
 
-    return conn.postTransactionSync(txSigned)
+    return conn.postTransactionCommit(txSigned)
         .then(resTx => t.truthy(resTx))
 })
 
@@ -199,7 +198,7 @@ test('Search for spent and unspent outputs of a given public key', t => {
         carol.privateKey,
     )
 
-    return conn.postTransactionSync(createTxSigned)
+    return conn.postTransactionCommit(createTxSigned)
         .then(() => conn.postTransactionSync(transferTxSigned))
         .then(() => conn.listOutputs(carol.publicKey))
         // now listOutputs should return us outputs 0 and 1 (unfiltered)
@@ -239,7 +238,7 @@ test('Search for unspent outputs for a given public key', t => {
         carol.privateKey,
     )
 
-    return conn.postTransactionSync(createTxSigned)
+    return conn.postTransactionCommit(createTxSigned)
         .then(() => conn.postTransactionSync(transferTxSigned))
         // now listOutputs should return us outputs 0 and 2 (1 is spent)
         .then(() => conn.listOutputs(carol.publicKey, 'false'))
@@ -279,7 +278,7 @@ test('Search for spent outputs for a given public key', t => {
         carol.privateKey,
     )
 
-    return conn.postTransactionSync(createTxSigned)
+    return conn.postTransactionCommit(createTxSigned)
         .then(() => conn.postTransactionSync(transferTxSigned))
         // now listOutputs should only return us output 1 (0 and 2 are unspent)
         .then(() => conn.listOutputs(carol.publicKey, true))
@@ -301,10 +300,10 @@ test('Search for an asset', t => {
         alice.privateKey
     )
 
-    return conn.postTransactionSync(createTxSigned)
+    return conn.postTransactionCommit(createTxSigned)
         .then(() => conn.searchAssets(createTxSigned.asset.data.message))
         .then(assets => t.truthy(
-            console.log('llllllllllllllllllll', createTxSigned.asset.data.message, assets.pop()),
+            console.log('llllllllllllllllllll', createTxSigned.asset.data.message, assets),
             assets.pop(),
             createTxSigned.asset.data.message
         ))
@@ -325,7 +324,7 @@ test('Search for metadata', t => {
         alice.privateKey
     )
 
-    return conn.postTransactionSync(createTxSigned)
+    return conn.postTransactionCommit(createTxSigned)
         .then(() => conn.searchMetadata(createTxSigned.metadata.message))
         .then(assets => t.truthy(
             assets.pop(),
@@ -348,10 +347,16 @@ test('Search blocks containing a transaction', t => {
         alice.privateKey
     )
 
-    return conn.postTransactionSync(createTxSigned)
-        .then(({ id }) => conn.listBlocks(id))
-        .then(blocks => conn.getBlock(blocks.pop()))
-        .then(({ block: { transactions } }) => transactions.filter(({ id }) => id === createTxSigned.id))
+    return conn.postTransactionCommit(createTxSigned)
+        .then(({ id }) => {
+            console.log('hhhhhhhhhh', id)
+            return conn.listBlocks(id)
+        })
+        .then(blockHeight => {
+            console.log('wwwwwwww', blockHeight)
+            conn.getBlock(blockHeight.pop())
+        })
+        .then(({ transactions }) => transactions.filter(({ id }) => id === createTxSigned.id))
         .then(transactions => t.truthy(transactions.length === 1))
 })
 
@@ -370,7 +375,7 @@ test('Search transaction containing an asset', t => {
         alice.privateKey
     )
 
-    return conn.postTransactionSync(createTxSigned)
+    return conn.postTransactionCommit(createTxSigned)
         .then(({ id }) => conn.listTransactions(id))
         .then(transactions => {
             console.log('cccccccccccc', transactions, createTxSigned.id)

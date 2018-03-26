@@ -3,8 +3,8 @@ import sinon from 'sinon'
 
 import * as request from '../../src/request' // eslint-disable-line
 import { Connection } from '../../src'
+import { API_PATH } from '../constants'
 
-const API_PATH = 'http://localhost:9984/api/v1/'
 const conn = new Connection(API_PATH)
 
 test('Payload thrown at incorrect API_PATH', t => {
