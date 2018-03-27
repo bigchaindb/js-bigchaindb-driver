@@ -53,7 +53,7 @@ test('Valid TRANSFER transaction with single Ed25519 input', t => {
         alice.privateKey
     )
 
-    return conn.postTransactionSync(createTxSigned)
+    return conn.postTransactionCommit(createTxSigned)
         .then(() => {
             const transferTx = Transaction.makeTransferTransaction(
                 [{ tx: createTxSigned, output_index: 0 }],
@@ -64,7 +64,7 @@ test('Valid TRANSFER transaction with single Ed25519 input', t => {
                 transferTx,
                 alice.privateKey
             )
-            return conn.postTransactionSync(transferTxSigned)
+            return conn.postTransactionCommit(transferTxSigned)
                 .then(resTx => t.truthy(resTx))
         })
 })
@@ -83,7 +83,7 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs', t => {
         alice.privateKey
     )
 
-    return conn.postTransactionSync(createTxSigned)
+    return conn.postTransactionCommit(createTxSigned)
         .then(() => {
             const transferTx = Transaction.makeTransferTransaction(
                 [{ tx: createTxSigned, output_index: 0 }, { tx: createTxSigned, output_index: 1 }],
@@ -95,7 +95,7 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs', t => {
                 alice.privateKey,
                 bob.privateKey
             )
-            return conn.postTransactionSync(transferTxSigned)
+            return conn.postTransactionCommit(transferTxSigned)
                 .then(resTx => t.truthy(resTx))
         })
 })
@@ -123,7 +123,7 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs from different tra
         alice.privateKey
     )
 
-    return conn.postTransactionSync(createTxSigned)
+    return conn.postTransactionCommit(createTxSigned)
         .then(() => {
             const transferTx1 = Transaction.makeTransferTransaction(
                 [{ tx: createTxSigned, output_index: 0 }],
@@ -144,8 +144,8 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs from different tra
                 bob.privateKey
             )
 
-            return conn.postTransactionSync(transferTxSigned1)
-                .then(conn.postTransactionSync(transferTxSigned2))
+            return conn.postTransactionCommit(transferTxSigned1)
+                .then(conn.postTransactionCommit(transferTxSigned2))
                 .then(() => {
                     const transferTxMultipleInputs = Transaction.makeTransferTransaction(
                         [{ tx: transferTxSigned1, output_index: 0 },
@@ -158,12 +158,11 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs from different tra
                         carol.privateKey,
                         trent.privateKey
                     )
-                    return conn.postTransactionSync(transferTxSignedMultipleInputs)
+                    return conn.postTransactionCommit(transferTxSignedMultipleInputs)
                         .then(resTx => t.truthy(resTx))
                 })
         })
 })
-
 
 test('Search for spent and unspent outputs of a given public key', t => {
     const conn = new Connection(API_PATH)
@@ -199,7 +198,7 @@ test('Search for spent and unspent outputs of a given public key', t => {
     )
 
     return conn.postTransactionCommit(createTxSigned)
-        .then(() => conn.postTransactionSync(transferTxSigned))
+        .then(() => conn.postTransactionCommit(transferTxSigned))
         .then(() => conn.listOutputs(carol.publicKey))
         // now listOutputs should return us outputs 0 and 1 (unfiltered)
         .then(outputs => t.truthy(outputs.length === 2))
@@ -239,7 +238,7 @@ test('Search for unspent outputs for a given public key', t => {
     )
 
     return conn.postTransactionCommit(createTxSigned)
-        .then(() => conn.postTransactionSync(transferTxSigned))
+        .then(() => conn.postTransactionCommit(transferTxSigned))
         // now listOutputs should return us outputs 0 and 2 (1 is spent)
         .then(() => conn.listOutputs(carol.publicKey, 'false'))
         .then(outputs => t.truthy(outputs.length === 2))
@@ -279,7 +278,7 @@ test('Search for spent outputs for a given public key', t => {
     )
 
     return conn.postTransactionCommit(createTxSigned)
-        .then(() => conn.postTransactionSync(transferTxSigned))
+        .then(() => conn.postTransactionCommit(transferTxSigned))
         // now listOutputs should only return us output 1 (0 and 2 are unspent)
         .then(() => conn.listOutputs(carol.publicKey, true))
         .then(outputs => t.truthy(outputs.length === 1))
@@ -303,7 +302,6 @@ test('Search for an asset', t => {
     return conn.postTransactionCommit(createTxSigned)
         .then(() => conn.searchAssets(createTxSigned.asset.data.message))
         .then(assets => t.truthy(
-            console.log('llllllllllllllllllll', createTxSigned.asset.data.message, assets),
             assets.pop(),
             createTxSigned.asset.data.message
         ))
@@ -348,14 +346,8 @@ test('Search blocks containing a transaction', t => {
     )
 
     return conn.postTransactionCommit(createTxSigned)
-        .then(({ id }) => {
-            console.log('hhhhhhhhhh', id)
-            return conn.listBlocks(id)
-        })
-        .then(blockHeight => {
-            console.log('wwwwwwww', blockHeight)
-            conn.getBlock(blockHeight.pop())
-        })
+        .then(({ id }) => conn.listBlocks(id))
+        .then(blockHeight => conn.getBlock(blockHeight.pop()))
         .then(({ transactions }) => transactions.filter(({ id }) => id === createTxSigned.id))
         .then(transactions => t.truthy(transactions.length === 1))
 })
@@ -378,7 +370,6 @@ test('Search transaction containing an asset', t => {
     return conn.postTransactionCommit(createTxSigned)
         .then(({ id }) => conn.listTransactions(id))
         .then(transactions => {
-            console.log('cccccccccccc', transactions, createTxSigned.id)
             t.truthy(transactions.length === 1)
         })
 })
