@@ -3,27 +3,20 @@ sudo: required
 services:
     - docker
 
-language: node_js
-
-node_js: 7
-
-cache:
-    directories:
-        - node_modules
+env:
+  global:
+    - DOCKER_COMPOSE_VERSION=1.19.0
 
 before_install:
-    - docker run -d -p 27017:27017 mongo:3.4 --replSet=bigchain-rs
-    - docker run -d -p 9984:9984
-      -e BIGCHAINDB_KEYPAIR_PUBLIC=8wHUvvraRo5yEoJAt66UTZaFq9YZ9tFFwcauKPDtjkGw
-      -e BIGCHAINDB_KEYPAIR_PRIVATE=5C5Cknco7YxBRP9AgB1cbUVTL4FAcooxErLygw1DeG2D
-      -e BIGCHAINDB_DATABASE_BACKEND=mongodb
-      -e BIGCHAINDB_DATABASE_HOST=172.17.0.1
-      bigchaindb/bigchaindb:1.3.0
-      start
-    - gem install cowsay
-    - npm install -g codecov
+  - .ci/travis-before-install
 
-script: yarn test
+install:
+  - .ci/travis-install.sh
+
+before_script:
+  - .ci/travis-before-script.sh
+
+script: .ci/travis_script.sh
 
 notifications:
     email: false

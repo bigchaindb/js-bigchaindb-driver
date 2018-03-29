@@ -4,16 +4,16 @@ import sinon from 'sinon'
 import * as request from '../../src/request' // eslint-disable-line
 import { Connection } from '../../src'
 
-const API_PATH = 'http://localhost:9984/api/v1/'
+const API_PATH = 'http://bigchaindb:9984/api/v1/'
 const conn = new Connection(API_PATH)
 
 test('Payload thrown at incorrect API_PATH', t => {
-    const path = 'http://localhost:9984/api/wrong/'
+    const path = 'http://bigchaindb:9984/api/wrong/'
     const connection = new Connection(path)
     const target = {
         message: 'HTTP Error: Requested page not reachable',
         status: '404 NOT FOUND',
-        requestURI: 'http://localhost:9984/api/wrong/transactions/transactionId'
+        requestURI: 'http://bigchaindb:9984/api/wrong/transactions/transactionId'
     }
     connection.getTransaction('transactionId')
         .catch(error => {
