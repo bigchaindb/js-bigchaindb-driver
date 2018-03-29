@@ -4,6 +4,7 @@ import { Transaction, Ed25519Keypair } from '../src'
 
 // NOTE: It's safer to cast `Math.random()` to a string, to avoid differences
 // in "float interpretation" between languages (e.g. JavaScript and Python)
+export const API_PATH = 'http://localhost:9984/api/v1/'
 export function asset() { return { message: `${Math.random()}` } }
 export const metaData = { message: 'metaDataMessage' }
 

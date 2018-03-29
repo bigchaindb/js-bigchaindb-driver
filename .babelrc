@@ -1,9 +1,5 @@
 {
-    "presets": [
-        "@ava/stage-4",
-        "@ava/transform-test-files",
-        "es2015-no-commonjs"
-    ],
+    "presets": ["env"],
 
     "plugins": [
         "transform-export-extensions",
@@ -11,21 +7,4 @@
         "transform-object-rest-spread"
     ],
     "sourceMaps": true,
-
-    "env": {
-        "bundle": {
-            "plugins": [
-                ["transform-runtime", {
-                    "polyfill": true,
-                    "regenerator": false
-                }]
-            ]
-        },
-        "cjs": {
-            "plugins": [
-                "add-module-exports",
-                "transform-es2015-modules-commonjs"
-            ]
-        }
-    }
 }

@@ -2,6 +2,7 @@ import test from 'ava'
 import { Ed25519Keypair, Transaction, Connection } from '../../src'
 
 import {
+    API_PATH,
     alice,
     aliceCondition,
     aliceOutput,
@@ -10,8 +11,6 @@ import {
     asset,
     metaData
 } from '../constants'
-
-const API_PATH = 'http://localhost:9984/api/v1/'
 
 
 test('Keypair is created', t => {
@@ -36,8 +35,7 @@ test('Valid CREATE transaction', t => {
     )
     const txSigned = Transaction.signTransaction(tx, alice.privateKey)
 
-    return conn.postTransaction(txSigned)
-        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+    return conn.postTransactionCommit(txSigned)
         .then(resTx => t.truthy(resTx))
 })
 
@@ -55,8 +53,7 @@ test('Valid TRANSFER transaction with single Ed25519 input', t => {
         alice.privateKey
     )
 
-    return conn.postTransaction(createTxSigned)
-        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+    return conn.postTransactionCommit(createTxSigned)
         .then(() => {
             const transferTx = Transaction.makeTransferTransaction(
                 [{ tx: createTxSigned, output_index: 0 }],
@@ -67,8 +64,7 @@ test('Valid TRANSFER transaction with single Ed25519 input', t => {
                 transferTx,
                 alice.privateKey
             )
-            return conn.postTransaction(transferTxSigned)
-                .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+            return conn.postTransactionCommit(transferTxSigned)
                 .then(resTx => t.truthy(resTx))
         })
 })
@@ -87,8 +83,7 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs', t => {
         alice.privateKey
     )
 
-    return conn.postTransaction(createTxSigned)
-        .then(({ 'id': txId }) => conn.pollStatusAndFetchTransaction(txId))
+    return conn.postTransactionCommit(createTxSigned)
         .then(() => {
             const transferTx = Transaction.makeTransferTransaction(
                 [{ tx: createTxSigned, output_index: 0 }, { tx: createTxSigned, output_index: 1 }],
@@ -100,8 +95,7 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs', t => {
                 alice.privateKey,
                 bob.privateKey
             )
-            return conn.postTransaction(transferTxSigned)
-                .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+            return conn.postTransactionCommit(transferTxSigned)
                 .then(resTx => t.truthy(resTx))
         })
 })
@@ -129,8 +123,7 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs from different tra
         alice.privateKey
     )
 
-    return conn.postTransaction(createTxSigned)
-        .then(({ 'id': txId }) => conn.pollStatusAndFetchTransaction(txId))
+    return conn.postTransactionCommit(createTxSigned)
         .then(() => {
             const transferTx1 = Transaction.makeTransferTransaction(
                 [{ tx: createTxSigned, output_index: 0 }],
@@ -151,10 +144,8 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs from different tra
                 bob.privateKey
             )
 
-            return conn.postTransaction(transferTxSigned1)
-                .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
-                .then(conn.postTransaction(transferTxSigned2))
-                .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+            return conn.postTransactionCommit(transferTxSigned1)
+                .then(conn.postTransactionCommit(transferTxSigned2))
                 .then(() => {
                     const transferTxMultipleInputs = Transaction.makeTransferTransaction(
                         [{ tx: transferTxSigned1, output_index: 0 },
@@ -167,13 +158,11 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs from different tra
                         carol.privateKey,
                         trent.privateKey
                     )
-                    return conn.postTransaction(transferTxSignedMultipleInputs)
-                        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+                    return conn.postTransactionCommit(transferTxSignedMultipleInputs)
                         .then(resTx => t.truthy(resTx))
                 })
         })
 })
-
 
 test('Search for spent and unspent outputs of a given public key', t => {
     const conn = new Connection(API_PATH)
@@ -208,10 +197,8 @@ test('Search for spent and unspent outputs of a given public key', t => {
         carol.privateKey,
     )
 
-    return conn.postTransaction(createTxSigned)
-        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
-        .then(() => conn.postTransaction(transferTxSigned))
-        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+    return conn.postTransactionCommit(createTxSigned)
+        .then(() => conn.postTransactionCommit(transferTxSigned))
         .then(() => conn.listOutputs(carol.publicKey))
         // now listOutputs should return us outputs 0 and 1 (unfiltered)
         .then(outputs => t.truthy(outputs.length === 2))
@@ -250,10 +237,8 @@ test('Search for unspent outputs for a given public key', t => {
         carol.privateKey,
     )
 
-    return conn.postTransaction(createTxSigned)
-        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
-        .then(() => conn.postTransaction(transferTxSigned))
-        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+    return conn.postTransactionCommit(createTxSigned)
+        .then(() => conn.postTransactionCommit(transferTxSigned))
         // now listOutputs should return us outputs 0 and 2 (1 is spent)
         .then(() => conn.listOutputs(carol.publicKey, 'false'))
         .then(outputs => t.truthy(outputs.length === 2))
@@ -292,10 +277,8 @@ test('Search for spent outputs for a given public key', t => {
         carol.privateKey,
     )
 
-    return conn.postTransaction(createTxSigned)
-        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
-        .then(() => conn.postTransaction(transferTxSigned))
-        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+    return conn.postTransactionCommit(createTxSigned)
+        .then(() => conn.postTransactionCommit(transferTxSigned))
         // now listOutputs should only return us output 1 (0 and 2 are unspent)
         .then(() => conn.listOutputs(carol.publicKey, true))
         .then(outputs => t.truthy(outputs.length === 1))
@@ -316,8 +299,7 @@ test('Search for an asset', t => {
         alice.privateKey
     )
 
-    return conn.postTransaction(createTxSigned)
-        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+    return conn.postTransactionCommit(createTxSigned)
         .then(() => conn.searchAssets(createTxSigned.asset.data.message))
         .then(assets => t.truthy(
             assets.pop(),
@@ -340,14 +322,14 @@ test('Search for metadata', t => {
         alice.privateKey
     )
 
-    return conn.postTransaction(createTxSigned)
-        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
+    return conn.postTransactionCommit(createTxSigned)
         .then(() => conn.searchMetadata(createTxSigned.metadata.message))
         .then(assets => t.truthy(
             assets.pop(),
             createTxSigned.metadata.message
         ))
 })
+
 
 test('Search blocks containing a transaction', t => {
     const conn = new Connection(API_PATH)
@@ -363,11 +345,10 @@ test('Search blocks containing a transaction', t => {
         alice.privateKey
     )
 
-    return conn.postTransaction(createTxSigned)
-        .then(({ id }) => conn.pollStatusAndFetchTransaction(id))
-        .then(({ id }) => conn.listBlocks(id, 'VALID'))
-        .then(blocks => conn.getBlock(blocks.pop()))
-        .then(({ block: { transactions } }) => transactions.filter(({ id }) => id === createTxSigned.id))
+    return conn.postTransactionCommit(createTxSigned)
+        .then(({ id }) => conn.listBlocks(id))
+        .then(blockHeight => conn.getBlock(blockHeight.pop()))
+        .then(({ transactions }) => transactions.filter(({ id }) => id === createTxSigned.id))
         .then(transactions => t.truthy(transactions.length === 1))
 })
 
@@ -386,10 +367,11 @@ test('Search transaction containing an asset', t => {
         alice.privateKey
     )
 
-    return conn.postTransaction(createTxSigned)
-        .then(({ id }) => conn.pollStatusAndFetchTransaction(id, 'CREATE'))
+    return conn.postTransactionCommit(createTxSigned)
         .then(({ id }) => conn.listTransactions(id))
-        .then(transactions => t.truthy(transactions.length === 1))
+        .then(transactions => {
+            t.truthy(transactions.length === 1)
+        })
 })
 
 
