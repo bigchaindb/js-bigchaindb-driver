@@ -77,4 +77,6 @@ Don't forget to import the package in your code:
     import * as sha3 from 'js-sha3'
 
 
+If you would like to see a more complex example, please have a look [here](https://github.com/bigchaindb/project-jannowitz/blob/code-examples/js-examples/crypto-conditions.js)
+
 .. TODO: Document Utils when finished
