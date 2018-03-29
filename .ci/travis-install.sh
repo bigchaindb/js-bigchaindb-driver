@@ -2,4 +2,4 @@
 
 set -e -x
 
-docker-compose build --no-cache bigchaindb js-bigchaindb-driver
+docker-compose build --no-cache bigchaindb
