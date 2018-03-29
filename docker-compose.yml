@@ -10,12 +10,7 @@ services:
     depends_on:
       - mongodb
       - tendermint
-    build:
-      context: .
-      dockerfile: ./compose/Dockerfile
-      args:
-        branch: master
-        backend: localmongodb
+    image: bigchaindb/bigchaindb:master
     environment:
       BIGCHAINDB_DATABASE_HOST: mongodb
       BIGCHAINDB_DATABASE_PORT: 27017
@@ -24,15 +19,15 @@ services:
       BIGCHAINDB_TENDERMINT_HOST: tendermint
       BIGCHAINDB_TENDERMINT_PORT: 46657
     ports:
-      - "9984"
-      - "9985"
+      - "9984:9984"
+      - "9985:9985"
       - "46658"
     healthcheck:
       test: ["CMD", "bash", "-c", "curl http://bigchaindb:9984 && curl http://tendermint:46657/abci_query"]
       interval: 3s
       timeout: 5s
       retries: 3
-    command: bigchaindb -l DEBUG start
+    command: -l DEBUG start
   tendermint:
     image: tendermint/tendermint:0.12
     volumes:
