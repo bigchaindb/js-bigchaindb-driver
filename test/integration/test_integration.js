@@ -11,7 +11,7 @@ import {
     metaData
 } from '../constants'
 
-const API_PATH = 'http://localhost:9984/api/v1/'
+const API_PATH = 'http://bigchaindb:9984/api/v1/'
 
 
 test('Keypair is created', t => {
