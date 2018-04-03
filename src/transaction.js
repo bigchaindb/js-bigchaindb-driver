@@ -30,14 +30,6 @@ export default class Transaction {
         }
     }
 
-    static hashTransaction(transaction) {
-        // Safely remove any tx id from the given transaction for hashing
-        const tx = { ...transaction }
-        delete tx.id
-
-        return sha256Hash(Transaction.serializeTransactionIntoCanonicalString(tx))
-    }
-
     static makeTransactionTemplate() {
         const txTemplate = {
             'id': null,
@@ -46,7 +38,7 @@ export default class Transaction {
             'inputs': [],
             'metadata': null,
             'asset': null,
-            'version': '1.0',
+            'version': '2.0',
         }
         return txTemplate
     }
@@ -58,8 +50,6 @@ export default class Transaction {
         tx.metadata = metadata
         tx.inputs = inputs
         tx.outputs = outputs
-
-        tx.id = Transaction.hashTransaction(tx)
         return tx
     }
 
@@ -246,15 +236,23 @@ export default class Transaction {
         signedTx.inputs.forEach((input, index) => {
             const privateKey = privateKeys[index]
             const privateKeyBuffer = Buffer.from(base58.decode(privateKey))
-            const serializedTransaction = Transaction
-                .serializeTransactionIntoCanonicalString(transaction)
+            const serializedTransaction =
+                Transaction.serializeTransactionIntoCanonicalString(transaction)
+
+            const transactionUniqueFulfillment = input.fulfills ? serializedTransaction
+                .concat(input.fulfills.transaction_id)
+                .concat(input.fulfills.output_index) : serializedTransaction
+            const transactionHash = sha256Hash(transactionUniqueFulfillment)
             const ed25519Fulfillment = new cc.Ed25519Sha256()
-            ed25519Fulfillment.sign(Buffer.from(serializedTransaction), privateKeyBuffer)
+            ed25519Fulfillment.sign(Buffer.from(transactionHash, 'hex'), privateKeyBuffer)
             const fulfillmentUri = ed25519Fulfillment.serializeUri()
 
             input.fulfillment = fulfillmentUri
         })
 
+        const serializedTransaction =
+                Transaction.serializeTransactionIntoCanonicalString(signedTx)
+        signedTx.id = sha256Hash(serializedTransaction)
         return signedTx
     }
 }

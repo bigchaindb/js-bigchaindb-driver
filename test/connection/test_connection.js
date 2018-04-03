@@ -3,8 +3,8 @@ import sinon from 'sinon'
 
 import * as request from '../../src/request' // eslint-disable-line
 import { Connection } from '../../src'
+import { API_PATH } from '../constants'
 
-const API_PATH = 'http://localhost:9984/api/v1/'
 const conn = new Connection(API_PATH)
 
 test('Payload thrown at incorrect API_PATH', t => {
@@ -24,9 +24,8 @@ test('Payload thrown at incorrect API_PATH', t => {
 test('Generate API URLS', t => {
     const endpoints = {
         'blocks': 'blocks',
-        'blocksDetail': 'blocks/%(blockId)s',
+        'blocksDetail': 'blocks/%(blockHeight)s',
         'outputs': 'outputs',
-        'statuses': 'statuses',
         'transactions': 'transactions',
         'transactionsDetail': 'transactions/%(transactionId)s',
         'assets': 'assets',
@@ -59,30 +58,15 @@ test('Request with custom headers', t => {
 
 test('Get block for a block id', t => {
     const expectedPath = 'path'
-    const blockId = 'abc'
+    const blockHeight = 'abc'
 
     conn._req = sinon.spy()
     conn.getApiUrls = sinon.stub().returns(expectedPath)
 
-    conn.getBlock(blockId)
+    conn.getBlock(blockHeight)
     t.truthy(conn._req.calledWith(
         expectedPath,
-        { urlTemplateSpec: { blockId } }
-    ))
-})
-
-
-test('Get status for a transaction id', t => {
-    const expectedPath = 'path'
-    const transactionId = 'abc'
-
-    conn._req = sinon.spy()
-    conn.getApiUrls = sinon.stub().returns(expectedPath)
-
-    conn.getStatus(transactionId)
-    t.truthy(conn._req.calledWith(
-        expectedPath,
-        { query: { transaction_id: transactionId } }
+        { urlTemplateSpec: { blockHeight } }
     ))
 })
 
@@ -105,18 +89,16 @@ test('Get transaction for a transaction id', t => {
 test('Get list of blocks for a transaction id', t => {
     const expectedPath = 'path'
     const transactionId = 'abc'
-    const status = 'status'
 
     conn._req = sinon.spy()
     conn.getApiUrls = sinon.stub().returns(expectedPath)
 
-    conn.listBlocks(transactionId, status)
+    conn.listBlocks(transactionId)
     t.truthy(conn._req.calledWith(
         expectedPath,
         {
             query: {
                 transaction_id: transactionId,
-                status
             }
         }
     ))

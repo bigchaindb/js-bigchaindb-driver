@@ -1,6 +1,7 @@
 import test from 'ava'
 import cc from 'crypto-conditions'
 import { Ed25519Keypair, Transaction, ccJsonLoad } from '../../src'
+import sha256Hash from '../../src/sha256Hash'
 
 test('Ed25519 condition encoding', t => {
     const publicKey = '4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS'
@@ -53,16 +54,27 @@ test('Fulfillment correctly formed', t => {
         [Transaction.makeOutput(Transaction.makeEd25519Condition(alice.publicKey))],
         alice.publicKey
     )
+    // Sign in order to get the tx id, needed for the unique fulfillment in the transfer transaction
+    const signCreateTransaction = Transaction.signTransaction(txCreate, alice.privateKey)
+
     const txTransfer = Transaction.makeTransferTransaction(
-        [{ tx: txCreate, output_index: 0 }],
+        [{ tx: signCreateTransaction, output_index: 0 }],
         [Transaction.makeOutput(Transaction.makeEd25519Condition(alice.publicKey))],
         {}
     )
-    const msg = Transaction.serializeTransactionIntoCanonicalString(txTransfer)
     const txSigned = Transaction.signTransaction(txTransfer, alice.privateKey)
+
+    // Here reconstruct the fulfillment of the transfer transaction
+    // The tx is serialized, and extended with tx_id and output index, and then hashed into bytes
+    const msg = Transaction.serializeTransactionIntoCanonicalString(txTransfer)
+    const msgUniqueFulfillment = txTransfer.inputs[0].fulfills ? msg
+        .concat(txTransfer.inputs[0].fulfills.transaction_id)
+        .concat(txTransfer.inputs[0].fulfills.output_index) : msg
+    const msgHash = sha256Hash(msgUniqueFulfillment)
+
     t.truthy(cc.validateFulfillment(
         txSigned.inputs[0].fulfillment, txCreate.outputs[0].condition.uri,
-        Buffer.from(msg)
+        Buffer.from(msgHash, 'hex')
     ))
 })
 

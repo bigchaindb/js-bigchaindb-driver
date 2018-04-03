@@ -19,10 +19,11 @@ export default class Connection {
     getApiUrls(endpoint) {
         return this.path + {
             'blocks': 'blocks',
-            'blocksDetail': 'blocks/%(blockId)s',
+            'blocksDetail': 'blocks/%(blockHeight)s',
             'outputs': 'outputs',
-            'statuses': 'statuses',
             'transactions': 'transactions',
+            'transactionsSync': 'transactions?mode=sync',
+            'transactionsCommit': 'transactions?mode=commit',
             'transactionsDetail': 'transactions/%(transactionId)s',
             'assets': 'assets',
             'metadata': 'metadata',
@@ -38,24 +39,12 @@ export default class Connection {
 
     /**
      * @public
-     * @param blockId
+     * @param blockHeight
      */
-    getBlock(blockId) {
+    getBlock(blockHeight) {
         return this._req(this.getApiUrls('blocksDetail'), {
             urlTemplateSpec: {
-                blockId
-            }
-        })
-    }
-
-    /**
-     * @public
-     * @param transactionId
-     */
-    getStatus(transactionId) {
-        return this._req(this.getApiUrls('statuses'), {
-            query: {
-                transaction_id: transactionId
+                blockHeight
             }
         })
     }
@@ -77,11 +66,10 @@ export default class Connection {
      * @param transactionId
      * @param status
      */
-    listBlocks(transactionId, status) {
+    listBlocks(transactionId) {
         return this._req(this.getApiUrls('blocks'), {
             query: {
                 transaction_id: transactionId,
-                status
             }
         })
     }
@@ -133,27 +121,12 @@ export default class Connection {
 
     /**
      * @public
-     * @param txId
-     * @return {Promise}
+     * @param transaction
      */
-    pollStatusAndFetchTransaction(txId) {
-        return new Promise((resolve, reject) => {
-            const timer = setInterval(() => {
-                this.getStatus(txId)
-                    .then((res) => {
-                        if (res.status === 'valid') {
-                            clearInterval(timer)
-                            this.getTransaction(txId)
-                                .then((res_) => {
-                                    resolve(res_)
-                                })
-                        }
-                    })
-                    .catch((err) => {
-                        clearInterval(timer)
-                        reject(err)
-                    })
-            }, 500)
+    postTransaction(transaction) {
+        return this._req(this.getApiUrls('transactions'), {
+            method: 'POST',
+            jsonBody: transaction
         })
     }
 
@@ -161,8 +134,20 @@ export default class Connection {
      * @public
      * @param transaction
      */
-    postTransaction(transaction) {
-        return this._req(this.getApiUrls('transactions'), {
+    postTransactionSync(transaction) {
+        return this._req(this.getApiUrls('transactionsSync'), {
+            method: 'POST',
+            jsonBody: transaction
+        })
+    }
+
+    /**
+     * @public
+     * @param transaction
+     */
+    postTransactionCommit(transaction) {
+        return this._req(this.getApiUrls('transactionsCommit'), {
+
             method: 'POST',
             jsonBody: transaction
         })

@@ -128,29 +128,13 @@ And sent over to a BigchainDB node:
 
 .. code-block:: js
 
-	conn.postTransaction(txCreateAliceSimpleSigned)
+	conn.postTransactionCommit(txCreateAliceSimpleSigned)
 
 Notice the transaction ``id``:
 
 .. code-block:: js
 
 	txid = txCreateAliceSimpleSigned.id
-
-To check the status of the transaction:
-
-.. code-block:: js
-
-	conn.getStatus(txCreateAliceSimpleSigned.id)
-
-It is also possible to check the status every 0.5 seconds
-with use of the transaction ``id``:
-
-.. code-block:: js
-
-	conn.pollStatusAndFetchTransaction(txCreateAliceSimpleSigned.id)
-
-.. note:: It may take a small amount of time before a BigchainDB cluster
-    confirms a transaction as being valid.
 
 Asset Transfer
 --------------
@@ -198,13 +182,10 @@ And sent over to a BigchainDB node:
 
 .. code-block:: js
 
-	conn.postTransaction(txTransferBobSigned)
+	conn.postTransactionCommit(txTransferBobSigned)
 
 Check the status again:
 
-.. code-block:: js
-
-	conn.pollStatusAndFetchTransaction(txTransferBobSigned.id)
 
 Bob is the new owner:
 
@@ -362,15 +343,10 @@ Recap: Asset Creation & Transfer
 	// Send the transaction off to BigchainDB
 	const conn = new driver.Connection(API_PATH)
 
-	conn.postTransaction(txCreateAliceSimpleSigned)
-		// Check status of transaction every 0.5 seconds until fulfilled
-		.then(() => conn.pollStatusAndFetchTransaction(txCreateAliceSimpleSigned.id))
+	conn.postTransactionCommit(txCreateAliceSimpleSigned)
 		.then(retrievedTx => console.log('Transaction', retrievedTx.id, 'successfully posted.'))
-		// Check status after transaction has completed (result: { 'status': 'valid' })
-		// If you check the status of a transaction to fast without polling,
-		// It returns that the transaction is waiting in the 'backlog'
-		.then(() => conn.getStatus(txCreateAliceSimpleSigned.id))
-		.then(status => console.log('Retrieved status method 2: ', status))
+		// With the postTransactionCommit if the response is correct, then the transaction
+		// is valid and commited to a block
 
 		// Transfer bicycle to Bob
 		.then(() => {
@@ -386,12 +362,12 @@ Recap: Asset Creation & Transfer
 			let txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey)
 			console.log('Posting signed transaction: ', txTransferBobSigned)
 
-			// Post and poll status
-			return conn.postTransaction(txTransferBobSigned)
+			// Post with commit so transaction is validated and included in a block
+			return conn.postTransactionCommit(txTransferBobSigned)
 		})
 		.then(res => {
 			console.log('Response from BDB server:', res)
-			return conn.pollStatusAndFetchTransaction(res.id)
+			return res.id
 		})
 		.then(tx => {
 			console.log('Is Bob the owner?', tx['outputs'][0]['public_keys'][0] == bob.publicKey)
@@ -608,9 +584,7 @@ and further we transfer it from Bob to Chris. Expectations:
 	const txCreateAliceSimpleSigned = driver.Transaction.signTransaction(txCreateAliceSimple, alice.privateKey)
 	console.log('\n\nPosting signed create transaction for Alice:\n', txCreateAliceSimpleSigned)
 
-	conn.postTransaction(txCreateAliceSimpleSigned)
-		// Check status of transaction every 0.5 seconds until fulfilled
-		.then(() => conn.pollStatusAndFetchTransaction(txCreateAliceSimpleSigned.id))
+	conn.postTransactionCommit(txCreateAliceSimpleSigned)
 
 		// Transfer bicycle from Alice to Bob
 		.then(() => {
@@ -624,10 +598,9 @@ and further we transfer it from Bob to Chris. Expectations:
 			txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey)
 			console.log('\n\nPosting signed transaction to Bob:\n', txTransferBobSigned)
 
-			// Post and poll status
-			return conn.postTransaction(txTransferBobSigned)
+			// Post with commit so transaction is validated and included in a block
+			return conn.postTransactionCommit(txTransferBobSigned)
 		})
-		.then(res => conn.pollStatusAndFetchTransaction(res.id))
 
 		// Second transfer of bicycle from Bob to Chris
 		.then(tx => {
@@ -641,10 +614,9 @@ and further we transfer it from Bob to Chris. Expectations:
 			let txTransferChrisSigned = driver.Transaction.signTransaction(txTransferChris, bob.privateKey)
 			console.log('\n\nPosting signed transaction to Chris:\n', txTransferChrisSigned)
 
-			// Post and poll status
-			return conn.postTransaction(txTransferChrisSigned)
+			// Post with commit so transaction is validated and included in a block
+			return conn.postTransactionCommit(txTransferChrisSigned)
 		})
-		.then(res => conn.pollStatusAndFetchTransaction(res.id))
 		.then(() => conn.listOutputs(alice.publicKey, true))
 		.then(listSpentOutputs => {
 			console.log("\nSpent outputs for Alice: ", listSpentOutputs.length) // Spent outputs: 1
