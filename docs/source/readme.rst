@@ -44,70 +44,69 @@ Compatibility Matrix
 Older versions
 --------------------
 
-#### Versions 4.x.x
+**Version 4.x.x**
+
+	As part of the changes in the BigchainDB 2.0 server, some endpoints were
+	modified. In order to be consistent with them, the JS driver does not have
+	anymore the `pollStatusAndFetchTransaction()` method as there are three
+	different ways of posting a transaction:
+
+	- `async` using the `postTransaction`: the response will return immediately and not wait to see if the transaction is valid.
+	- `sync` using the `postTransactionSync`: the response will return after the transaction is validated.
+	- `commit` using the `postTransactionCommit`: the response will return after the transaction is committed to a block.
+
+	By default in the docs we will use the `postTransactionCommit` as is way of
+	being sure that the transaction is validated and commited to a block, so
+	there will not be any issue if you try to do any other action with the asset immediately.
 
 
+**Version 3.2.x**
 
-As part of the changes in the BigchainDB 2.0 server, some endpoint were
-modified. In order to be consistent with them, the JS driver does not have
-anymore the `pollStatusAndFetchTransaction()` method as there are three
-different ways of posting a transaction.
-- `async` using the `postTransaction`: the response will return immediately and not wait to see if the transaction is valid.
-- `sync` using the `postTransactionSync`: the response will return after the transaction is validated.
-- `commit` using the `postTransactionCommit`: the response will return after the transaction is committed to a block.
+	For versions below 3.2, a transfer transaction looked like:
 
-By default in the docs we will use the `postTransactionCommit` as is way of
-being sure that the transaction is validated and commited to a block, so
-there will not be any issue if you try to transfer the asset immediately.
+	.. code-block:: js
+
+		const createTranfer = BigchainDB.Transaction.makeTransferTransaction(
+		    txCreated,
+		    metadata, [BigchainDB.Transaction.makeOutput(
+		        BigchainDB.Transaction.makeEd25519Condition(alice.publicKey))],
+		    0
+		)
+
+		const signedTransfer = BigchainDB.Transaction.signTransaction(createTranfer,
+			keypair.privateKey)
 
 
-#### Versions 3.2.x 
+	In order to upgrade and do it compatible with the new driver version, this
+	transaction should be now:
 
-For versions below 3.2, a transfer transaction looked like:
+	.. code-block:: js
 
-.. code-block:: js
-
-	const createTranfer = BigchainDB.Transaction.makeTransferTransaction(
-	    txCreated,
-	    metadata, [BigchainDB.Transaction.makeOutput(
+		const createTranfer = BigchainDB.Transaction.makeTransferTransaction(
+			[{ tx: txCreated, output_index: 0 }],
+			[BigchainDB.Transaction.makeOutput(
 	        BigchainDB.Transaction.makeEd25519Condition(alice.publicKey))],
-	    0
-	)
+			metaData
+		)
 
-	const signedTransfer = BigchainDB.Transaction.signTransaction(createTranfer,
-		keypair.privateKey)
-
-
-In order to upgrade and do it compatible with the new driver version, this
-transaction should be now:
-
-.. code-block:: js
-
-	const createTranfer = BigchainDB.Transaction.makeTransferTransaction(
-		[{ tx: txCreated, output_index: 0 }],
-		[BigchainDB.Transaction.makeOutput(
-        BigchainDB.Transaction.makeEd25519Condition(alice.publicKey))],
-		metaData
-	)
-
-	const signedTransfer = BigchainDB.Transaction.signTransaction(createTranfer,
-		keypair.privateKey)
+		const signedTransfer = BigchainDB.Transaction.signTransaction(createTranfer,
+			keypair.privateKey)
 
 
-The upgrade allows to create transfer transaction spending outputs that belong
-to different transactions. So for instance is now possible to create a transfer
-transaction spending two outputs from two different create transactions:
+	The upgrade allows to create transfer transaction spending outputs that belong
+	to different transactions. So for instance is now possible to create a transfer
+	transaction spending two outputs from two different create transactions:
 
 
-.. code-block:: js
+	.. code-block:: js
 
-	const createTranfer = BigchainDB.Transaction.makeTransferTransaction(
-		[{ tx: txCreated1, output_index: 0 },
-			{ tx: txCreated2, output_index: 0}],
-		[BigchainDB.Transaction.makeOutput(
-        BigchainDB.Transaction.makeEd25519Condition(alice.publicKey))],
-		metaData
-	)
+		const createTranfer = BigchainDB.Transaction.makeTransferTransaction(
+			[{ tx: txCreated1, output_index: 0 },
+				{ tx: txCreated2, output_index: 0}],
+			[BigchainDB.Transaction.makeOutput(
+	        BigchainDB.Transaction.makeEd25519Condition(alice.publicKey))],
+			metaData
+		)
 
-	const signedTransfer = BigchainDB.Transaction.signTransaction(createTranfer,
-		keypair.privateKey)
+		const signedTransfer = BigchainDB.Transaction.signTransaction(createTranfer,
+			keypair.privateKey)

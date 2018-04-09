@@ -18,9 +18,13 @@
 | `0.10`            | `0.1.x`                      |
 | `1.0.0`        | `0.3.x`                      |
 | `>= 1.3.0`        | `3.x.x`                      |
+| `>= 2.0.0`        | `4.x.x`                      |
 
 ## Breaking changes
-Version 3.2 of BigchainDB JavaScript Driver introduces a new way of creating transfer transactions. Check [older versions](https://docs.bigchaindb.com/projects/js-driver/en/latest/readme.html#features)
+
+- **Version 4.0** of BigchainDB JavaScript Driver makes the driver compatible with BigchainDB 2.0. There are new functions for sending off transactions along with other changes. Check [older versions](https://docs.bigchaindb.com/projects/js-driver/en/latest/readme.html#features)
+- **Version 3.2** of BigchainDB JavaScript Driver introduces a new way of creating transfer transactions. Check [older versions](https://docs.bigchaindb.com/projects/js-driver/en/latest/readme.html#features)
+
 
 ## Contents
 
@@ -71,8 +75,7 @@ const txSigned = driver.Transaction.signTransaction(tx, alice.privateKey)
 // Send the transaction off to BigchainDB
 const conn = new driver.Connection(API_PATH)
 
-conn.postTransaction(txSigned)
-    .then(() => conn.pollStatusAndFetchTransaction(txSigned.id))
+conn.postTransactionCommit(txSigned)
     .then(retrievedTx => console.log('Transaction', retrievedTx.id, 'successfully posted.'))
 ```
 
@@ -85,7 +88,7 @@ conn.postTransaction(txSigned)
         <meta charset="utf-8">
         <title>BigchainDB boilerplate</title>
         <!-- Adjust version to your needs -->
-        <script src="https://unpkg.com/bigchaindb-driver@0.3.0/dist/browser/bigchaindb-driver.window.min.js"></script>
+        <script src="https://unpkg.com/bigchaindb-driver@4.0.0/dist/browser/bigchaindb-driver.window.min.js"></script>
 
         <script>
             // BigchainDB server instance or IPDB (e.g. https://test.ipdb.io/api/v1/)
@@ -117,8 +120,7 @@ conn.postTransaction(txSigned)
             // Send the transaction off to BigchainDB
             let conn = new BigchainDB.Connection(API_PATH)
 
-            conn.postTransaction(txSigned)
-                .then(() => conn.pollStatusAndFetchTransaction(txSigned.id))
+            conn.postTransactionCommit(txSigned)
                 .then(res => {
                     const elem = document.getElementById('lastTransaction')
                     elem.href = API_PATH + 'transactions/' + txSigned.id
