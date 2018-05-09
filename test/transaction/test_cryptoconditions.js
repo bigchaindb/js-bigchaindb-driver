@@ -15,6 +15,20 @@ test('Ed25519 condition encoding', t => {
     t.deepEqual(target, Transaction.makeEd25519Condition(publicKey))
 })
 
+test('Sha256Condition fulfillment', t => {
+    const preimage = 'secret'
+    const target = {
+        details: {
+            type_id: 0,
+            bitmask: 3,
+            preimage,
+            type: 'fulfillment'
+        },
+        uri: 'ni:///sha-256;K7gNU3sdo-OL0wNhqoVWhr3g6s1xYv72ol_pe_Unols?fpt=preimage-sha-256&cost=6'
+    }
+    t.deepEqual(target, Transaction.makeSha256Condition(preimage))
+})
+
 
 test('Threshold condition encoding', t => {
     const publicKey = '4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS'
