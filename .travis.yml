@@ -25,10 +25,8 @@ install:
 
 before_script:
   - .ci/travis-before-script.sh
-  - gem install cowsay
-  - npm install -g codecov
 
-script: yarn test
+script: npm test
 
 notifications:
     email: false
