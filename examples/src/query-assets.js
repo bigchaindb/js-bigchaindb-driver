@@ -1,4 +1,6 @@
-const driver = require('bigchaindb-driver') // eslint-disable-line import/no-unresolved
+/* eslint-disable import/no-unresolved */
+
+const driver = require('bigchaindb-driver')
 require('dotenv').config()
 
 
