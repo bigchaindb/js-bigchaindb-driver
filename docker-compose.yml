@@ -29,11 +29,11 @@ services:
       retries: 3
     command: -l DEBUG start
   tendermint:
-    image: tendermint/tendermint:0.12
+    image: tendermint/tendermint:0.19.2
     volumes:
       - ./compose/tendermint/tmdata/config.toml:/tendermint/config.toml
     entrypoint: ''
     ports:
       - "46656"
       - "46657"
-    command: bash -c "tendermint init && tendermint node"
+    command: sh -c "tendermint init && tendermint node --consensus.create_empty_blocks=false --proxy_app=tcp://bigchaindb:46658"
