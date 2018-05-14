@@ -13,7 +13,7 @@
   "main": "./dist/node/index.js",
   "browser": "./dist/browser/bigchaindb-driver.cjs2.min.js",
   "scripts": {
-    "lint": "eslint ./",
+    "lint": "./node_modules/.bin/eslint ./",
     "build": "npm run clean && npm run build:cjs && npm run build:dist",
     "build:bundle": "webpack",
     "build:cjs": "cross-env BABEL_ENV=cjs babel ./src -d dist/node",

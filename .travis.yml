@@ -5,7 +5,10 @@ services:
 
 language: node_js
 
-node_js: 7
+node_js:
+  - 8
+  - 9
+  - 10
 
 cache:
     directories:
@@ -23,10 +26,8 @@ install:
 
 before_script:
   - .ci/travis-before-script.sh
-  - gem install cowsay
-  - npm install -g codecov
 
-script: yarn test
+script: npm test
 
 notifications:
     email: false
