@@ -6,11 +6,13 @@ import cc from 'crypto-conditions'
 import ccJsonify from './utils/ccJsonify'
 import sha256Hash from './sha256Hash'
 
+/**
+ * Construct Transactions
+ */
 export default class Transaction {
     /**
-     * @public
      * Canonically serializes a transaction into a string by sorting the keys
-     * @param {object} (transaction)
+     * @param {Object} (transaction)
      * @return {string} a canonically serialized Transaction
      */
     static serializeTransactionIntoCanonicalString(transaction) {
@@ -54,12 +56,11 @@ export default class Transaction {
     }
 
     /**
-     * @public
      * Generate a `CREATE` transaction holding the `asset`, `metadata`, and `outputs`, to be signed by
      * the `issuers`.
-     * @param {object} asset Created asset's data
-     * @param {object} metadata Metadata for the Transaction
-     * @param {object[]} outputs Array of Output objects to add to the Transaction.
+     * @param {Object} asset Created asset's data
+     * @param {Object} metadata Metadata for the Transaction
+     * @param {Object[]} outputs Array of Output objects to add to the Transaction.
      *                           Think of these as the recipients of the asset after the transaction.
      *                           For `CREATE` Transactions, this should usually just be a list of
      *                           Outputs wrapping Ed25519 Conditions generated from the issuers' public
@@ -69,7 +70,7 @@ export default class Transaction {
      *                              Note: Each of the private keys corresponding to the given public
      *                              keys MUST be used later (and in the same order) when signing the
      *                              Transaction (`signTransaction()`).
-     * @returns {object} Unsigned transaction -- make sure to call signTransaction() on it before
+     * @returns {Object} Unsigned transaction -- make sure to call signTransaction() on it before
      *                   sending it off!
      */
     static makeCreateTransaction(asset, metadata, outputs, ...issuers) {
@@ -82,12 +83,11 @@ export default class Transaction {
     }
 
     /**
-     * @public
      * Create an Ed25519 Cryptocondition from an Ed25519 public key
      * to put into an Output of a Transaction
      * @param {string} publicKey base58 encoded Ed25519 public key for the recipient of the Transaction
      * @param {boolean} [json=true] If true returns a json object otherwise a crypto-condition type
-     * @returns {object} Ed25519 Condition (that will need to wrapped in an Output)
+     * @returns {Object} Ed25519 Condition (that will need to wrapped in an Output)
      */
     static makeEd25519Condition(publicKey, json = true) {
         const publicKeyBuffer = Buffer.from(base58.decode(publicKey))
@@ -103,13 +103,12 @@ export default class Transaction {
     }
 
     /**
-     * @public
      * Create an Output from a Condition.
      * Note: Assumes the given Condition was generated from a
      * single public key (e.g. a Ed25519 Condition)
-     * @param {object} condition Condition (e.g. a Ed25519 Condition from `makeEd25519Condition()`)
+     * @param {Object} condition Condition (e.g. a Ed25519 Condition from `makeEd25519Condition()`)
      * @param {string} amount Amount of the output
-     * @returns {object} An Output usable in a Transaction
+     * @returns {Object} An Output usable in a Transaction
      */
     static makeOutput(condition, amount = '1') {
         if (typeof amount !== 'string') {
@@ -134,11 +133,10 @@ export default class Transaction {
     }
 
     /**
-     * @public
      * Create a Preimage-Sha256 Cryptocondition from a secret to put into an Output of a Transaction
      * @param {string} preimage Preimage to be hashed and wrapped in a crypto-condition
      * @param {boolean} [json=true] If true returns a json object otherwise a crypto-condition type
-     * @returns {object} Preimage-Sha256 Condition (that will need to wrapped in an Output)
+     * @returns {Object} Preimage-Sha256 Condition (that will need to wrapped in an Output)
      */
     static makeSha256Condition(preimage, json = true) {
         const sha256Fulfillment = new cc.PreimageSha256()
@@ -151,12 +149,11 @@ export default class Transaction {
     }
 
     /**
-     * @public
      * Create an Sha256 Threshold Cryptocondition from threshold to put into an Output of a Transaction
      * @param {number} threshold
      * @param {Array} [subconditions=[]]
      * @param {boolean} [json=true] If true returns a json object otherwise a crypto-condition type
-     * @returns {object} Sha256 Threshold Condition (that will need to wrapped in an Output)
+     * @returns {Object} Sha256 Threshold Condition (that will need to wrapped in an Output)
      */
     static makeThresholdCondition(threshold, subconditions = [], json = true) {
         const thresholdCondition = new cc.ThresholdSha256()
@@ -175,13 +172,12 @@ export default class Transaction {
     }
 
     /**
-     * @public
      * Generate a `TRANSFER` transaction holding the `asset`, `metadata`, and `outputs`, that fulfills
      * the `fulfilledOutputs` of `unspentTransaction`.
-     * @param {object} unspentTransaction Previous Transaction you have control over (i.e. can fulfill
+     * @param {Object} unspentTransaction Previous Transaction you have control over (i.e. can fulfill
      *                                    its Output Condition)
-     * @param {object} metadata Metadata for the Transaction
-     * @param {object[]} outputs Array of Output objects to add to the Transaction.
+     * @param {Object} metadata Metadata for the Transaction
+     * @param {Object[]} outputs Array of Output objects to add to the Transaction.
      *                           Think of these as the recipients of the asset after the transaction.
      *                           For `TRANSFER` Transactions, this should usually just be a list of
      *                           Outputs wrapping Ed25519 Conditions generated from the public keys of
@@ -191,7 +187,7 @@ export default class Transaction {
      *                                     Note that listed public keys listed must be used (and in
      *                                     the same order) to sign the Transaction
      *                                     (`signTransaction()`).
-     * @returns {object} Unsigned transaction -- make sure to call signTransaction() on it before
+     * @returns {Object} Unsigned transaction -- make sure to call signTransaction() on it before
      *                   sending it off!
      */
     // TODO:
@@ -220,16 +216,15 @@ export default class Transaction {
     }
 
     /**
-     * @public
      * Sign the given `transaction` with the given `privateKey`s, returning a new copy of `transaction`
      * that's been signed.
      * Note: Only generates Ed25519 Fulfillments. Thresholds and other types of Fulfillments are left as
      * an exercise for the user.
-     * @param {object} transaction Transaction to sign. `transaction` is not modified.
+     * @param {Object} transaction Transaction to sign. `transaction` is not modified.
      * @param {...string} privateKeys Private keys associated with the issuers of the `transaction`.
      *                                Looped through to iteratively sign any Input Fulfillments found in
      *                                the `transaction`.
-     * @returns {object} The signed version of `transaction`.
+     * @returns {Object} The signed version of `transaction`.
      */
     static signTransaction(transaction, ...privateKeys) {
         const signedTx = clone(transaction)
@@ -251,7 +246,7 @@ export default class Transaction {
         })
 
         const serializedTransaction =
-                Transaction.serializeTransactionIntoCanonicalString(signedTx)
+            Transaction.serializeTransactionIntoCanonicalString(signedTx)
         signedTx.id = sha256Hash(serializedTransaction)
         return signedTx
     }

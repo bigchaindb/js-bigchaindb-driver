@@ -3,14 +3,13 @@ import fetchPonyfill from 'fetch-ponyfill'
 import { vsprintf } from 'sprintf-js'
 
 import formatText from './format_text'
-
 import stringifyAsQueryParam from './stringify_as_query_param'
-
 
 const fetch = fetchPonyfill(Promise)
 
 
 /**
+ * @private
  * imported from https://github.com/bigchaindb/js-utility-belt/
  *
  * Global fetch wrapper that adds some basic error handling and ease of use enhancements.
@@ -24,14 +23,14 @@ const fetch = fetchPonyfill(Promise)
  * @param  {string}  url    Url to request. Can be specified as a sprintf format string (see
  *                          https://github.com/alexei/sprintf.js) that will be resolved using
  *                          `config.urlTemplateSpec`.
- * @param  {object}  config Additional configuration, mostly passed to fetch as its 'init' config
+ * @param  {Object}  config Additional configuration, mostly passed to fetch as its 'init' config
  *                          (see https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch/fetch#Parameters).
  * @param  {*}             config.jsonBody        Json payload to the request. Will automatically be
  *                                                JSON.stringify()-ed and override `config.body`.
- * @param  {string|object} config.query           Query parameter to append to the end of the url.
+ * @param  {string|Object} config.query           Query parameter to append to the end of the url.
  *                                                If specified as an object, keys will be
  *                                                decamelized into snake case first.
- * @param  {*[]|object}    config.urlTemplateSpec Format spec to use to expand the url (see sprintf).
+ * @param  {*[]|Object}    config.urlTemplateSpec Format spec to use to expand the url (see sprintf).
  * @param  {*}             config.*               All other options are passed through to fetch.
  *
  * @return {Promise}        Promise that will resolve with the response if its status was 2xx;
@@ -47,8 +46,8 @@ export default function baseRequest(url, {
             // Use vsprintf for the array call signature
             expandedUrl = vsprintf(url, urlTemplateSpec)
         } else if (urlTemplateSpec &&
-                   typeof urlTemplateSpec === 'object' &&
-                   Object.keys(urlTemplateSpec).length) {
+            typeof urlTemplateSpec === 'object' &&
+            Object.keys(urlTemplateSpec).length) {
             expandedUrl = formatText(url, urlTemplateSpec)
         } else if (process.env.NODE_ENV !== 'production') {
             // eslint-disable-next-line no-console

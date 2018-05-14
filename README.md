@@ -1,6 +1,6 @@
 # [![js-bigchaindb-driver](media/repo-banner@2x.png)](https://www.bigchaindb.com)
 
-> Official JavaScript driver for [BigchainDB](https://github.com/bigchaindb/bigchaindb) with some naive helpers to get you on your way making transactions in Node.js and the browser.
+> Official JavaScript driver for [BigchainDB](https://github.com/bigchaindb/bigchaindb) to create transactions in Node.js and the browser.
 
 [![Join the chat at https://gitter.im/bigchaindb/js-bigchaindb-driver](https://badges.gitter.im/bigchaindb/js-bigchaindb-driver.svg)](https://gitter.im/bigchaindb/js-bigchaindb-driver?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![npm](https://img.shields.io/npm/v/bigchaindb-driver.svg)](https://www.npmjs.com/package/bigchaindb-driver)
@@ -9,15 +9,16 @@
 [![Build Status](https://travis-ci.org/bigchaindb/js-bigchaindb-driver.svg?branch=master)](https://travis-ci.org/bigchaindb/js-bigchaindb-driver)
 [![Greenkeeper badge](https://badges.greenkeeper.io/bigchaindb/js-bigchaindb-driver.svg)](https://greenkeeper.io/)
 
-- Documentation: https://docs.bigchaindb.com/projects/js-driver/en/latest/usage.html
+- [Main Documentation](https://docs.bigchaindb.com/projects/js-driver/en/latest/usage.html)
+- [Driver API reference](API.md)
 
 ## Compatibility
 
 | BigchainDB Server | BigchainDB JavaScript Driver |
 | ----------------- |------------------------------|
 | `0.10`            | `0.1.x`                      |
-| `1.0.0`        | `0.3.x`                      |
-| `1.3.x`        | `3.x.x`                      |
+| `1.0.0`           | `0.3.x`                      |
+| `1.3.x`           | `3.x.x`                      |
 | `>= 2.0.0`        | `4.x.x`                      |
 
 ## Breaking changes
@@ -25,20 +26,29 @@
 - **Version 4.0** of BigchainDB JavaScript Driver makes the driver compatible with BigchainDB 2.0. There are new functions for sending off transactions along with other changes. Check [older versions](https://docs.bigchaindb.com/projects/js-driver/en/latest/readme.html#features)
 - **Version 3.2** of BigchainDB JavaScript Driver introduces a new way of creating transfer transactions. Check [older versions](https://docs.bigchaindb.com/projects/js-driver/en/latest/readme.html#features)
 
+## Table of Contents
 
-## Contents
+  - [Installation and Usage](#installation-and-usage)
+     - [Example: Create a transaction](#example-create-a-transaction)
+     - [Browser usage](#browser-usage)
+  - [BigchainDB Documentation](#bigchaindb-documentation)
+  - [Speed Optimizations](#speed-optimizations)
+  - [Development](#development)
+  - [Authors](#authors)
+  - [License](#license)
 
-* [Installation and Usage with package managers (npm/yarn)](#installation-and-usage-with-package-managers-npmyarn)
-   * [Example: Create a transaction](#example-create-a-transaction)
-* [Use a pre-built image (browser only)](#use-a-pre-built-image-browser-only)
-* [Documentation](#bigchaindb-documentation)
-* [Authors](#authors)
-* [License](#license)
+---
 
-## Installation and Usage with package managers (npm/yarn)
+## Installation and Usage
 
 ```bash
 npm install bigchaindb-driver
+```
+
+```js
+const driver = require('bigchaindb-driver')
+// or ES6+
+import driver from 'bigchaindb-driver'
 ```
 
 ### Example: Create a transaction
@@ -46,7 +56,7 @@ npm install bigchaindb-driver
 ```js
 const driver = require('bigchaindb-driver')
 
-// BigchainDB server instance or IPDB (e.g. https://test.ipdb.io/api/v1/)
+// BigchainDB server instance (e.g. https://test.bigchaindb.com/api/v1/)
 const API_PATH = 'http://localhost:9984/api/v1/'
 
 // Create a new keypair.
@@ -79,7 +89,7 @@ conn.postTransactionCommit(txSigned)
     .then(retrievedTx => console.log('Transaction', retrievedTx.id, 'successfully posted.'))
 ```
 
-## Use a pre-built image (browser only)
+### Browser usage
 
 ```html
 <!DOCTYPE html>
@@ -91,7 +101,7 @@ conn.postTransactionCommit(txSigned)
         <script src="https://unpkg.com/bigchaindb-driver@4.0.0/dist/browser/bigchaindb-driver.window.min.js"></script>
 
         <script>
-            // BigchainDB server instance or IPDB (e.g. https://test.ipdb.io/api/v1/)
+            // BigchainDB server instance (e.g. https://test.bigchaindb.com/api/v1/)
             const API_PATH = 'http://localhost:9984/api/v1/'
 
             // Create a new keypair.
@@ -139,6 +149,7 @@ conn.postTransactionCommit(txSigned)
 
 ## BigchainDB Documentation
 
+- [The Hitchhiker's Guide to BigchainDB](https://www.bigchaindb.com/developers/guide/)
 - [HTTP API Reference](https://docs.bigchaindb.com/projects/server/en/latest/http-client-server-api.html)
 - [The Transaction Model](https://docs.bigchaindb.com/projects/server/en/latest/data-models/transaction-model.html?highlight=crypto%20conditions)
 - [Inputs and Outputs](https://docs.bigchaindb.com/projects/server/en/latest/data-models/inputs-outputs.html)
@@ -152,6 +163,21 @@ This implementation plays "safe" by using JS-native (or downgradable) libraries 
 * [chloride](https://github.com/dominictarr/chloride), or its underlying [sodium](https://github.com/paixaop/node-sodium) library
 * [node-sha3](https://github.com/phusion/node-sha3) -- **MAKE SURE** to use [steakknife's fork](https://github.com/steakknife/node-sha3) if [the FIPS 202 upgrade](https://github.com/phusion/node-sha3/pull/25) hasn't been merged (otherwise, you'll run into all kinds of hashing problems)
 
+## Development
+
+```js
+git clone git@github.com:bigchaindb/js-bigchaindb-driver.git
+cd js-bigchaindb-driver/
+
+npm i
+npm run dev
+```
+
+After updating source files in `src/`, make sure to update the API documentation. The following command will scan all source files and create the Markdown output into `./API.md`:
+
+```bash
+npm run doc
+```
 
 ## Authors
 

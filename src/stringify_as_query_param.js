@@ -4,6 +4,7 @@ import queryString from 'query-string'
 
 
 /**
+ * @private
  * imported from https://github.com/bigchaindb/js-utility-belt/
  *
  * Takes a key-value dictionary (ie. object) and converts it to a query-parameter string that you
@@ -24,7 +25,7 @@ import queryString from 'query-string'
  *
  *   ?page=1&page_size=10
  *
- * @param  {object}   obj                    Query params dictionary
+ * @param  {Object}   obj                    Query params dictionary
  * @param  {function} [transform=decamelize] Transform function for each of the param keys
  * @return {string}                          Query param string
  */

@@ -11,7 +11,7 @@ const Regex = {
 
 /**
  * imported from https://github.com/bigchaindb/js-utility-belt/
- *
+ * @private
  * Formats strings similarly to C's sprintf, with the addition of '${...}' formats.
  *
  * Makes a first pass replacing '${...}' formats before passing the expanded string and other
@@ -47,6 +47,7 @@ export default function formatText(s, ...argv) {
             let interpolationLeft = replacement
 
             /**
+             * @private
              * Interpolation algorithm inspired by sprintf-js.
              *
              * Goes through the replacement string getting the left-most key or index to interpolate
@@ -69,7 +70,7 @@ export default function formatText(s, ...argv) {
                 // Assigning in the conditionals here makes the code less bloated
                 /* eslint-disable no-cond-assign */
                 while ((interpolationLeft = interpolationLeft.substring(curMatch[0].length)) &&
-                       value != null) {
+                    value != null) {
                     if ((curMatch = Regex.KEY_ACCESS.exec(interpolationLeft))) {
                         value = value[curMatch[1]]
                     } else if ((curMatch = Regex.INDEX_ACCESS.exec(interpolationLeft))) {

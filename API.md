@@ -2,217 +2,421 @@
 
 ### Table of Contents
 
--   [Ed25519Keypair](#ed25519keypair)
--   [makeEd25519Condition](#makeed25519condition)
--   [makeSha256Condition](#makesha256condition)
--   [makeThresholdCondition](#makethresholdcondition)
--   [makeCreateTransaction](#makecreatetransaction)
--   [makeOutput](#makeoutput)
--   [makeTransferTransaction](#maketransfertransaction)
--   [serializeTransactionIntoCanonicalString](#serializetransactionintocanonicalstring)
--   [signTransaction](#signtransaction)
--   [ccJsonLoad](#ccjsonload)
--   [ccJsonify](#ccjsonify)
--   [getBlock](#getblock)
--   [getStatus](#getstatus)
--   [getTransaction](#gettransaction)
--   [listBlocks](#listblocks)
--   [listOutputs](#listoutputs)
--   [listTransactions](#listtransactions)
--   [listVotes](#listvotes)
--   [pollStatusAndFetchTransaction](#pollstatusandfetchtransaction)
--   [postTransaction](#posttransaction)
+-   [Ed25519Keypair][1]
+-   [Connection][2]
+    -   [getBlock][3]
+    -   [getTransaction][4]
+    -   [listBlocks][5]
+    -   [listOutputs][6]
+    -   [listTransactions][7]
+    -   [listVotes][8]
+    -   [postTransaction][9]
+    -   [postTransactionSync][10]
+    -   [postTransactionCommit][11]
+    -   [searchAssets][12]
+    -   [searchMetadata][13]
+-   [Transaction][14]
+    -   [serializeTransactionIntoCanonicalString][15]
+    -   [makeCreateTransaction][16]
+    -   [makeEd25519Condition][17]
+    -   [makeOutput][18]
+    -   [makeSha256Condition][19]
+    -   [makeThresholdCondition][20]
+    -   [makeTransferTransaction][21]
+    -   [signTransaction][22]
+-   [ccJsonLoad][23]
+-   [ccJsonify][24]
 
 ## Ed25519Keypair
 
+[src/Ed25519Keypair.js:12-17][25]
+
+Type: [Object][26]
+
 **Parameters**
 
--   `secret` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)?** A seed that will be used as a key derivation function
+-   `seed` **[Buffer][27]?** A seed that will be used as a key derivation function
 
 **Properties**
 
--   `publicKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `privateKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `publicKey` **[string][28]** 
+-   `privateKey` **[string][28]** 
 
-## makeEd25519Condition
+## Connection
 
-**Parameters**
+[src/connection.js:8-168][29]
 
--   `publicKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** base58 encoded Ed25519 public key for the recipient of the Transaction
--   `json` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** If true returns a json object otherwise a crypto-condition type (optional, default `true`)
-
-Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Ed25519 Condition (that will need to wrapped in an Output)
-
-## makeSha256Condition
+Base connection
 
 **Parameters**
 
--   `preimage` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Preimage to be hashed and wrapped in a crypto-condition
--   `json` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** If true returns a json object otherwise a crypto-condition type (optional, default `true`)
+-   `path`  
+-   `headers`   (optional, default `{}`)
 
-Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Preimage-Sha256 Condition (that will need to wrapped in an Output)
+### getBlock
 
-## makeThresholdCondition
-
-**Parameters**
-
--   `threshold` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
--   `subconditions` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)**  (optional, default `[]`)
--   `json` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** If true returns a json object otherwise a crypto-condition type (optional, default `true`)
-
-Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Sha256 Threshold Condition (that will need to wrapped in an Output)
-
-## makeCreateTransaction
+[src/connection.js:44-50][30]
 
 **Parameters**
 
--   `asset` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Created asset's data
--   `metadata` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Metadata for the Transaction
--   `outputs` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** Array of Output objects to add to the Transaction.
-                              Think of these as the recipients of the asset after the transaction.
-                              For `CREATE` Transactions, this should usually just be a list of
-                              Outputs wrapping Ed25519 Conditions generated from the issuers' public
-                              keys (so that the issuers are the recipients of the created asset).
--   `issuers` **...[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)>** Public key of one or more issuers to the asset being created by this
-                                 Transaction.
-                                 Note: Each of the private keys corresponding to the given public
-                                 keys MUST be used later (and in the same order) when signing the
-                                 Transaction (`signTransaction()`).
+-   `blockHeight`  
 
-Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Unsigned transaction -- make sure to call signTransaction() on it before
-                  sending it off!
+### getTransaction
 
-## makeOutput
+[src/connection.js:55-61][31]
 
 **Parameters**
 
--   `condition` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Condition (e.g. a Ed25519 Condition from `makeEd25519Condition()`)
--   `amount` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** Amount of the output (optional, default `1`)
+-   `transactionId`  
 
-Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An Output usable in a Transaction
+### listBlocks
 
-## makeTransferTransaction
-
-**Parameters**
-
--   `unspentTransaction` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Previous Transaction you have control over (i.e. can fulfill
-                                       its Output Condition)
--   `metadata` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Metadata for the Transaction
--   `outputs` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** Array of Output objects to add to the Transaction.
-                              Think of these as the recipients of the asset after the transaction.
-                              For `TRANSFER` Transactions, this should usually just be a list of
-                              Outputs wrapping Ed25519 Conditions generated from the public keys of
-                              the recipients.
--   `fulfilledOutputs` **...[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** Indices of the Outputs in `unspentTransaction` that this
-                                        Transaction fulfills.
-                                        Note that the public keys listed in the fulfilled Outputs
-                                        must be used (and in the same order) to sign the Transaction
-                                        (`signTransaction()`).
-
-Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Unsigned transaction -- make sure to call signTransaction() on it before
-                  sending it off!
-
-## serializeTransactionIntoCanonicalString
+[src/connection.js:67-73][32]
 
 **Parameters**
 
--   `transaction`  
--   `null` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** (transaction)
+-   `transactionId`  
+-   `status`  
 
-Returns **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** a canonically serialized Transaction
+### listOutputs
 
-## signTransaction
-
-**Parameters**
-
--   `transaction` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Transaction to sign. `transaction` is not modified.
--   `privateKeys` **...[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Private keys associated with the issuers of the `transaction`.
-                                   Looped through to iteratively sign any Input Fulfillments found in
-                                   the `transaction`.
-
-Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The signed version of `transaction`.
-
-## ccJsonLoad
+[src/connection.js:79-91][33]
 
 **Parameters**
 
--   `conditionJson` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `publicKey`  
+-   `spent`  
 
-Returns **cc.Condition** Ed25519 Condition (that will need to wrapped in an Output)
+### listTransactions
 
-## ccJsonify
+[src/connection.js:97-104][34]
 
 **Parameters**
 
--   `fulfillment` **cc.Fulfillment** base58 encoded Ed25519 public key for the recipient of the Transaction
+-   `assetId`  
+-   `operation`  
 
-Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Ed25519 Condition (that will need to wrapped in an Output)
+### listVotes
 
-## getBlock
+[src/connection.js:109-115][35]
 
 **Parameters**
 
 -   `blockId`  
 
-## getStatus
+### postTransaction
 
-**Parameters**
-
--   `tx_id`  
-
-## getTransaction
-
-**Parameters**
-
--   `txId`  
-
-## listBlocks
-
-**Parameters**
-
--   `$0` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-    -   `$0.tx_id`  
-    -   `$0.status`  
--   `tx_id`  
--   `status`  
-
-## listOutputs
-
-**Parameters**
-
--   `$0` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-    -   `$0.public_key`  
-    -   `$0.unspent`  
--   `onlyJsonResponse`  
--   `public_key`  
--   `unspent`  
-
-## listTransactions
-
-**Parameters**
-
--   `$0` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-    -   `$0.asset_id`  
-    -   `$0.operation`  
--   `asset_id`  
--   `operation`  
-
-## listVotes
-
-**Parameters**
-
--   `block_id`  
-
-## pollStatusAndFetchTransaction
-
-**Parameters**
-
--   `tx_id`  
-
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
-
-## postTransaction
+[src/connection.js:120-125][36]
 
 **Parameters**
 
 -   `transaction`  
+
+### postTransactionSync
+
+[src/connection.js:130-135][37]
+
+**Parameters**
+
+-   `transaction`  
+
+### postTransactionCommit
+
+[src/connection.js:140-145][38]
+
+**Parameters**
+
+-   `transaction`  
+
+### searchAssets
+
+[src/connection.js:150-156][39]
+
+**Parameters**
+
+-   `search`  
+
+### searchMetadata
+
+[src/connection.js:161-167][40]
+
+**Parameters**
+
+-   `search`  
+
+## Transaction
+
+[src/transaction.js:12-253][41]
+
+Construct Transactions
+
+### serializeTransactionIntoCanonicalString
+
+[src/transaction.js:18-25][42]
+
+Canonically serializes a transaction into a string by sorting the keys
+
+**Parameters**
+
+-   `transaction`  
+-   `null` **[Object][26]** (transaction)
+
+Returns **[string][28]** a canonically serialized Transaction
+
+### makeCreateTransaction
+
+[src/transaction.js:76-83][43]
+
+Generate a `CREATE` transaction holding the `asset`, `metadata`, and `outputs`, to be signed by
+the `issuers`.
+
+**Parameters**
+
+-   `asset` **[Object][26]** Created asset's data
+-   `metadata` **[Object][26]** Metadata for the Transaction
+-   `outputs` **[Array][44]&lt;[Object][26]>** Array of Output objects to add to the Transaction.
+                              Think of these as the recipients of the asset after the transaction.
+                              For `CREATE` Transactions, this should usually just be a list of
+                              Outputs wrapping Ed25519 Conditions generated from the issuers' public
+                              keys (so that the issuers are the recipients of the created asset).
+-   `issuers` **...[Array][44]&lt;[string][28]>** Public key of one or more issuers to the asset being created by this
+                                 Transaction.
+                                 Note: Each of the private keys corresponding to the given public
+                                 keys MUST be used later (and in the same order) when signing the
+                                 Transaction (`signTransaction()`).
+
+Returns **[Object][26]** Unsigned transaction -- make sure to call signTransaction() on it before
+                  sending it off!
+
+### makeEd25519Condition
+
+[src/transaction.js:92-103][45]
+
+Create an Ed25519 Cryptocondition from an Ed25519 public key
+to put into an Output of a Transaction
+
+**Parameters**
+
+-   `publicKey` **[string][28]** base58 encoded Ed25519 public key for the recipient of the Transaction
+-   `json` **[boolean][46]** If true returns a json object otherwise a crypto-condition type (optional, default `true`)
+
+Returns **[Object][26]** Ed25519 Condition (that will need to wrapped in an Output)
+
+### makeOutput
+
+[src/transaction.js:113-133][47]
+
+Create an Output from a Condition.
+Note: Assumes the given Condition was generated from a
+single public key (e.g. a Ed25519 Condition)
+
+**Parameters**
+
+-   `condition` **[Object][26]** Condition (e.g. a Ed25519 Condition from `makeEd25519Condition()`)
+-   `amount` **[string][28]** Amount of the output (optional, default `'1'`)
+
+Returns **[Object][26]** An Output usable in a Transaction
+
+### makeSha256Condition
+
+[src/transaction.js:141-149][48]
+
+Create a Preimage-Sha256 Cryptocondition from a secret to put into an Output of a Transaction
+
+**Parameters**
+
+-   `preimage` **[string][28]** Preimage to be hashed and wrapped in a crypto-condition
+-   `json` **[boolean][46]** If true returns a json object otherwise a crypto-condition type (optional, default `true`)
+
+Returns **[Object][26]** Preimage-Sha256 Condition (that will need to wrapped in an Output)
+
+### makeThresholdCondition
+
+[src/transaction.js:158-172][49]
+
+Create an Sha256 Threshold Cryptocondition from threshold to put into an Output of a Transaction
+
+**Parameters**
+
+-   `threshold` **[number][50]** 
+-   `subconditions` **[Array][44]**  (optional, default `[]`)
+-   `json` **[boolean][46]** If true returns a json object otherwise a crypto-condition type (optional, default `true`)
+
+Returns **[Object][26]** Sha256 Threshold Condition (that will need to wrapped in an Output)
+
+### makeTransferTransaction
+
+[src/transaction.js:195-216][51]
+
+Generate a `TRANSFER` transaction holding the `asset`, `metadata`, and `outputs`, that fulfills
+the `fulfilledOutputs` of `unspentTransaction`.
+
+**Parameters**
+
+-   `unspentOutputs`  
+-   `outputs` **[Array][44]&lt;[Object][26]>** Array of Output objects to add to the Transaction.
+                              Think of these as the recipients of the asset after the transaction.
+                              For `TRANSFER` Transactions, this should usually just be a list of
+                              Outputs wrapping Ed25519 Conditions generated from the public keys of
+                              the recipients.
+-   `metadata` **[Object][26]** Metadata for the Transaction
+-   `unspentTransaction` **[Object][26]** Previous Transaction you have control over (i.e. can fulfill
+                                       its Output Condition)
+-   `OutputIndices` **...[number][50]** Indices of the Outputs in `unspentTransaction` that this
+                                        Transaction fulfills.
+                                        Note that listed public keys listed must be used (and in
+                                        the same order) to sign the Transaction
+                                        (`signTransaction()`).
+
+Returns **[Object][26]** Unsigned transaction -- make sure to call signTransaction() on it before
+                  sending it off!
+
+### signTransaction
+
+[src/transaction.js:229-252][52]
+
+Sign the given `transaction` with the given `privateKey`s, returning a new copy of `transaction`
+that's been signed.
+Note: Only generates Ed25519 Fulfillments. Thresholds and other types of Fulfillments are left as
+an exercise for the user.
+
+**Parameters**
+
+-   `transaction` **[Object][26]** Transaction to sign. `transaction` is not modified.
+-   `privateKeys` **...[string][28]** Private keys associated with the issuers of the `transaction`.
+                                   Looped through to iteratively sign any Input Fulfillments found in
+                                   the `transaction`.
+
+Returns **[Object][26]** The signed version of `transaction`.
+
+## ccJsonLoad
+
+[src/utils/ccJsonLoad.js:10-40][53]
+
+Loads a crypto-condition class (Fulfillment or Condition) from a BigchainDB JSON object
+
+**Parameters**
+
+-   `conditionJson` **[Object][26]** 
+
+Returns **cc.Condition** Ed25519 Condition (that will need to wrapped in an Output)
+
+## ccJsonify
+
+[src/utils/ccJsonify.js:8-61][54]
+
+Serializes a crypto-condition class (Condition or Fulfillment) into a BigchainDB-compatible JSON
+
+**Parameters**
+
+-   `fulfillment` **cc.Fulfillment** base58 encoded Ed25519 public key for recipient of the Transaction
+
+Returns **[Object][26]** Ed25519 Condition (that will need to wrapped in an Output)
+
+[1]: #ed25519keypair
+
+[2]: #connection
+
+[3]: #getblock
+
+[4]: #gettransaction
+
+[5]: #listblocks
+
+[6]: #listoutputs
+
+[7]: #listtransactions
+
+[8]: #listvotes
+
+[9]: #posttransaction
+
+[10]: #posttransactionsync
+
+[11]: #posttransactioncommit
+
+[12]: #searchassets
+
+[13]: #searchmetadata
+
+[14]: #transaction
+
+[15]: #serializetransactionintocanonicalstring
+
+[16]: #makecreatetransaction
+
+[17]: #makeed25519condition
+
+[18]: #makeoutput
+
+[19]: #makesha256condition
+
+[20]: #makethresholdcondition
+
+[21]: #maketransfertransaction
+
+[22]: #signtransaction
+
+[23]: #ccjsonload
+
+[24]: #ccjsonify
+
+[25]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/Ed25519Keypair.js#L12-L17 "Source code on GitHub"
+
+[26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[27]: https://nodejs.org/api/buffer.html
+
+[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[29]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/connection.js#L8-L168 "Source code on GitHub"
+
+[30]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/connection.js#L44-L50 "Source code on GitHub"
+
+[31]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/connection.js#L55-L61 "Source code on GitHub"
+
+[32]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/connection.js#L67-L73 "Source code on GitHub"
+
+[33]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/connection.js#L79-L91 "Source code on GitHub"
+
+[34]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/connection.js#L97-L104 "Source code on GitHub"
+
+[35]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/connection.js#L109-L115 "Source code on GitHub"
+
+[36]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/connection.js#L120-L125 "Source code on GitHub"
+
+[37]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/connection.js#L130-L135 "Source code on GitHub"
+
+[38]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/connection.js#L140-L145 "Source code on GitHub"
+
+[39]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/connection.js#L150-L156 "Source code on GitHub"
+
+[40]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/connection.js#L161-L167 "Source code on GitHub"
+
+[41]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/transaction.js#L12-L253 "Source code on GitHub"
+
+[42]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/transaction.js#L18-L25 "Source code on GitHub"
+
+[43]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/transaction.js#L76-L83 "Source code on GitHub"
+
+[44]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[45]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/transaction.js#L92-L103 "Source code on GitHub"
+
+[46]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[47]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/transaction.js#L113-L133 "Source code on GitHub"
+
+[48]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/transaction.js#L141-L149 "Source code on GitHub"
+
+[49]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/transaction.js#L158-L172 "Source code on GitHub"
+
+[50]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+
+[51]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/transaction.js#L195-L216 "Source code on GitHub"
+
+[52]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/transaction.js#L229-L252 "Source code on GitHub"
+
+[53]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/utils/ccJsonLoad.js#L10-L40 "Source code on GitHub"
+
+[54]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/691fadfd9887d59fcff4877d9f90521da11ef950/src/utils/ccJsonify.js#L8-L61 "Source code on GitHub"
