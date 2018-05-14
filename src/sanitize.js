@@ -3,6 +3,7 @@ import coreObjectEntries from 'core-js/library/fn/object/entries'
 
 
 /**
+ * @private
  * Abstraction for selectFromObject and omitFromObject for DRYness.
  * Set isInclusion to true if the filter should be for including the filtered items (ie. selecting
  * only them vs omitting only them).
@@ -21,6 +22,7 @@ function filterFromObject(obj, filter, { isInclusion = true } = {}) {
 }
 
 /**
+ * @private
  * Returns a filtered copy of the given object's own enumerable properties (no inherited
  * properties), keeping any keys that pass the given filter function.
  */
@@ -40,24 +42,26 @@ function applyFilterOnObject(obj, filterFn) {
 }
 
 /**
+ * @private
  * Similar to lodash's _.pick(), this returns a copy of the given object's
  * own and inherited enumerable properties, selecting only the keys in
  * the given array or whose value pass the given filter function.
- * @param  {object}         obj    Source object
- * @param  {array|function} filter Array of key names to select or function to invoke per iteration
- * @return {object}                The new object
+ * @param {Object} obj Source object
+ * @param {Array|function} filter Array of key names to select or function to invoke per iteration
+ * @return {Object} The new object
  */
 function selectFromObject(obj, filter) {
     return filterFromObject(obj, filter)
 }
 
 /**
+ * @private
  * Glorified selectFromObject. Takes an object and returns a filtered shallow copy that strips out
  * any properties that are falsy (including coercions, ie. undefined, null, '', 0, ...).
  * Does not modify the passed in object.
  *
- * @param  {object} obj      Javascript object
- * @return {object}          Sanitized Javascript object
+ * @param {Object} obj Javascript object
+ * @return {Object} Sanitized Javascript object
  */
 export default function sanitize(obj) {
     return selectFromObject(obj, (val) => !!val)

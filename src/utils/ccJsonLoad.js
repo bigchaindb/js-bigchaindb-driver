@@ -3,9 +3,8 @@ import base58 from 'bs58'
 import cc from 'crypto-conditions'
 
 /**
- * @public
  * Loads a crypto-condition class (Fulfillment or Condition) from a BigchainDB JSON object
- * @param {object} conditionJson
+ * @param {Object} conditionJson
  * @returns {cc.Condition} Ed25519 Condition (that will need to wrapped in an Output)
  */
 export default function ccJsonLoad(conditionJson) {

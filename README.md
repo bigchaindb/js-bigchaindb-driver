@@ -33,6 +33,7 @@
      - [Browser usage](#browser-usage)
   - [BigchainDB Documentation](#bigchaindb-documentation)
   - [Speed Optimizations](#speed-optimizations)
+  - [Development](#development)
   - [Authors](#authors)
   - [License](#license)
 
@@ -162,6 +163,21 @@ This implementation plays "safe" by using JS-native (or downgradable) libraries 
 * [chloride](https://github.com/dominictarr/chloride), or its underlying [sodium](https://github.com/paixaop/node-sodium) library
 * [node-sha3](https://github.com/phusion/node-sha3) -- **MAKE SURE** to use [steakknife's fork](https://github.com/steakknife/node-sha3) if [the FIPS 202 upgrade](https://github.com/phusion/node-sha3/pull/25) hasn't been merged (otherwise, you'll run into all kinds of hashing problems)
 
+## Development
+
+```js
+git clone git@github.com:bigchaindb/js-bigchaindb-driver.git
+cd js-bigchaindb-driver/
+
+npm i
+npm run dev
+```
+
+After updating source files in `src/`, make sure to update the API documentation. The following command will scan all source files and create the Markdown output into `./API.md`:
+
+```bash
+npm run doc
+```
 
 ## Authors
 

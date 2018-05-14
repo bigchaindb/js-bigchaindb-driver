@@ -1,7 +1,6 @@
 import baseRequest from './baseRequest'
 import sanitize from './sanitize'
 
-
 const DEFAULT_REQUEST_CONFIG = {
     headers: {
         'Accept': 'application/json'
@@ -9,6 +8,7 @@ const DEFAULT_REQUEST_CONFIG = {
 }
 
 /**
+ * @private
  * Small wrapper around js-utility-belt's request that provides url resolving,
  * default settings, and response handling.
  */

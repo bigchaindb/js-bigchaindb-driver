@@ -1,9 +1,10 @@
 import request from './request'
 
-
 const HEADER_BLACKLIST = ['content-type']
 
-
+/**
+ * Base connection
+ */
 export default class Connection {
     constructor(path, headers = {}) {
         this.path = path
@@ -38,7 +39,6 @@ export default class Connection {
     }
 
     /**
-     * @public
      * @param blockHeight
      */
     getBlock(blockHeight) {
@@ -50,7 +50,6 @@ export default class Connection {
     }
 
     /**
-     * @public
      * @param transactionId
      */
     getTransaction(transactionId) {
@@ -62,7 +61,6 @@ export default class Connection {
     }
 
     /**
-     * @public
      * @param transactionId
      * @param status
      */
@@ -75,7 +73,6 @@ export default class Connection {
     }
 
     /**
-     * @public
      * @param publicKey
      * @param spent
      */
@@ -94,7 +91,6 @@ export default class Connection {
     }
 
     /**
-     * @public
      * @param assetId
      * @param operation
      */
@@ -108,7 +104,6 @@ export default class Connection {
     }
 
     /**
-     * @public
      * @param blockId
      */
     listVotes(blockId) {
@@ -120,7 +115,6 @@ export default class Connection {
     }
 
     /**
-     * @public
      * @param transaction
      */
     postTransaction(transaction) {
@@ -131,7 +125,6 @@ export default class Connection {
     }
 
     /**
-     * @public
      * @param transaction
      */
     postTransactionSync(transaction) {
@@ -142,19 +135,16 @@ export default class Connection {
     }
 
     /**
-     * @public
      * @param transaction
      */
     postTransactionCommit(transaction) {
         return this._req(this.getApiUrls('transactionsCommit'), {
-
             method: 'POST',
             jsonBody: transaction
         })
     }
 
     /**
-     * @public
      * @param search
      */
     searchAssets(search) {
@@ -166,7 +156,6 @@ export default class Connection {
     }
 
     /**
-     * @public
      * @param search
      */
     searchMetadata(search) {

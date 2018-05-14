@@ -1,10 +1,11 @@
 {
-    "presets": ["env"],
-
+    "presets": [
+        "env"
+    ],
     "plugins": [
         "transform-export-extensions",
         "transform-object-assign",
         "transform-object-rest-spread"
     ],
-    "sourceMaps": true,
+    "sourceMaps": true
 }
