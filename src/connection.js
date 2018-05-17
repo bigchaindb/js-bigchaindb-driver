@@ -1,24 +1,49 @@
 import request from './request'
+import baseRequest from './baseRequest'
+import sanitize from './sanitize'
 
 const HEADER_BLACKLIST = ['content-type']
+const DEFAULT_REQUEST_CONFIG = {
+    headers: {
+        'Accept': 'application/json'
+    }
+}
 
 /**
  * Base connection
  */
 export default class Connection {
-    constructor(path, headers = {}) {
-        this.path = path
-        this.headers = Object.assign({}, headers)
+    constructor(path = [], headers = {}) {
 
-        Object.keys(headers).forEach(header => {
-            if (HEADER_BLACKLIST.includes(header.toLowerCase())) {
-                throw new Error(`Header ${header} is reserved and cannot be set.`)
-            }
-        })
+        // E list of BigchainDB endpoints
+        this.E = path.length
+        //number of node
+        this.iNode = 0
+        if(typeof path[0] == 'string' ){
+            this.path = path
+            this.headers = Object.assign({}, headers)
+            Object.keys(headers).forEach(header => {
+                if (HEADER_BLACKLIST.includes(header.toLowerCase())) {
+                    throw new Error(`Header ${header} is reserved and cannot be set.`)
+                }
+            })
+        }else{
+            path.forEach(singlePath =>{
+                this.path = []
+                path.push(singlePath.endpoint)
+                this.headers = []
+                this.headers.push(Object.assign({}, headers))
+                singlePath.headers.forEach(header => {
+                    if (HEADER_BLACKLIST.includes(header.toLowerCase())) {
+                        throw new Error(`Header ${header} is reserved and cannot be set.`)
+                    }
+                })
+            })
+        }
     }
 
     getApiUrls(endpoint) {
-        return this.path + {
+        return this.path[iNode] + {
             'blocks': 'blocks',
             'blocksDetail': 'blocks/%(blockHeight)s',
             'outputs': 'outputs',
@@ -35,8 +60,37 @@ export default class Connection {
     _req(path, options = {}) {
         // NOTE: `options.headers` could be undefined, but that's OK.
         options.headers = Object.assign({}, options.headers, this.headers)
-        return request(path, options)
+        return this.request(path, options)
     }
+
+    request(url, config = {}) {
+        // Load default fetch configuration and remove any falsy query parameters
+        const requestConfig = Object.assign({}, DEFAULT_REQUEST_CONFIG, config, {
+            query: config.query && sanitize(config.query)
+        })
+        const apiUrl = url
+    
+        if (requestConfig.jsonBody) {
+            requestConfig.headers = Object.assign({}, requestConfig.headers, {
+                'Content-Type': 'application/json'
+            })
+        }
+    
+        if (!url) {
+            return Promise.reject(new Error('Request was not given a url.'))
+        }
+    
+        return baseRequest(apiUrl, requestConfig)
+            .then(res => res.json())
+            .catch(err => {
+                console.error(err)
+                if(path[iNode + 1]){
+                    iNode++
+                }
+                throw err
+            })
+    }
+    
 
     /**
      * @param blockHeight
@@ -165,4 +219,5 @@ export default class Connection {
             }
         })
     }
+    
 }
