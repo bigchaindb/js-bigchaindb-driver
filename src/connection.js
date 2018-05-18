@@ -1,4 +1,3 @@
-import request from './request'
 import baseRequest from './baseRequest'
 import sanitize from './sanitize'
 
@@ -8,18 +7,19 @@ const DEFAULT_REQUEST_CONFIG = {
         'Accept': 'application/json'
     }
 }
-
+const delay = 200
 /**
  * Base connection
  */
 export default class Connection {
     constructor(path = [], headers = {}) {
-
         // E list of BigchainDB endpoints
         this.E = path.length
-        //number of node
+        // number of node
         this.iNode = 0
-        if(typeof path[0] == 'string' ){
+        this.nTries = []
+        this.timestamps = []
+        if (typeof path[0] === 'string') {
             this.path = path
             this.headers = Object.assign({}, headers)
             Object.keys(headers).forEach(header => {
@@ -27,8 +27,8 @@ export default class Connection {
                     throw new Error(`Header ${header} is reserved and cannot be set.`)
                 }
             })
-        }else{
-            path.forEach(singlePath =>{
+        } else {
+            path.forEach(singlePath => {
                 this.path = []
                 path.push(singlePath.endpoint)
                 this.headers = []
@@ -43,7 +43,7 @@ export default class Connection {
     }
 
     getApiUrls(endpoint) {
-        return this.path[iNode] + {
+        return this.path[this.iNode] + {
             'blocks': 'blocks',
             'blocksDetail': 'blocks/%(blockHeight)s',
             'outputs': 'outputs',
@@ -57,40 +57,53 @@ export default class Connection {
         }[endpoint]
     }
 
-    _req(path, options = {}) {
-        // NOTE: `options.headers` could be undefined, but that's OK.
-        options.headers = Object.assign({}, options.headers, this.headers)
-        return this.request(path, options)
-    }
-
     request(url, config = {}) {
         // Load default fetch configuration and remove any falsy query parameters
         const requestConfig = Object.assign({}, DEFAULT_REQUEST_CONFIG, config, {
             query: config.query && sanitize(config.query)
         })
         const apiUrl = url
-    
+
         if (requestConfig.jsonBody) {
             requestConfig.headers = Object.assign({}, requestConfig.headers, {
                 'Content-Type': 'application/json'
             })
         }
-    
+
         if (!url) {
             return Promise.reject(new Error('Request was not given a url.'))
         }
-    
+
         return baseRequest(apiUrl, requestConfig)
-            .then(res => res.json())
+            .then(res => {
+                res.json()
+                this.nTries[this.iNode] = 0
+            })
             .catch(err => {
                 console.error(err)
-                if(path[iNode + 1]){
-                    iNode++
+
+                // Round-robin strategy
+                // this.timestamps[this.iNode] = Date.now() + delay
+                // if(Date.now()> this.timestamps[this.iNode]){
+                this.nTries[this.iNode]++
+                if (this.path[this.iNode + 1]) {
+                    this.iNode++
+                }else if (path.length > 1){
+                    this.iNode = 0
+                }
+                if(this.nTries[this.iNode] < 3){
+                    baseRequest(apiUrl,requestConfig)
                 }
                 throw err
             })
     }
-    
+
+
+    _req(path, options = {}) {
+        // NOTE: `options.headers` could be undefined, but that's OK.
+        options.headers = Object.assign({}, options.headers, this.headers[this.iNode])
+        return this.request(path, options)
+    }
 
     /**
      * @param blockHeight
@@ -219,5 +232,4 @@ export default class Connection {
             }
         })
     }
-    
 }
