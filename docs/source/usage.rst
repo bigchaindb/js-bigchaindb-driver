@@ -45,6 +45,8 @@ To do so, you need to pass the **app_id and app_key**.
 		app_key: 'Get one from testnet.bigchaindb.com'
 	})
 
+Careful though: further examples **may not work** with the BigchainDB test network, especially those involving websockets. 
+
 Cryptographic Identities Generation
 -----------------------------------
 Alice and Bob are represented by public/private key pairs. The private key is
