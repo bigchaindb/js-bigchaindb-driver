@@ -145,7 +145,7 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs from different tra
             )
 
             return conn.postTransactionCommit(transferTxSigned1)
-                .then(conn.postTransactionCommit(transferTxSigned2))
+                .then(() => conn.postTransactionCommit(transferTxSigned2))
                 .then(() => {
                     const transferTxMultipleInputs = Transaction.makeTransferTransaction(
                         [{ tx: transferTxSigned1, output_index: 0 },
