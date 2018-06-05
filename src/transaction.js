@@ -246,9 +246,9 @@ export default class Transaction {
             input.fulfillment = fulfillmentUri
         })
 
-        const serializedSecondTransaction =
+        const serializedSignedTransaction =
             Transaction.serializeTransactionIntoCanonicalString(signedTx)
-        signedTx.id = sha256Hash(serializedSecondTransaction)
+        signedTx.id = sha256Hash(serializedSignedTransaction)
         return signedTx
     }
 }
