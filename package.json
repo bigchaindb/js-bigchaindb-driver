@@ -50,7 +50,7 @@
     "babel-preset-es2015-no-commonjs": "0.0.2",
     "babel-runtime": "^6.26.0",
     "cross-env": "^5.1.4",
-    "documentation": "^7.0.0",
+    "documentation": "^8.0.0",
     "eslint": "^4.19.1",
     "eslint-config-ascribe": "^3.0.5",
     "eslint-plugin-import": "^2.9.0",
