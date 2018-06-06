@@ -228,11 +228,12 @@ export default class Transaction {
      */
     static signTransaction(transaction, ...privateKeys) {
         const signedTx = clone(transaction)
+        const serializedTransaction =
+            Transaction.serializeTransactionIntoCanonicalString(transaction)
+
         signedTx.inputs.forEach((input, index) => {
             const privateKey = privateKeys[index]
             const privateKeyBuffer = Buffer.from(base58.decode(privateKey))
-            const serializedTransaction =
-                Transaction.serializeTransactionIntoCanonicalString(transaction)
 
             const transactionUniqueFulfillment = input.fulfills ? serializedTransaction
                 .concat(input.fulfills.transaction_id)
@@ -245,9 +246,9 @@ export default class Transaction {
             input.fulfillment = fulfillmentUri
         })
 
-        const serializedTransaction =
+        const serializedSignedTransaction =
             Transaction.serializeTransactionIntoCanonicalString(signedTx)
-        signedTx.id = sha256Hash(serializedTransaction)
+        signedTx.id = sha256Hash(serializedSignedTransaction)
         return signedTx
     }
 }
