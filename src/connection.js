@@ -24,6 +24,7 @@ export default class Connection {
             'outputs': 'outputs',
             'transactions': 'transactions',
             'transactionsSync': 'transactions?mode=sync',
+            'transactionsAsync': 'transactions?mode=async',
             'transactionsCommit': 'transactions?mode=commit',
             'transactionsDetail': 'transactions/%(transactionId)s',
             'assets': 'assets',
@@ -118,7 +119,7 @@ export default class Connection {
      * @param transaction
      */
     postTransaction(transaction) {
-        return this._req(this.getApiUrls('transactions'), {
+        return this._req(this.getApiUrls('transactionsCommit'), {
             method: 'POST',
             jsonBody: transaction
         })
@@ -133,6 +134,18 @@ export default class Connection {
             jsonBody: transaction
         })
     }
+
+
+    /**
+     * @param transaction
+     */
+    postTransactionAsync(transaction) {
+        return this._req(this.getApiUrls('transactionsAsync'), {
+            method: 'POST',
+            jsonBody: transaction
+        })
+    }
+
 
     /**
      * @param transaction
