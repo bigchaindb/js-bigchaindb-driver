@@ -48,12 +48,13 @@ Older versions
 
 	As part of the changes in the BigchainDB 2.0 server, some endpoints were
 	modified. In order to be consistent with them, the JS driver does not have
-	anymore the `pollStatusAndFetchTransaction()` method as there are three
+	anymore the `pollStatusAndFetchTransaction()` method as there are four
 	different ways of posting a transaction:
 
-	- `async` using the `postTransaction`: the response will return immediately and not wait to see if the transaction is valid.
+	- `async` using the `postTransactionAsync`: the response will return immediately and not wait to see if the transaction is valid.
 	- `sync` using the `postTransactionSync`: the response will return after the transaction is validated.
 	- `commit` using the `postTransactionCommit`: the response will return after the transaction is committed to a block.
+	- `commit` using the `postTransaction` which will act the same as `postTransactionCommit`
 
 	By default in the docs we will use the `postTransactionCommit` as is way of
 	being sure that the transaction is validated and commited to a block, so
