@@ -61,7 +61,7 @@
     "rimraf": "^2.6.2",
     "sinon": "^6.0.0",
     "webpack": "^4.8.3",
-    "webpack-cli": "^3.0.0"
+    "webpack-cli": "^3.0.4"
   },
   "dependencies": {
     "browser-resolve": "^1.11.2",
