@@ -29,9 +29,10 @@
 #
 # needs_sphinx = '1.0'
 
-from recommonmark.parser import CommonMarkParser
+import datetime
 import sphinx_rtd_theme
 
+from recommonmark.parser import CommonMarkParser
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -58,7 +59,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'BigchainDB Javascript Driver'
-copyright = '2017, BigchainDB'
+now = datetime.datetime.now()
+copyright = str(now.year) + ', BigchainDB Contributors'
 author = 'BigchainDB Contributors'
 
 # The version info for the project you're documenting, acts as replacement for
