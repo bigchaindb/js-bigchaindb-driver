@@ -7,6 +7,7 @@ import { API_PATH } from '../constants'
 
 const conn = new Connection(API_PATH)
 
+
 test('Payload thrown at incorrect API_PATH', t => {
     const path = 'http://localhost:9984/api/wrong/'
     const connection = new Connection(path)
@@ -27,8 +28,12 @@ test('Generate API URLS', t => {
         'blocksDetail': 'blocks/%(blockHeight)s',
         'outputs': 'outputs',
         'transactions': 'transactions',
+        'transactionsSync': 'transactions?mode=sync',
+        'transactionsCommit': 'transactions?mode=commit',
         'transactionsDetail': 'transactions/%(transactionId)s',
         'assets': 'assets',
+        'metadata': 'metadata',
+        'votes': 'votes'
     }
     Object.keys(endpoints).forEach(endpointName => {
         const url = conn.getApiUrls(endpointName)
