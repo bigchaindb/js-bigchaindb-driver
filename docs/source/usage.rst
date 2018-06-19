@@ -130,6 +130,12 @@ And sent over to a BigchainDB node:
 
 	conn.postTransactionCommit(txCreateAliceSimpleSigned)
 
+or:
+
+.. code-block:: js
+
+	conn.postTransaction(txCreateAliceSimpleSigned)
+
 Notice the transaction ``id``:
 
 .. code-block:: js
