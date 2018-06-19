@@ -119,10 +119,7 @@ export default class Connection {
      * @param transaction
      */
     postTransaction(transaction) {
-        return this._req(this.getApiUrls('transactionsCommit'), {
-            method: 'POST',
-            jsonBody: transaction
-        })
+        return this.postTransactionCommit(transaction)
     }
 
     /**
