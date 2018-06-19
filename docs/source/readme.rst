@@ -51,13 +51,16 @@ Older versions
 	anymore the `pollStatusAndFetchTransaction()` method as there are three
 	different ways of posting a transaction:
 
-	- `async` using the `postTransaction`: the response will return immediately and not wait to see if the transaction is valid.
+	- `commit` using the `postTransaction` or the `postTransactionCommit`: the response will return after the transaction is committed to a block.
 	- `sync` using the `postTransactionSync`: the response will return after the transaction is validated.
-	- `commit` using the `postTransactionCommit`: the response will return after the transaction is committed to a block.
+	- `async` using the `postTransactionAsync`: the response will return immediately and not wait to see if the transaction is valid.
 
 	By default in the docs we will use the `postTransactionCommit` as is way of
 	being sure that the transaction is validated and commited to a block, so
 	there will not be any issue if you try to do any other action with the asset immediately.
+
+	Note: In order to not create breaking changes, both methods `postTransaction` and `postTransactionCommit` are kept although
+	they do exactly the same
 
 
 **Version 3.2.x**
