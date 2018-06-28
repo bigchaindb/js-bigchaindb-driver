@@ -35,7 +35,39 @@ test('Valid CREATE transaction', t => {
     )
     const txSigned = Transaction.signTransaction(tx, alice.privateKey)
 
-    return conn.postTransactionCommit(txSigned)
+    return conn.postTransaction(txSigned)
+        .then(resTx => t.truthy(resTx))
+})
+
+
+test('Valid CREATE transaction using async', t => {
+    const conn = new Connection(API_PATH)
+
+    const tx = Transaction.makeCreateTransaction(
+        asset(),
+        metaData,
+        [aliceOutput],
+        alice.publicKey
+    )
+    const txSigned = Transaction.signTransaction(tx, alice.privateKey)
+
+    return conn.postTransactionAsync(txSigned)
+        .then(resTx => t.truthy(resTx))
+})
+
+
+test('Valid CREATE transaction using sync', t => {
+    const conn = new Connection(API_PATH)
+
+    const tx = Transaction.makeCreateTransaction(
+        asset(),
+        metaData,
+        [aliceOutput],
+        alice.publicKey
+    )
+    const txSigned = Transaction.signTransaction(tx, alice.privateKey)
+
+    return conn.postTransactionSync(txSigned)
         .then(resTx => t.truthy(resTx))
 })
 

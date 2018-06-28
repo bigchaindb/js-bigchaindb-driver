@@ -27,6 +27,9 @@ test('Generate API URLS', t => {
         'blocksDetail': 'blocks/%(blockHeight)s',
         'outputs': 'outputs',
         'transactions': 'transactions',
+        'transactionsSync': 'transactions?mode=sync',
+        'transactionsAsync': 'transactions?mode=async',
+        'transactionsCommit': 'transactions?mode=commit',
         'transactionsDetail': 'transactions/%(transactionId)s',
         'assets': 'assets',
     }
