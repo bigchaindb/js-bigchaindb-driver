@@ -40,7 +40,7 @@ To do so, you need to pass the **app_id and app_key**.
 
 .. code-block:: js
 
-	let bdb = new driver.Connection('https://test.bigchaindb.com/api/v1/', {
+	let conn = new driver.Connection('https://test.bigchaindb.com/api/v1/', {
 		app_id: 'Get one from testnet.bigchaindb.com',
 		app_key: 'Get one from testnet.bigchaindb.com'
 	})
@@ -365,11 +365,8 @@ Recap: Asset Creation & Transfer
 			// Post with commit so transaction is validated and included in a block
 			return conn.postTransactionCommit(txTransferBobSigned)
 		})
-		.then(res => {
-			console.log('Response from BDB server:', res)
-			return res.id
-		})
 		.then(tx => {
+			console.log('Response from BDB server:', tx)
 			console.log('Is Bob the owner?', tx['outputs'][0]['public_keys'][0] == bob.publicKey)
 			console.log('Was Alice the previous owner?', tx['inputs'][0]['owners_before'][0] == alice.publicKey )
 		})
@@ -408,7 +405,7 @@ Websocket Event Stream API Usage
 --------------------------------
 
 The Event Stream API enables new ways to interact with BigchainDB, making it possible for your application to subscribe to all newly–confirmed transactions that are happening in the system.
-Below piece of code can be opened in your web browser. It will connect to your websocket (change it at ``var wsUri``). This web page will display all validated transactions.
+Below piece of code can be opened in your web browser. It will connect to your websocket (if you are using the testnet, redefine ``var wsUri ='wss://test.bigchaindb.com:443/api/v1/streams/valid_transactions'``). This web page will display all validated transactions.
 
 .. code-block:: html
 
