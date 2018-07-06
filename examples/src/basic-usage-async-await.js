@@ -43,8 +43,8 @@ async function basicUsage() {
 
 
     // ======== Post Transaction and Fetch Result ======== //
-    await conn.postTransaction(txCreateAliceSimpleSigned)
-    await conn.pollStatusAndFetchTransaction(txCreateAliceSimpleSigned.id)
+    await conn.postTransactionCommit(txCreateAliceSimpleSigned)
+    await conn.getTransaction(txCreateAliceSimpleSigned.id)
 
     const txTransferBob = driver.Transaction.makeTransferTransaction(
         [{ tx: txCreateAliceSimpleSigned, output_index: 0 }],
@@ -54,8 +54,8 @@ async function basicUsage() {
 
     const txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey)
 
-    await conn.postTransaction(txTransferBobSigned)
-    await conn.pollStatusAndFetchTransaction(txTransferBobSigned.id)
+    await conn.postTransactionCommit(txTransferBobSigned)
+    await conn.getTransaction(txTransferBobSigned.id)
 
 
     // ======== Querying Assets ======== //

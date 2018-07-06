@@ -36,17 +36,13 @@ const txCreateAliceSimple = driver.Transaction.makeCreateTransaction(
 const txCreateAliceSimpleSigned =
     driver.Transaction.signTransaction(txCreateAliceSimple, alice.privateKey)
 
-
 // ======== Post Transaction and Fetch Result ======== //
-conn.postTransaction(txCreateAliceSimpleSigned)
-    // Check status of transaction every 0.5 seconds until fulfilled
-    .then(() => conn.pollStatusAndFetchTransaction(txCreateAliceSimpleSigned.id))
-
-
+conn.postTransactionCommit(txCreateAliceSimpleSigned)
+    .then(() => conn.getTransaction(txCreateAliceSimpleSigned.id))
 // ======== Transfer Bicycle to Bob ======== //
-    .then(() => {
+    .then((fetchedTx) => {
         const txTransferBob = driver.Transaction.makeTransferTransaction(
-            [{ tx: txCreateAliceSimpleSigned, output_index: 0 }],
+            [{ tx: fetchedTx, output_index: 0 }],
             [driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey))],
             { price: '100 euro' }
         )
@@ -54,9 +50,9 @@ conn.postTransaction(txCreateAliceSimpleSigned)
         // Sign transfer transaction with Alice's private key
         const txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey)
 
-        return conn.postTransaction(txTransferBobSigned)
+        return conn.postTransactionCommit(txTransferBobSigned)
     })
-    .then(res => conn.pollStatusAndFetchTransaction(res.id))
+    .then(res => conn.getTransaction(res.id))
     .then(tx => {
         console.log('Is Bob the owner?', tx.outputs[0].public_keys[0] === bob.publicKey) // eslint-disable-line no-console
         console.log('Was Alice the previous owner?', tx.inputs[0].owners_before[0] === alice.publicKey) // eslint-disable-line no-console
