@@ -42,12 +42,12 @@ async function basicUsage() {
         driver.Transaction.signTransaction(txCreateAliceSimple, alice.privateKey)
 
 
-    // ======== Post Transaction and Fetch Result ======== //
-    await conn.postTransactionCommit(txCreateAliceSimpleSigned)
-    await conn.getTransaction(txCreateAliceSimpleSigned.id)
+    // ======== POST CREATE Transaction ======== //
+    const createdTx = await conn.postTransactionCommit(txCreateAliceSimpleSigned)
 
+    // ======== POST TRANSFER Transaction ======== //
     const txTransferBob = driver.Transaction.makeTransferTransaction(
-        [{ tx: txCreateAliceSimpleSigned, output_index: 0 }],
+        [{ tx: createdTx, output_index: 0 }],
         [driver.Transaction.makeOutput(driver.Transaction.makeEd25519Condition(bob.publicKey))],
         { price: '100 euro' }
     )
@@ -55,7 +55,6 @@ async function basicUsage() {
     const txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey)
 
     await conn.postTransactionCommit(txTransferBobSigned)
-    await conn.getTransaction(txTransferBobSigned.id)
 
 
     // ======== Querying Assets ======== //

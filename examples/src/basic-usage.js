@@ -38,7 +38,6 @@ const txCreateAliceSimpleSigned =
 
 // ======== Post Transaction and Fetch Result ======== //
 conn.postTransactionCommit(txCreateAliceSimpleSigned)
-    .then(() => conn.getTransaction(txCreateAliceSimpleSigned.id))
 // ======== Transfer Bicycle to Bob ======== //
     .then((fetchedTx) => {
         const txTransferBob = driver.Transaction.makeTransferTransaction(
@@ -52,7 +51,6 @@ conn.postTransactionCommit(txCreateAliceSimpleSigned)
 
         return conn.postTransactionCommit(txTransferBobSigned)
     })
-    .then(res => conn.getTransaction(res.id))
     .then(tx => {
         console.log('Is Bob the owner?', tx.outputs[0].public_keys[0] === bob.publicKey) // eslint-disable-line no-console
         console.log('Was Alice the previous owner?', tx.inputs[0].owners_before[0] === alice.publicKey) // eslint-disable-line no-console
