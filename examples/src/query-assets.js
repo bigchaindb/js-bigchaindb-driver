@@ -35,7 +35,6 @@ function createTx(assetdata) {
 
     const txCreateSigned = driver.Transaction.signTransaction(txCreate, alice.privateKey)
     return conn.postTransactionCommit(txCreateSigned)
-        .then(() => conn.getTransaction(txCreateSigned.id))
 }
 
 
