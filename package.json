@@ -18,7 +18,7 @@
     "build": "npm run clean && npm run build:cjs && npm run build:dist",
     "build:bundle": "webpack",
     "build:cjs": "cross-env BABEL_ENV=cjs babel ./src -d dist/node",
-    "build:dist": "cross-env NODE_ENV=production webpack -w",
+    "build:dist": "cross-env NODE_ENV=production webpack",
     "dev": "webpack -w",
     "clean": "rimraf dist/bundle dist/node",
     "test": "npm run lint && nyc ava test/ && npm run thanks && npm run report-coverage",
