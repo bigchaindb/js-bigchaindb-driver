@@ -80,6 +80,7 @@
     "js-utility-belt": "^1.5.0",
     "json-stable-stringify": "^1.0.1",
     "query-string": "^6.0.0",
+    "rewire": "^4.0.1",
     "sprintf-js": "^1.1.1",
     "tweetnacl": "^1.0.0",
     "uglifyjs-webpack-plugin": "^1.2.7",
