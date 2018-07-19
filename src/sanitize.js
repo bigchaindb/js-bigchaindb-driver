@@ -10,14 +10,14 @@ import coreObjectEntries from 'core-js/library/fn/object/entries'
  */
 function filterFromObject(obj, filter, { isInclusion = true } = {}) {
     if (filter && Array.isArray(filter)) {
-        return applyFilterOnObject(obj, isInclusion ? ((_, key) => coreIncludes(filter, key))
-            : ((_, key) => !coreIncludes(filter, key)))
+        return applyFilterOnObject(obj, isInclusion ? (val => coreIncludes(filter, val))
+            : (val => !coreIncludes(filter, val)))
     } else if (filter && typeof filter === 'function') {
         // Flip the filter fn's return if it's for inclusion
         return applyFilterOnObject(obj, isInclusion ? filter
             : (...args) => !filter(...args))
     } else {
-        throw new Error('The given filter is not an array or function. Exclude aborted')
+        throw new Error('The given filter is not an array or function. Filter aborted')
     }
 }
 
