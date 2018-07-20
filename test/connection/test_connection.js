@@ -7,7 +7,7 @@ import { API_PATH } from '../constants'
 
 const conn = new Connection(API_PATH)
 
-test('Payload thrown at incorrect API_PATH', t => {
+test('Payload thrown at incorrect API_PATH', async t => {
     const path = 'http://localhost:9984/api/wrong/'
     const connection = new Connection(path)
     const target = {
@@ -15,10 +15,8 @@ test('Payload thrown at incorrect API_PATH', t => {
         status: '404 NOT FOUND',
         requestURI: 'http://localhost:9984/api/wrong/transactions/transactionId'
     }
-    connection.getTransaction('transactionId')
-        .catch(error => {
-            t.deepEqual(target, error)
-        })
+    const error = await t.throws(connection.getTransaction('transactionId'))
+    t.deepEqual(target, error)
 })
 
 test('Generate API URLS', t => {
