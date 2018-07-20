@@ -29,7 +29,7 @@
   "repository": "/",
   "private": true,
   "dependencies": {
-    "bigchaindb-driver": "^3.2.0",
+    "bigchaindb-driver": "^4.1.0",
     "bip39": "^2.5.0",
     "dotenv": "^4.0.0"
   }
