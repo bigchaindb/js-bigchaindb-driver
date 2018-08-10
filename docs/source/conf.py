@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# Copyright BigchainDB GmbH and BigchainDB contributors
+# SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+# Code is Apache-2.0 and docs are CC-BY-4.0
+
 #
 # BigchainDB Javascript Driver documentation build configuration file, created by
 # sphinx-quickstart on Wed Aug  2 15:39:03 2017.

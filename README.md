@@ -1,3 +1,9 @@
+<!---
+Copyright BigchainDB GmbH and BigchainDB contributors
+SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+Code is Apache-2.0 and docs are CC-BY-4.0
+--->
+
 # [![js-bigchaindb-driver](media/repo-banner@2x.png)](https://www.bigchaindb.com)
 
 > Official JavaScript driver for [BigchainDB](https://github.com/bigchaindb/bigchaindb) to create transactions in Node.js and the browser.
