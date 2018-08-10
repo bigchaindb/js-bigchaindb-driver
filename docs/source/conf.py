@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 #
 # BigchainDB Javascript Driver documentation build configuration file, created by
 # sphinx-quickstart on Wed Aug  2 15:39:03 2017.
