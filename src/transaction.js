@@ -231,12 +231,13 @@ export default class Transaction {
      * @returns {Object} The signed version of `transaction`.
      */
     static signTransaction(transaction, ...privateKeys) {
+        privateKeys = Array.isArray(privatekeys[0]) ? privateKeys[0]: privateKeys;
         const signedTx = clone(transaction)
         const serializedTransaction =
             Transaction.serializeTransactionIntoCanonicalString(transaction)
 
         signedTx.inputs.forEach((input, index) => {
-            const privateKey = privateKeys[index]
+            const privateKey = privateKeys[index] || privateKeys[0]
             const privateKeyBuffer = Buffer.from(base58.decode(privateKey))
 
             const transactionUniqueFulfillment = input.fulfills ? serializedTransaction
