@@ -1,24 +1,55 @@
-import request from './request'
+import Transport from './Transport'
 
 const HEADER_BLACKLIST = ['content-type']
-
+const DEFAULT_NODE = 'http://localhost:9984'
 /**
- * Base connection
+ * If initialized with ``>1`` nodes, the driver will send successive
+    requests to different nodes in a round-robin fashion (this will be
+    customizable in the future)
+ *
+ * @nodes
+ * list of
+ *
+ * @headers
+ *
+ *
  */
 export default class Connection {
-    constructor(path, headers = {}) {
-        this.path = path
+    constructor(nodes, headers = {}, timeout = null) {
+        const nodesArray = Array.isArray(nodes) ? nodes : [nodes]
+        // Copy object
         this.headers = Object.assign({}, headers)
 
+        // Validate headers
         Object.keys(headers).forEach(header => {
             if (HEADER_BLACKLIST.includes(header.toLowerCase())) {
                 throw new Error(`Header ${header} is reserved and cannot be set.`)
             }
         })
+
+        this.normalizedNodes = []
+        if (!nodesArray) {
+            this.normalizedNodes.push(Connection.normalizeNode(DEFAULT_NODE, this.headers))
+        } else {
+            nodesArray.forEach(node => {
+                this.normalizedNodes.push(Connection.normalizeNode(node, this.headers))
+            })
+        }
+        this.transport = new Transport(this.normalizedNodes, this.headers, timeout)
     }
 
-    getApiUrls(endpoint) {
-        return this.path + {
+    static normalizeNode(node, headers) {
+        if (typeof node === 'string') {
+            return { 'endpoint': node, 'headers': headers }
+        } else {
+            // TODO normalize URL if needed
+            const allHeaders = Object.assign({}, headers, node.headers)
+            return { 'endpoint': node, 'headers': allHeaders }
+        }
+    }
+
+    static getApiUrls(endpoint) {
+        return {
             'blocks': 'blocks',
             'blocksDetail': 'blocks/%(blockHeight)s',
             'outputs': 'outputs',
@@ -33,17 +64,15 @@ export default class Connection {
         }[endpoint]
     }
 
-    _req(path, options = {}) {
-        // NOTE: `options.headers` could be undefined, but that's OK.
-        options.headers = Object.assign({}, options.headers, this.headers)
-        return request(path, options)
+    _req(pathEndpoint, options = {}) {
+        return this.transport.forwardRequest(pathEndpoint, options)
     }
 
     /**
      * @param blockHeight
      */
     getBlock(blockHeight) {
-        return this._req(this.getApiUrls('blocksDetail'), {
+        return this._req(Connection.getApiUrls('blocksDetail'), {
             urlTemplateSpec: {
                 blockHeight
             }
@@ -54,7 +83,7 @@ export default class Connection {
      * @param transactionId
      */
     getTransaction(transactionId) {
-        return this._req(this.getApiUrls('transactionsDetail'), {
+        return this._req(Connection.getApiUrls('transactionsDetail'), {
             urlTemplateSpec: {
                 transactionId
             }
@@ -66,7 +95,7 @@ export default class Connection {
      * @param status
      */
     listBlocks(transactionId) {
-        return this._req(this.getApiUrls('blocks'), {
+        return this._req(Connection.getApiUrls('blocks'), {
             query: {
                 transaction_id: transactionId,
             }
@@ -86,7 +115,7 @@ export default class Connection {
         if (spent !== undefined) {
             query.spent = spent.toString()
         }
-        return this._req(this.getApiUrls('outputs'), {
+        return this._req(Connection.getApiUrls('outputs'), {
             query
         })
     }
@@ -96,7 +125,8 @@ export default class Connection {
      * @param operation
      */
     listTransactions(assetId, operation) {
-        return this._req(this.getApiUrls('transactions'), {
+        console.log('listtransaction', assetId)
+        return this._req(Connection.getApiUrls('transactions'), {
             query: {
                 asset_id: assetId,
                 operation
@@ -108,7 +138,7 @@ export default class Connection {
      * @param blockId
      */
     listVotes(blockId) {
-        return this._req(this.getApiUrls('votes'), {
+        return this._req(Connection.getApiUrls('votes'), {
             query: {
                 block_id: blockId
             }
@@ -126,7 +156,7 @@ export default class Connection {
      * @param transaction
      */
     postTransactionSync(transaction) {
-        return this._req(this.getApiUrls('transactionsSync'), {
+        return this._req(Connection.getApiUrls('transactionsSync'), {
             method: 'POST',
             jsonBody: transaction
         })
@@ -137,7 +167,7 @@ export default class Connection {
      * @param transaction
      */
     postTransactionAsync(transaction) {
-        return this._req(this.getApiUrls('transactionsAsync'), {
+        return this._req(Connection.getApiUrls('transactionsAsync'), {
             method: 'POST',
             jsonBody: transaction
         })
@@ -148,7 +178,7 @@ export default class Connection {
      * @param transaction
      */
     postTransactionCommit(transaction) {
-        return this._req(this.getApiUrls('transactionsCommit'), {
+        return this._req(Connection.getApiUrls('transactionsCommit'), {
             method: 'POST',
             jsonBody: transaction
         })
@@ -158,7 +188,7 @@ export default class Connection {
      * @param search
      */
     searchAssets(search) {
-        return this._req(this.getApiUrls('assets'), {
+        return this._req(Connection.getApiUrls('assets'), {
             query: {
                 search
             }
@@ -169,7 +199,7 @@ export default class Connection {
      * @param search
      */
     searchMetadata(search) {
-        return this._req(this.getApiUrls('metadata'), {
+        return this._req(Connection.getApiUrls('metadata'), {
             query: {
                 search
             }

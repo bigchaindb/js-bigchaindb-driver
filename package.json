@@ -22,6 +22,7 @@
     "dev": "webpack -w",
     "clean": "rimraf dist/bundle dist/node",
     "test": "npm run lint && nyc ava test/ && npm run thanks && npm run report-coverage",
+    "mine-test": "nyc ava test/connection/test_mine*",
     "thanks": "cowsay Hi, thanks for your interest in BigchainDB. We appreciate your contribution!",
     "release": "./node_modules/release-it/bin/release-it.js --src.tagName='v%s' --github.release --npm.publish --non-interactive",
     "release-minor": "./node_modules/release-it/bin/release-it.js minor --src.tagName='v%s' --github.release --npm.publish --non-interactive",

@@ -1,8 +1,7 @@
 import test from 'ava'
 import sinon from 'sinon'
 
-import * as request from '../../src/request' // eslint-disable-line
-import { Connection } from '../../src'
+import { Connection, Request } from '../../src'
 import { API_PATH } from '../constants'
 
 const conn = new Connection(API_PATH)
@@ -32,13 +31,13 @@ test('Generate API URLS', t => {
         'assets': 'assets',
     }
     Object.keys(endpoints).forEach(endpointName => {
-        const url = conn.getApiUrls(endpointName)
-        const expected = API_PATH + endpoints[endpointName]
+        const url = Connection.getApiUrls(endpointName)
+        const expected = endpoints[endpointName]
         t.is(url, expected)
     })
 })
 
-
+// TODO Redefine test
 test('Request with custom headers', t => {
     const testConn = new Connection(API_PATH, { hello: 'world' })
     const expectedOptions = {
@@ -49,11 +48,11 @@ test('Request with custom headers', t => {
     }
 
     // request is read only, cannot be mocked?
-    sinon.spy(request, 'default')
+    sinon.spy(Request, 'default')
     testConn._req(API_PATH, { headers: { custom: 'headers' } })
 
-    t.truthy(request.default.calledWith(API_PATH, expectedOptions))
-    request.default.restore()
+    t.truthy(Request.default.calledWith(API_PATH, expectedOptions))
+    Request.default.restore()
 })
 
 
@@ -62,7 +61,7 @@ test('Get block for a block id', t => {
     const blockHeight = 'abc'
 
     conn._req = sinon.spy()
-    conn.getApiUrls = sinon.stub().returns(expectedPath)
+    Connection.getApiUrls = sinon.stub().returns(expectedPath)
 
     conn.getBlock(blockHeight)
     t.truthy(conn._req.calledWith(
@@ -77,7 +76,7 @@ test('Get transaction for a transaction id', t => {
     const transactionId = 'abc'
 
     conn._req = sinon.spy()
-    conn.getApiUrls = sinon.stub().returns(expectedPath)
+    Connection.getApiUrls = sinon.stub().returns(expectedPath)
 
     conn.getTransaction(transactionId)
     t.truthy(conn._req.calledWith(
@@ -92,7 +91,7 @@ test('Get list of blocks for a transaction id', t => {
     const transactionId = 'abc'
 
     conn._req = sinon.spy()
-    conn.getApiUrls = sinon.stub().returns(expectedPath)
+    Connection.getApiUrls = sinon.stub().returns(expectedPath)
 
     conn.listBlocks(transactionId)
     t.truthy(conn._req.calledWith(
@@ -112,7 +111,7 @@ test('Get list of transactions for an asset id', t => {
     const operation = 'operation'
 
     conn._req = sinon.spy()
-    conn.getApiUrls = sinon.stub().returns(expectedPath)
+    Connection.getApiUrls = sinon.stub().returns(expectedPath)
 
     conn.listTransactions(assetId, operation)
     t.truthy(conn._req.calledWith(
@@ -132,7 +131,7 @@ test('Get outputs for a public key and no spent flag', t => {
     const publicKey = 'publicKey'
 
     conn._req = sinon.spy()
-    conn.getApiUrls = sinon.stub().returns(expectedPath)
+    Connection.getApiUrls = sinon.stub().returns(expectedPath)
 
     conn.listOutputs(publicKey)
     t.truthy(conn._req.calledWith(
@@ -148,7 +147,7 @@ test('Get outputs for a public key and spent=false', t => {
     const spent = false
 
     conn._req = sinon.spy()
-    conn.getApiUrls = sinon.stub().returns(expectedPath)
+    Connection.getApiUrls = sinon.stub().returns(expectedPath)
 
     conn.listOutputs(publicKey, spent)
     t.truthy(conn._req.calledWith(
@@ -164,7 +163,7 @@ test('Get outputs for a public key and spent=true', t => {
     const spent = true
 
     conn._req = sinon.spy()
-    conn.getApiUrls = sinon.stub().returns(expectedPath)
+    Connection.getApiUrls = sinon.stub().returns(expectedPath)
 
     conn.listOutputs(publicKey, spent)
     t.truthy(conn._req.calledWith(
@@ -179,7 +178,7 @@ test('Get votes for a block id', t => {
     const blockId = 'abc'
 
     conn._req = sinon.spy()
-    conn.getApiUrls = sinon.stub().returns(expectedPath)
+    Connection.getApiUrls = sinon.stub().returns(expectedPath)
 
     conn.listVotes(blockId)
     t.truthy(conn._req.calledWith(
@@ -194,7 +193,7 @@ test('Get asset for text', t => {
     const search = 'abc'
 
     conn._req = sinon.spy()
-    conn.getApiUrls = sinon.stub().returns(expectedPath)
+    Connection.getApiUrls = sinon.stub().returns(expectedPath)
 
     conn.searchAssets(search)
     t.truthy(conn._req.calledWith(
@@ -209,7 +208,7 @@ test('Get metadata for text', t => {
     const search = 'abc'
 
     conn._req = sinon.spy()
-    conn.getApiUrls = sinon.stub().returns(expectedPath)
+    Connection.getApiUrls = sinon.stub().returns(expectedPath)
 
     conn.searchMetadata(search)
     t.truthy(conn._req.calledWith(
