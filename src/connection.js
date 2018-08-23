@@ -1,4 +1,4 @@
-import Transport from './Transport'
+import Transport from './transport'
 
 const HEADER_BLACKLIST = ['content-type']
 const DEFAULT_NODE = 'http://localhost:9984'
@@ -44,7 +44,7 @@ export default class Connection {
         } else {
             // TODO normalize URL if needed
             const allHeaders = Object.assign({}, headers, node.headers)
-            return { 'endpoint': node, 'headers': allHeaders }
+            return { 'endpoint': node.endpoint, 'headers': allHeaders }
         }
     }
 
@@ -125,7 +125,6 @@ export default class Connection {
      * @param operation
      */
     listTransactions(assetId, operation) {
-        console.log('listtransaction', assetId)
         return this._req(Connection.getApiUrls('transactions'), {
             query: {
                 asset_id: assetId,

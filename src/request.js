@@ -21,11 +21,11 @@ export default class Request {
         this.node = node
         this.requestConfig = requestConfig
         this.backoffTime = null
+        this.retries = 0
+        this.connectionError = null
     }
 
-    async request(endpoint, config, timeout) {
-        // Num or retries to the same node
-        this.retries = 0
+    async request(endpoint, config, setTimeout) {
         // Load default fetch configuration and remove any falsy query parameters
         const requestConfig = Object.assign({}, this.node.headers, DEFAULT_REQUEST_CONFIG, config, {
             query: config.query && sanitize(config.query)
@@ -43,7 +43,7 @@ export default class Request {
 
         // If `ConnectionError` occurs, a timestamp equal to now +
         // the default delay (`BACKOFF_DELAY`) is assigned to the object.
-        // The timestamp is in UTC. Next time the function is called, it either
+        // Next time the function is called, it either
         // waits till the timestamp is passed or raises `TimeoutError`.
         // If `ConnectionError` occurs two or more times in a row,
         // the retry count is incremented and the new timestamp is calculated
@@ -52,28 +52,27 @@ export default class Request {
         // If a request is successful, the backoff timestamp is removed,
         // the retry count is back to zero.
 
-        this.backoffTimedelta = this.getBackoffTimedelta()
+        const backoffTimedelta = this.getBackoffTimedelta()
 
-        if (timeout != null && timeout < this.backoffTimedelta) {
-            throw new Error()
+        if (setTimeout != null && setTimeout < this.backoffTimedelta) {
+            const errorObject = {
+                message: 'TimeoutError'
+            }
+            throw errorObject
         }
-        if (this.backoffTimedelta > 0) {
-            await Request.sleep(this.backoffTimedelta)
+        if (backoffTimedelta > 0) {
+            await Request.sleep(backoffTimedelta)
         }
-        this.timeout = this.timeout ? this.timeout - this.backoffTimedelta : timeout
-
+        this.timeout = setTimeout ? setTimeout - backoffTimedelta : setTimeout
         return baseRequest(apiUrl, requestConfig)
-            .then(res => async function handleResponse() {
-                res.json()
-                if (!(res.status >= 200 && res.status < 300)) {
-                    console.log('Valid response')
-                }
-            })
+            .then(res => res.json())
             .catch(err => {
-                throw err
+                // ConnectionError
+                this.connectionError = err
+                // throw err
             })
-            .finally((res) => {
-                this.updateBackoffTime(res)
+            .finally(() => {
+                this.updateBackoffTime()
             })
     }
 
@@ -84,13 +83,13 @@ export default class Request {
         return (this.backoffTime - Date.now())
     }
 
-    updateBackoffTime(success) {
-        if (success) {
+    updateBackoffTime() {
+        if (!this.connectionError) {
             this.retries = 0
             this.backoffTime = null
         } else {
-            this.backoffTimedelta = BACKOFF_DELAY * (2 ** this.retries)
-            this.backoffTime = Date.now() + this.backoffTimedelta
+            const backoffTimedelta = BACKOFF_DELAY * (2 ** this.retries)
+            this.backoffTime = Date.now() + backoffTimedelta
             this.retries += 1
         }
     }

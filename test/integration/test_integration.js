@@ -36,7 +36,9 @@ test('Valid CREATE transaction', t => {
     const txSigned = Transaction.signTransaction(tx, alice.privateKey)
 
     return conn.postTransaction(txSigned)
-        .then(resTx => t.truthy(resTx))
+        .then(resTx => {
+            t.truthy(resTx)
+        })
 })
 
 

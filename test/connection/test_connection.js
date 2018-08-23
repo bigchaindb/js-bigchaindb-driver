@@ -1,8 +1,12 @@
 import test from 'ava'
 import sinon from 'sinon'
 
-import { Connection, Request } from '../../src'
-import { API_PATH } from '../constants'
+import {
+    Connection
+} from '../../src'
+import {
+    API_PATH
+} from '../constants'
 
 const conn = new Connection(API_PATH)
 
@@ -37,22 +41,59 @@ test('Generate API URLS', t => {
     })
 })
 
-// TODO Redefine test
-test('Request with custom headers', t => {
-    const testConn = new Connection(API_PATH, { hello: 'world' })
-    const expectedOptions = {
+test('Normalize node from an object', t => {
+    const headers = {
+        custom: 'headers'
+    }
+    const node = {
+        endpoint: API_PATH,
         headers: {
+            hello: 'world'
+        }
+    }
+    const expectedNode = {
+        'endpoint': API_PATH,
+        'headers': {
             hello: 'world',
             custom: 'headers'
         }
     }
 
-    // request is read only, cannot be mocked?
-    sinon.spy(Request, 'default')
-    testConn._req(API_PATH, { headers: { custom: 'headers' } })
+    t.deepEqual(Connection.normalizeNode(node, headers), expectedNode)
+})
 
-    t.truthy(Request.default.calledWith(API_PATH, expectedOptions))
-    Request.default.restore()
+test('Normalize node from a string', t => {
+    const headers = {
+        custom: 'headers'
+    }
+    const expectedNode = {
+        'endpoint': API_PATH,
+        'headers': {
+            custom: 'headers'
+        }
+    }
+
+    t.deepEqual(Connection.normalizeNode(API_PATH, headers), expectedNode)
+})
+
+test('Request with custom headers', t => {
+    const testConn = new Connection(API_PATH, {
+        hello: 'world'
+    })
+    const expectedOptions = {
+        headers: {
+            custom: 'headers'
+        }
+    }
+    const PATH = 'blocks'
+    testConn.transport.forwardRequest = sinon.spy()
+
+    testConn._req(PATH, {
+        headers: {
+            custom: 'headers'
+        }
+    })
+    t.truthy(testConn.transport.forwardRequest.calledWith(PATH, expectedOptions))
 })
 
 
