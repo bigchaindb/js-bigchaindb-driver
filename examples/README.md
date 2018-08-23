@@ -1,3 +1,9 @@
+<!---
+Copyright BigchainDB GmbH and BigchainDB contributors
+SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+Code is Apache-2.0 and docs are CC-BY-4.0
+--->
+
 # Quick Notes
 `dotenv` is listed as a dependencies in `package.json`.
 If you want to use this, add a `.env` file to the root of this project (same level as this `README.md` file)
