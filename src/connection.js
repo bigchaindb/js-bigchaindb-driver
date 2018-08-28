@@ -41,7 +41,7 @@ export default class Connection {
             this.normalizedNodes.push(Connection.normalizeNode(nodes, this.headers))
         }
 
-        this.transport = new Transport(this.normalizedNodes, this.headers, timeout)
+        this.transport = new Transport(this.normalizedNodes, timeout) // TODO
     }
 
     static normalizeNode(node, headers) {

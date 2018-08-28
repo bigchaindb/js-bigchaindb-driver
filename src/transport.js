@@ -15,13 +15,13 @@ import Request from './request'
 
 
 export default class Transport {
-    constructor(nodes, headers, timeout) {
+    constructor(nodes, timeout) {
         this.connectionPool = []
         this.timeout = timeout
         // the maximum backoff time is 10 seconds
         this.maxBackoffTime = timeout ? timeout / 10 : 10000
         nodes.forEach(node => {
-            this.connectionPool.push(new Request(node, headers))
+            this.connectionPool.push(new Request(node))
         })
     }
 

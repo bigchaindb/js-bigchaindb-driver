@@ -21,9 +21,8 @@ const BACKOFF_DELAY = 0.5 // seconds
 
 
 export default class Request {
-    constructor(node, requestConfig) {
+    constructor(node) {
         this.node = node
-        this.requestConfig = requestConfig
         this.backoffTime = null
         this.retries = 0
         this.connectionError = null
