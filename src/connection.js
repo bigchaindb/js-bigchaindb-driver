@@ -5,22 +5,21 @@
 import Transport from './transport'
 
 const HEADER_BLACKLIST = ['content-type']
-const DEFAULT_NODE = 'http://localhost:9984'
+const DEFAULT_NODE = 'http://localhost:9984/api/v1/'
+
 /**
- * If initialized with ``>1`` nodes, the driver will send successive
-    requests to different nodes in a round-robin fashion (this will be
-    customizable in the future)
  *
- * @nodes
- * list of
- *
- * @headers
+ * @param  {String, Array}  nodes    Nodes for the connection. String possible to be backwards compatible
+ *                                   with version before 4.1.0 version
+ * @param  {Object}  headers         Common headers for every request
+ * @param  {float}  timeout          Optional timeout in secs
  *
  *
  */
+
 export default class Connection {
-    constructor(nodes, headers = {}, timeout = null) {
-        const nodesArray = Array.isArray(nodes) ? nodes : [nodes]
+    // 20 seconds is the default value for a timeout if not specified
+    constructor(nodes, headers = {}, timeout = 20000) {
         // Copy object
         this.headers = Object.assign({}, headers)
 
@@ -32,13 +31,16 @@ export default class Connection {
         })
 
         this.normalizedNodes = []
-        if (!nodesArray) {
+        if (!nodes) {
             this.normalizedNodes.push(Connection.normalizeNode(DEFAULT_NODE, this.headers))
-        } else {
-            nodesArray.forEach(node => {
+        } else if (Array.isArray(nodes)) {
+            nodes.forEach(node => {
                 this.normalizedNodes.push(Connection.normalizeNode(node, this.headers))
             })
+        } else {
+            this.normalizedNodes.push(Connection.normalizeNode(nodes, this.headers))
         }
+
         this.transport = new Transport(this.normalizedNodes, this.headers, timeout)
     }
 

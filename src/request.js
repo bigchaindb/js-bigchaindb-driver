@@ -29,7 +29,7 @@ export default class Request {
         this.connectionError = null
     }
 
-    async request(endpoint, config, setTimeout) {
+    async request(endpoint, config, timeout, maxBackoffTime) {
         // Load default fetch configuration and remove any falsy query parameters
         const requestConfig = Object.assign({}, this.node.headers, DEFAULT_REQUEST_CONFIG, config, {
             query: config.query && sanitize(config.query)
@@ -58,7 +58,7 @@ export default class Request {
 
         const backoffTimedelta = this.getBackoffTimedelta()
 
-        if (setTimeout != null && setTimeout < this.backoffTimedelta) {
+        if (timeout != null && timeout < backoffTimedelta) {
             const errorObject = {
                 message: 'TimeoutError'
             }
@@ -67,16 +67,15 @@ export default class Request {
         if (backoffTimedelta > 0) {
             await Request.sleep(backoffTimedelta)
         }
-        this.timeout = setTimeout ? setTimeout - backoffTimedelta : setTimeout
+        // this.timeout = setTimeout ? setTimeout - backoffTimedelta : setTimeout
         return baseRequest(apiUrl, requestConfig)
             .then(res => res.json())
             .catch(err => {
                 // ConnectionError
                 this.connectionError = err
-                // throw err
             })
             .finally(() => {
-                this.updateBackoffTime()
+                this.updateBackoffTime(maxBackoffTime)
             })
     }
 
@@ -87,12 +86,12 @@ export default class Request {
         return (this.backoffTime - Date.now())
     }
 
-    updateBackoffTime() {
+    updateBackoffTime(maxBackoffTime) {
         if (!this.connectionError) {
             this.retries = 0
             this.backoffTime = null
         } else {
-            const backoffTimedelta = BACKOFF_DELAY * (2 ** this.retries)
+            const backoffTimedelta = Math.min(BACKOFF_DELAY * (2 ** this.retries), maxBackoffTime)
             this.backoffTime = Date.now() + backoffTimedelta
             this.retries += 1
         }
