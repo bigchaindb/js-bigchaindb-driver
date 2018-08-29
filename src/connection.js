@@ -6,6 +6,7 @@ import Transport from './transport'
 
 const HEADER_BLACKLIST = ['content-type']
 const DEFAULT_NODE = 'http://localhost:9984/api/v1/'
+const DEFAULT_TIMEOUT = 20000 // The default value is 20 seconds
 
 /**
  *
@@ -19,7 +20,7 @@ const DEFAULT_NODE = 'http://localhost:9984/api/v1/'
 
 export default class Connection {
     // 20 seconds is the default value for a timeout if not specified
-    constructor(nodes, headers = {}, timeout = 20000) {
+    constructor(nodes, headers = {}, timeout = DEFAULT_TIMEOUT) {
         // Copy object
         this.headers = Object.assign({}, headers)
 
@@ -48,7 +49,6 @@ export default class Connection {
         if (typeof node === 'string') {
             return { 'endpoint': node, 'headers': headers }
         } else {
-            // TODO normalize URL if needed
             const allHeaders = Object.assign({}, headers, node.headers)
             return { 'endpoint': node.endpoint, 'headers': allHeaders }
         }
@@ -70,8 +70,8 @@ export default class Connection {
         }[endpoint]
     }
 
-    _req(pathEndpoint, options = {}) {
-        return this.transport.forwardRequest(pathEndpoint, options)
+    _req(path, options = {}) {
+        return this.transport.forwardRequest(path, options)
     }
 
     /**

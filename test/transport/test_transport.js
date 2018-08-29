@@ -10,7 +10,7 @@ import {
 
 test('Pick connection with earliest backoff time', async t => {
     const path1 = 'http://localhost:9984/api/v1/'
-    const path2 = 'http://localhost:9984/api/wrong/'
+    const path2 = 'http://localhostwrong:9984/api/v1/'
 
     // Reverse order
     const conn = new Connection([path2, path1])

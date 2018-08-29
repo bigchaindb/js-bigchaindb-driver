@@ -19,7 +19,7 @@ export default class Transport {
         this.connectionPool = []
         this.timeout = timeout
         // the maximum backoff time is 10 seconds
-        this.maxBackoffTime = timeout ? timeout / 10 : 10000
+        this.maxBackoffTime = timeout ? timeout / 2 : 10000
         nodes.forEach(node => {
             this.connectionPool.push(new Request(node))
         })
@@ -28,9 +28,6 @@ export default class Transport {
     // Select the connection with the earliest backoff time, in case of a tie,
     // prefer the one with the smaller list index
     pickConnection() {
-        if (this.connectionPool.length === 1) {
-            return this.connectionPool[0]
-        }
         let connection = this.connectionPool[0]
 
         this.connectionPool.forEach(conn => {
@@ -58,7 +55,7 @@ export default class Transport {
                     this.maxBackoffTime
                 )
                 const elapsed = Date.now() - startTime
-                if (connection.backoffTime) {
+                if (connection.backoffTime && this.timeout) {
                     this.timeout -= elapsed
                 } else {
                     // No connection error, the response is valid
@@ -71,6 +68,6 @@ export default class Transport {
         const errorObject = {
             message: 'TimeoutError',
         }
-        throw connection.connectionError ? connection.connectionError : errorObject
+        throw errorObject
     }
 }

@@ -40,9 +40,34 @@ const fetch = fetchPonyfill(Promise)
  * @return {Promise}        Promise that will resolve with the response if its status was 2xx;
  *                          otherwise rejects with the response
  */
+
+const timeout = (ms, promise) => new Promise((resolve, reject) => {
+    setTimeout(() => {
+        const errorObject = {
+            message: 'TimeoutError'
+        }
+        reject(new Error(errorObject))
+    }, ms)
+    return promise.then(resolve, reject)
+})
+
+const handleResponse = (res) => {
+    // If status is not a 2xx (based on Response.ok), assume it's an error
+    // See https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch/fetch
+    if (!(res && res.ok)) {
+        const errorObject = {
+            message: 'HTTP Error: Requested page not reachable',
+            status: `${res.status} ${res.statusText}`,
+            requestURI: res.url
+        }
+        throw errorObject
+    }
+    return res
+}
+
 export default function baseRequest(url, {
     jsonBody, query, urlTemplateSpec, ...fetchConfig
-} = {}) {
+} = {}, requestTimeout) {
     let expandedUrl = url
 
     if (urlTemplateSpec != null) {
@@ -73,19 +98,11 @@ export default function baseRequest(url, {
     if (jsonBody != null) {
         fetchConfig.body = JSON.stringify(jsonBody)
     }
-
-    return fetch.fetch(expandedUrl, fetchConfig)
-        .then((res) => {
-            // If status is not a 2xx (based on Response.ok), assume it's an error
-            // See https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch/fetch
-            if (!(res && res.ok)) {
-                const errorObject = {
-                    message: 'HTTP Error: Requested page not reachable',
-                    status: `${res.status} ${res.statusText}`,
-                    requestURI: res.url
-                }
-                throw errorObject
-            }
-            return res
-        })
+    if (requestTimeout) {
+        return timeout(requestTimeout, fetch.fetch(expandedUrl, fetchConfig))
+            .then(handleResponse)
+    } else {
+        return fetch.fetch(expandedUrl, fetchConfig)
+            .then(handleResponse)
+    }
 }

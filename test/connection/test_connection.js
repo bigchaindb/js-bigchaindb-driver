@@ -16,7 +16,7 @@ const conn = new Connection(API_PATH)
 
 test('Payload thrown at incorrect API_PATH', async t => {
     const path = 'http://localhost:9984/api/wrong/'
-    const connection = new Connection(path, {}, 0)
+    const connection = new Connection(path)
     const target = {
         message: 'HTTP Error: Requested page not reachable',
         status: '404 NOT FOUND',
