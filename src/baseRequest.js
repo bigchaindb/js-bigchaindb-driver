@@ -2,14 +2,58 @@
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 // Code is Apache-2.0 and docs are CC-BY-4.0
 
-import { Promise } from 'es6-promise'
+import {
+    Promise
+} from 'es6-promise'
 import fetchPonyfill from 'fetch-ponyfill'
-import { vsprintf } from 'sprintf-js'
+import {
+    vsprintf
+} from 'sprintf-js'
 
 import formatText from './format_text'
 import stringifyAsQueryParam from './stringify_as_query_param'
 
 const fetch = fetchPonyfill(Promise)
+
+
+/**
+ * @private
+ * Timeout function following https://github.com/github/fetch/issues/175#issuecomment-284787564
+ * @param {integer} obj Source object
+ * @param {Promise} filter Array of key names to select or function to invoke per iteration
+ * @return {Object} TimeoutError if the time was consumed, otherwise the Promise will be resolved
+ */
+function timeout(ms, promise) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const errorObject = {
+                message: 'TimeoutError'
+            }
+            reject(new Error(errorObject))
+        }, ms)
+        promise.then(resolve, reject)
+    })
+}
+
+/**
+ * @private
+ * @param {Promise} res Source object
+ * @return {Promise} Promise that will resolve with the response if its status was 2xx;
+ *                          otherwise rejects with the response
+ */
+function handleResponse(res) {
+    // If status is not a 2xx (based on Response.ok), assume it's an error
+    // See https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch/fetch
+    if (!(res && res.ok)) {
+        const errorObject = {
+            message: 'HTTP Error: Requested page not reachable',
+            status: `${res.status} ${res.statusText}`,
+            requestURI: res.url
+        }
+        throw errorObject
+    }
+    return res
+}
 
 
 /**
@@ -36,37 +80,16 @@ const fetch = fetchPonyfill(Promise)
  *                                                decamelized into snake case first.
  * @param  {*[]|Object}    config.urlTemplateSpec Format spec to use to expand the url (see sprintf).
  * @param  {*}             config.*               All other options are passed through to fetch.
+ * @param  {integer}         requestTimeout         Timeout for a single request
  *
- * @return {Promise}        Promise that will resolve with the response if its status was 2xx;
- *                          otherwise rejects with the response
+ * @return {Promise}        If requestTimeout the timeout function will be called. Otherwise resolve the
+ *                          Promise with the handleResponse function
  */
-
-const timeout = (ms, promise) => new Promise((resolve, reject) => {
-    setTimeout(() => {
-        const errorObject = {
-            message: 'TimeoutError'
-        }
-        reject(new Error(errorObject))
-    }, ms)
-    return promise.then(resolve, reject)
-})
-
-const handleResponse = (res) => {
-    // If status is not a 2xx (based on Response.ok), assume it's an error
-    // See https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch/fetch
-    if (!(res && res.ok)) {
-        const errorObject = {
-            message: 'HTTP Error: Requested page not reachable',
-            status: `${res.status} ${res.statusText}`,
-            requestURI: res.url
-        }
-        throw errorObject
-    }
-    return res
-}
-
 export default function baseRequest(url, {
-    jsonBody, query, urlTemplateSpec, ...fetchConfig
+    jsonBody,
+    query,
+    urlTemplateSpec,
+    ...fetchConfig
 } = {}, requestTimeout) {
     let expandedUrl = url
 

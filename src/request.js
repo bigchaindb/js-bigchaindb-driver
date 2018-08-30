@@ -12,7 +12,7 @@ const DEFAULT_REQUEST_CONFIG = {
 }
 
 const BACKOFF_DELAY = 500 // 0.5 seconds
-const ERROR = 'HTTP Error: Requested page not reachable'
+const ERROR_FROM_SERVER = 'HTTP Error: Requested page not reachable'
 /**
  * @private
  * Small wrapper around js-utility-belt's request that provides url resolving,
@@ -87,7 +87,7 @@ export default class Request {
         if (!this.connectionError) {
             this.retries = 0
             this.backoffTime = null
-        } else if (this.connectionError.message === ERROR) {
+        } else if (this.connectionError.message === ERROR_FROM_SERVER) {
             // If status is not a 2xx (based on Response.ok), throw error
             this.retries = 0
             this.backoffTime = null
