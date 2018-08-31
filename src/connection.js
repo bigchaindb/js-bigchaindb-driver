@@ -65,8 +65,7 @@ export default class Connection {
             'transactionsCommit': 'transactions?mode=commit',
             'transactionsDetail': 'transactions/%(transactionId)s',
             'assets': 'assets',
-            'metadata': 'metadata',
-            'votes': 'votes'
+            'metadata': 'metadata'
         }[endpoint]
     }
 
@@ -135,17 +134,6 @@ export default class Connection {
             query: {
                 asset_id: assetId,
                 operation
-            }
-        })
-    }
-
-    /**
-     * @param blockId
-     */
-    listVotes(blockId) {
-        return this._req(Connection.getApiUrls('votes'), {
-            query: {
-                block_id: blockId
             }
         })
     }

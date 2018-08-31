@@ -218,21 +218,6 @@ test('Get outputs for a public key and spent=true', t => {
 })
 
 
-test('Get votes for a block id', t => {
-    const expectedPath = 'path'
-    const blockId = 'abc'
-
-    conn._req = sinon.spy()
-    Connection.getApiUrls = sinon.stub().returns(expectedPath)
-
-    conn.listVotes(blockId)
-    t.truthy(conn._req.calledWith(
-        expectedPath,
-        { query: { block_id: blockId } }
-    ))
-})
-
-
 test('Get asset for text', t => {
     const expectedPath = 'path'
     const search = 'abc'
