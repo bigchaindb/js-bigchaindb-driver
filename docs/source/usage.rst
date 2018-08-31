@@ -45,10 +45,35 @@ To do so, you need to pass the **app_id and app_key**.
 
 .. code-block:: js
 
-	let conn = new driver.Connection('https://test.bigchaindb.com/api/v1/', {
+	const conn = new driver.Connection('https://test.bigchaindb.com/api/v1/', {
 		app_id: 'Get one from testnet.bigchaindb.com',
 		app_key: 'Get one from testnet.bigchaindb.com'
 	})
+
+A more complex connection can be created if the intention is to connect to 
+different nodes of a BigchainDB network.
+The connection strategy will be the one specified in the BEP-14_
+
+.. _BEP-14: https://github.com/bigchaindb/BEPs/tree/master/14#connection-strategy
+
+.. code-block:: js
+
+	const conn = new driver.Connection([
+    'https://test.bigchaindb.com',  // the first node does not use custom headers, only common headers
+    {endpoint: 'https://test.bigchaindb.com/api/v1/',
+     headers: {app_id: 'your_app_id',
+               app_key: 'your_app_key'}},
+    {endpoint: 'https://test2.bigchaindb.com/api/v1/',
+     headers: {app_id: 'your_app_id',
+               app_key: 'your_app_key',
+               extra_header: 'extra value'}},
+    {endpoint: 'https://test3.bigchaindb.com/api/v1/',
+     headers: {app_id: 'your_app_id',
+               app_key: 'your_app_key',
+       	       other_header: 'other value'}},
+    {endpoint: 'https://test4.bigchaindb.com/api/v1/',
+     headers: {custom_auth: 'custom token'}],
+     {'Content-Type': 'application/json'},  // this header is used by all nodes)
 
 Cryptographic Identities Generation
 -----------------------------------

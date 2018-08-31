@@ -28,8 +28,8 @@ test('Keypair is created', t => {
 // TODO: The following tests are a bit messy currently, please do:
 //
 //  - tidy up dependency on `pollStatusAndFetchTransaction`
-test('Valid CREATE transaction', t => {
-    const conn = new Connection(API_PATH)
+test('Valid CREATE transaction with default node', t => {
+    const conn = new Connection()
 
     const tx = Transaction.makeCreateTransaction(
         asset(),
@@ -40,7 +40,9 @@ test('Valid CREATE transaction', t => {
     const txSigned = Transaction.signTransaction(tx, alice.privateKey)
 
     return conn.postTransaction(txSigned)
-        .then(resTx => t.truthy(resTx))
+        .then(resTx => {
+            t.truthy(resTx)
+        })
 })
 
 
