@@ -42,7 +42,7 @@ export default class Transport {
         let response
         let connection
         // A new request will be executed until there is a valid response or timeout < 0
-        while (!this.timeout || this.timeout > 0) {
+        while (this.timeout >= 0) {
             connection = this.pickConnection()
             // Date in milliseconds
             const startTime = Date.now()
@@ -55,7 +55,7 @@ export default class Transport {
                     this.maxBackoffTime
                 )
                 const elapsed = Date.now() - startTime
-                if (connection.backoffTime && this.timeout) {
+                if (connection.backoffTime > 0 && this.timeout > 0) {
                     this.timeout -= elapsed
                 } else {
                     // No connection error, the response is valid

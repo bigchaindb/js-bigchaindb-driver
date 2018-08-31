@@ -19,7 +19,7 @@ const DEFAULT_TIMEOUT = 20000 // The default value is 20 seconds
  */
 
 export default class Connection {
-    // 20 seconds is the default value for a timeout if not specified
+    // This driver implements the BEP-14 https://github.com/bigchaindb/BEPs/tree/master/14
     constructor(nodes, headers = {}, timeout = DEFAULT_TIMEOUT) {
         // Copy object
         this.headers = Object.assign({}, headers)
@@ -42,7 +42,7 @@ export default class Connection {
             this.normalizedNodes.push(Connection.normalizeNode(nodes, this.headers))
         }
 
-        this.transport = new Transport(this.normalizedNodes, timeout) // TODO
+        this.transport = new Transport(this.normalizedNodes, timeout)
     }
 
     static normalizeNode(node, headers) {
