@@ -7,7 +7,8 @@
 Basic Usage Examples
 ====================
 
-For the examples on this page, we assume you've :doc:`installed the bigchaindb_driver JavaScript package <quickstart>`,
+For the examples on this page, we assume you've
+:doc:`installed the bigchaindb_driver JavaScript package <quickstart>`,
 and you have determined the BigchainDB Root URL (issue: move this to general docs)
 of the node or cluster you want to connect to.
 
@@ -31,52 +32,55 @@ Next, we define a constant containing the API path.
 
 	const API_PATH = 'http://localhost:9984/api/v1/'
 
-Create Connection With BigchainDB
----------------------------------
+Create a Connection with BigchainDB
+-----------------------------------
 
-A simple connection with BigchainDB can be established like this.
+A simple connection with a BigchainDB node can be established like this:
 
 .. code-block:: js
 
 	const conn = new driver.Connection(API_PATH)
 
-It is also possible to connect to a node of the BigchainDB test network.
-To do so, you need to pass the **app_id and app_key**.
+If the BigchainDB node requires special HTTP request headers
+(such as ``app_id`` and ``app_key``),
+they can be included like this:
 
 .. code-block:: js
 
-	const conn = new driver.Connection('https://test.bigchaindb.com/api/v1/', {
-		app_id: 'Get one from testnet.bigchaindb.com',
-		app_key: 'Get one from testnet.bigchaindb.com'
+	const conn = new driver.Connection(API_PATH, {
+		app_id: 'app_id_value',
+		app_key: 'app_key_value'
 	})
 
-A more complex connection can be created if the intention is to connect to 
-different nodes of a BigchainDB network.
-The connection strategy will be the one specified in the BEP-14_
+A more complex connection can be created if the BigchainDB network
+has several nodes, each with a different API path and different required headers.
+The connection strategy will be the one specified in BEP-14_.
 
 .. _BEP-14: https://github.com/bigchaindb/BEPs/tree/master/14#connection-strategy
 
 .. code-block:: js
 
 	const conn = new driver.Connection([
-    'https://test.bigchaindb.com',  // the first node does not use custom headers, only common headers
-    {endpoint: 'https://test.bigchaindb.com/api/v1/',
+    API_PATH_1,  // the first node does not use custom headers, only common headers
+    {endpoint: API_PATH_2,
      headers: {app_id: 'your_app_id',
                app_key: 'your_app_key'}},
-    {endpoint: 'https://test2.bigchaindb.com/api/v1/',
+    {endpoint: API_PATH_3,
      headers: {app_id: 'your_app_id',
                app_key: 'your_app_key',
                extra_header: 'extra value'}},
-    {endpoint: 'https://test3.bigchaindb.com/api/v1/',
+    {endpoint: API_PATH_4,
      headers: {app_id: 'your_app_id',
                app_key: 'your_app_key',
        	       other_header: 'other value'}},
-    {endpoint: 'https://test4.bigchaindb.com/api/v1/',
+    {endpoint: API_PATH_5,
      headers: {custom_auth: 'custom token'}],
-     {'Content-Type': 'application/json'},  // this header is used by all nodes)
+     {'sender_id': 'ab-12769'}  // common header sent to all nodes
+	)
 
 Cryptographic Identities Generation
 -----------------------------------
+
 Alice and Bob are represented by public/private key pairs. The private key is
 used to sign transactions, meanwhile the public key is used to verify that a
 signed transaction was indeed signed by the one who claims to be the signee.
@@ -282,7 +286,7 @@ This call returns all the assets that match the string 'Bicycle Inc.', sorted by
 
 
 Querying for Metadata
--------------------
+---------------------
 
 Similar as querying for assets, in BigchainDB you can query for metadata using simple text search.
 This search is applied to all the strings inside the metadata payload and returns all the metadata payloads that match a given text search string.
@@ -331,7 +335,7 @@ Recap: Asset Creation & Transfer
 
 	const driver = require('bigchaindb-driver')
 
-	// BigchainDB server instance or testnetwork (e.g. https://test.bigchaindb.com/api/v1/)
+	// BigchainDB server instance or testnetwork (e.g. https://example.com/api/v1/)
 	const API_PATH = 'http://localhost:9984/api/v1/'
 
 	// Create a new keypair for Alice and Bob
@@ -434,8 +438,13 @@ You can use the ``Ed25519Keypair()`` constructor as well without seed.
 Websocket Event Stream API Usage
 --------------------------------
 
-The Event Stream API enables new ways to interact with BigchainDB, making it possible for your application to subscribe to all newly–confirmed transactions that are happening in the system.
-Below piece of code can be opened in your web browser. It will connect to your websocket (if you are using the testnet, redefine ``var wsUri ='wss://test.bigchaindb.com:443/api/v1/streams/valid_transactions'``). This web page will display all validated transactions.
+The Event Stream API enables new ways to interact with BigchainDB,
+making it possible for your application to subscribe
+to all newly–confirmed transactions that are happening in the system.
+Below piece of code can be opened in your web browser.
+It will connect to your websocket (if you are using the testnet, redefine
+``var wsUri ='wss://insert-testnet-subdomain-here.com:443/api/v1/streams/valid_transactions'``).
+This web page will display all validated transactions.
 
 .. code-block:: html
 
@@ -739,6 +748,7 @@ We will fulfill the first and second output of the create transaction (0, 1) bec
 This gives us 3 tokens to redistribute. I want to give 1 token to Carly and 2 tokens Alice.
 
 .. code-block:: js
+
 	const txTransferDivisibleInputs = driver.Transaction.makeTransferTransaction(
 		[{ tx: txTransferDivisibleSigned, output_index: 0 }, { tx: txTransferDivisibleSigned, output_index: 1 }],
 		[
