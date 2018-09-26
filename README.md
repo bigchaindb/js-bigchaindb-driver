@@ -62,7 +62,7 @@ import driver from 'bigchaindb-driver'
 ```js
 const driver = require('bigchaindb-driver')
 
-// BigchainDB server instance (e.g. https://test.bigchaindb.com/api/v1/)
+// BigchainDB server instance (e.g. https://example.com/api/v1/)
 const API_PATH = 'http://localhost:9984/api/v1/'
 
 // Create a new keypair.
@@ -107,7 +107,7 @@ conn.postTransactionCommit(txSigned)
         <script src="https://unpkg.com/bigchaindb-driver@4.0.0/dist/browser/bigchaindb-driver.window.min.js"></script>
 
         <script>
-            // BigchainDB server instance (e.g. https://test.bigchaindb.com/api/v1/)
+            // BigchainDB server instance (e.g. https://example.com/api/v1/)
             const API_PATH = 'http://localhost:9984/api/v1/'
 
             // Create a new keypair.

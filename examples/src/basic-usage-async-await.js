@@ -9,9 +9,9 @@ require('dotenv').config()
 
 
 // ======== Preparation ======== //
-const conn = new driver.Connection('https://test.bigchaindb.com/api/v1/', {
-    app_id: process.env.BIGCHAINDB_APP_ID,
-    app_key: process.env.BIGCHAINDB_APP_KEY
+const conn = new driver.Connection('https://example.com/api/v1/', {
+    header1: header1_value,
+    header2: header2_value
 })
 
 const alice = new driver.Ed25519Keypair()
