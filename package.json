@@ -56,7 +56,7 @@
     "eslint-config-ascribe": "^3.0.5",
     "eslint-plugin-import": "^2.13.0",
     "husky": "^0.14.3",
-    "lint-staged": "^7.1.2",
+    "lint-staged": "^8.0.0",
     "nyc": "^12.0.1",
     "release-it": "^7.4.7",
     "rimraf": "^2.6.2",
