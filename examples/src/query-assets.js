@@ -10,8 +10,8 @@ require('dotenv').config()
 
 // ======== Preparation ======== //
 const conn = new driver.Connection('https://example.com/api/v1/', {
-    header1: header1_value,
-    header2: header2_value
+    header1: 'header1_value',
+    header2: 'header2_value'
 })
 
 const alice = new driver.Ed25519Keypair()
