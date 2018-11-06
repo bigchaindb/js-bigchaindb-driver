@@ -15,7 +15,7 @@ import nacl from 'tweetnacl'
  */
 export default function Ed25519Keypair(seed) {
     const keyPair = seed ? nacl.sign.keyPair.fromSeed(seed) : nacl.sign.keyPair()
-    this.publicKey = base58.encode(new Buffer(keyPair.publicKey))
+    this.publicKey = base58.encode(Buffer.from(keyPair.publicKey))
     // tweetnacl's generated secret key is the secret key + public key (resulting in a 64-byte buffer)
-    this.privateKey = base58.encode(new Buffer(keyPair.secretKey.slice(0, 32)))
+    this.privateKey = base58.encode(Buffer.from(keyPair.secretKey.slice(0, 32)))
 }
