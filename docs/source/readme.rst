@@ -15,8 +15,8 @@ BigchainDB JavaScript Driver
 .. image:: https://img.shields.io/badge/js-ascribe-39BA91.svg
 			:target: https://github.com/ascribe/javascript
 
-.. image:: https://travis-ci.org/bigchaindb/js-bigchaindb-driver.svg?branch=master
-			:target: https://travis-ci.org/bigchaindb/js-bigchaindb-driver
+.. image:: https://travis-ci.com/bigchaindb/js-bigchaindb-driver.svg?branch=master
+			:target: https://travis-ci.com/bigchaindb/js-bigchaindb-driver
 
 .. image:: https://badges.greenkeeper.io/bigchaindb/js-bigchaindb-driver.svg
 			:target: https://greenkeeper.io/
