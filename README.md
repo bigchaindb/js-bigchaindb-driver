@@ -188,7 +188,7 @@ npm run doc
 ## Authors
 
 * inspired by [`js-bigchaindb-quickstart`](https://github.com/sohkai/js-bigchaindb-quickstart) of @sohkhai [thanks]
-* BigchainDB <dev@bigchaindb.com>
+* BigchainDB <devs@bigchaindb.com>
 * BigchainDB contributors
 
 ## Licenses
