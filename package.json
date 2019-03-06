@@ -72,7 +72,7 @@
     "clone": "^2.1.1",
     "core-js": "^2.5.7",
     "crypto-conditions": "^2.0.1",
-    "decamelize": "^2.0.0",
+    "decamelize": "^3.0.0",
     "es6-promise": "^4.2.4",
     "fetch-ponyfill": "^6.0.1",
     "isomorphic-fetch": "^2.2.1",
