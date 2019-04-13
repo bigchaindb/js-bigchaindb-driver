@@ -54,7 +54,7 @@
     "documentation": "^8.0.1",
     "eslint": "^5.0.1",
     "eslint-config-ascribe": "^3.0.5",
-    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-import": "2.16.0",
     "husky": "^0.14.3",
     "lint-staged": "^7.1.2",
     "nyc": "^12.0.1",
