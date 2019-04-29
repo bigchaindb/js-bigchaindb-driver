@@ -59,7 +59,7 @@
     "husky": "^2.1.0",
     "lint-staged": "^8.0.0",
     "nyc": "^14.0.0",
-    "release-it": "^10.4.4",
+    "release-it": "^10.4.5",
     "rimraf": "^2.6.2",
     "sinon": "^7.3.2",
     "webpack": "^4.28.4",
