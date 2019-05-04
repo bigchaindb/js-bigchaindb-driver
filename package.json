@@ -63,7 +63,7 @@
     "rimraf": "^2.6.2",
     "sinon": "^7.3.2",
     "webpack": "^4.28.4",
-    "webpack-cli": "^3.0.8",
+    "webpack-cli": "^3.3.2",
     "webpack-concat-plugin": "^3.0.0"
   },
   "dependencies": {
