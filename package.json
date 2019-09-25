@@ -27,7 +27,6 @@
     "release-minor": "./node_modules/release-it/bin/release-it.js minor --src.tagName='v%s' --github.release --npm.publish --non-interactive",
     "release-major": "./node_modules/release-it/bin/release-it.js major --src.tagName='v%s' --github.release --npm.publish --non-interactive",
     "prepublishOnly": "npm run build",
-    "precommit": "lint-staged",
     "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "doc": "node ./node_modules/documentation/bin/documentation.js build src/index.js -f md -o API.md -g --markdown-toc"
   },
@@ -112,5 +111,10 @@
       "babel-register"
     ],
     "babel": "inherit"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
