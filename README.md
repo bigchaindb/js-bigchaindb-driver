@@ -40,8 +40,9 @@ Code is Apache-2.0 and docs are CC-BY-4.0
   - [BigchainDB Documentation](#bigchaindb-documentation)
   - [Speed Optimizations](#speed-optimizations)
   - [Development](#development)
+  - [Release Process](#release-process)
   - [Authors](#authors)
-  - [License](#license)
+  - [Licenses](#licenses)
 
 ---
 
@@ -184,6 +185,10 @@ After updating source files in `src/`, make sure to update the API documentation
 ```bash
 npm run doc
 ```
+
+## Release Process
+
+See the file named [RELEASE_PROCESS.md](RELEASE_PROCESS.md).
 
 ## Authors
 
