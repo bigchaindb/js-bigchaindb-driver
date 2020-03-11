@@ -12,6 +12,7 @@
 .vscode
 
 .env
+.genv
 
 node_modules
 dist
