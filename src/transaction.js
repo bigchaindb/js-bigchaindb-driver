@@ -236,7 +236,7 @@ export default class Transaction {
             Transaction.serializeTransactionIntoCanonicalString(transaction)
 
         signedTx.inputs.forEach((input, index) => {
-            const privateKey = privateKeys[index]
+            const privateKey = privateKeys[index] ? privateKeys[index] : privateKeys[0]
             const privateKeyBuffer = Buffer.from(base58.decode(privateKey))
 
             const transactionUniqueFulfillment = input.fulfills ? serializedTransaction
