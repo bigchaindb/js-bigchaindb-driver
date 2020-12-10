@@ -255,4 +255,31 @@ export default class Transaction {
         signedTx.id = sha256Hash(serializedSignedTransaction)
         return signedTx
     }
+
+    /**
+     * Delegate signing of the given `transaction` returning a new copy of `transaction`
+     * that's been signed.
+     * @param {Object} transaction Transaction to sign. `transaction` is not modified.
+     * @param {Function} signFn Function signing the transaction, expected to return the fulfillment.
+     * @returns {Object} The signed version of `transaction`.
+     */
+    static delegateSignTransaction(transaction, signFn) {
+        const signedTx = clone(transaction)
+        const serializedTransaction =
+            Transaction.serializeTransactionIntoCanonicalString(transaction)
+
+        signedTx.inputs.forEach((input) => {
+            const transactionUniqueFulfillment = input.fulfills ? serializedTransaction
+                .concat(input.fulfills.transaction_id)
+                .concat(input.fulfills.output_index) : serializedTransaction
+            const transactionHash = sha256Hash(transactionUniqueFulfillment)
+            const fulfillmentUri = signFn(signedTx, input, transactionHash)
+            // ? TODO fulfillmentUri should be validated ?
+            input.fulfillment = fulfillmentUri
+        })
+
+        const serializedSignedTransaction = Transaction.serializeTransactionIntoCanonicalString(signedTx)
+        signedTx.id = sha256Hash(serializedSignedTransaction)
+        return signedTx
+    }
 }
