@@ -13,7 +13,8 @@ import {
     bob,
     bobOutput,
     asset,
-    metaData
+    metaData,
+    delegatedSignTransaction
 } from '../constants'
 
 
@@ -199,6 +200,58 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs from different tra
                     return conn.postTransactionCommit(transferTxSignedMultipleInputs)
                         .then(resTx => t.truthy(resTx))
                 })
+        })
+})
+
+test('Valid CREATE transaction using delegateSign with default node', t => {
+    const conn = new Connection()
+
+    const tx = Transaction.makeCreateTransaction(
+        asset(),
+        metaData,
+        [aliceOutput],
+        alice.publicKey
+    )
+
+    const txSigned = Transaction.delegateSignTransaction(
+        tx,
+        delegatedSignTransaction(alice)
+    )
+
+    return conn.postTransaction(txSigned)
+        .then(resTx => {
+            t.truthy(resTx)
+        })
+})
+
+test('Valid TRANSFER transaction with multiple Ed25519 inputs using delegateSign', t => {
+    const conn = new Connection(API_PATH)
+    const createTx = Transaction.makeCreateTransaction(
+        asset(),
+        metaData,
+        [aliceOutput, bobOutput],
+        alice.publicKey
+    )
+    const createTxSigned = Transaction.signTransaction(
+        createTx,
+        alice.privateKey
+    )
+
+    return conn.postTransactionCommit(createTxSigned)
+        .then(() => {
+            const transferTx = Transaction.makeTransferTransaction(
+                [{ tx: createTxSigned, output_index: 0 }, { tx: createTxSigned, output_index: 1 }],
+                [Transaction.makeOutput(aliceCondition, '2')],
+                metaData
+            )
+
+            const transferTxSigned = Transaction.delegateSignTransaction(
+                transferTx,
+                delegatedSignTransaction(alice, bob)
+            )
+
+            return conn.postTransactionCommit(transferTxSigned)
+                .then(resTx => t.truthy(resTx))
         })
 })
 

@@ -5,6 +5,7 @@
 import test from 'ava'
 import cc from 'crypto-conditions'
 import { Ed25519Keypair, Transaction, ccJsonLoad } from '../../src'
+import { delegatedSignTransaction } from '../constants'
 import sha256Hash from '../../src/sha256Hash'
 
 test('Ed25519 condition encoding', t => {
@@ -94,6 +95,24 @@ test('Fulfillment correctly formed', t => {
         txSigned.inputs[0].fulfillment, txCreate.outputs[0].condition.uri,
         Buffer.from(msgHash, 'hex')
     ))
+})
+
+test('Delegated signature is correct', t => {
+    const alice = new Ed25519Keypair()
+
+    const txCreate = Transaction.makeCreateTransaction(
+        {},
+        {},
+        [Transaction.makeOutput(Transaction.makeEd25519Condition(alice.publicKey))],
+        alice.publicKey
+    )
+
+    const signCreateTransaction = Transaction.signTransaction(txCreate, alice.privateKey)
+    const delegatedSignCreateTransaction = Transaction.delegateSignTransaction(
+        txCreate,
+        delegatedSignTransaction(alice)
+    )
+    t.deepEqual(signCreateTransaction, delegatedSignCreateTransaction)
 })
 
 
