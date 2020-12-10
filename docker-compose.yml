@@ -33,7 +33,7 @@ services:
       retries: 3
     command: -l DEBUG start
   tendermint:
-    image: tendermint/tendermint:0.22.8
+    image: tendermint/tendermint:v0.31.5
     # volumes:
     #   - ./tmdata:/tendermint
     entrypoint: ''
