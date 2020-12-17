@@ -34,7 +34,7 @@ export const bobCondition = Transaction.makeEd25519Condition(bob.publicKey)
 export const bobOutput = Transaction.makeOutput(bobCondition)
 
 export function delegatedSignTransaction(...keyPairs) {
-    return function sign(transaction, input, transactionHash) {
+    return function sign(input, transactionHash) {
         const filteredKeyPairs = keyPairs.filter(({ publicKey }) =>
             input.owners_before.includes(publicKey))
         const ed25519Fulfillment = new Ed25519Sha256()

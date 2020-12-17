@@ -273,8 +273,7 @@ export default class Transaction {
                 .concat(input.fulfills.transaction_id)
                 .concat(input.fulfills.output_index) : serializedTransaction
             const transactionHash = sha256Hash(transactionUniqueFulfillment)
-            const fulfillmentUri = signFn(signedTx, input, transactionHash)
-            // ? TODO fulfillmentUri should be validated ?
+            const fulfillmentUri = signFn(input, transactionHash)
             input.fulfillment = fulfillmentUri
         })
 
