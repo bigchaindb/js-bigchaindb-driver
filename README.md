@@ -62,6 +62,8 @@ import driver from 'bigchaindb-driver'
 
 ```js
 const driver = require('bigchaindb-driver')
+const base58 = require('bs58');
+const { Ed25519Sha256 } = require('crypto-conditions');
 
 // BigchainDB server instance (e.g. https://example.com/api/v1/)
 const API_PATH = 'http://localhost:9984/api/v1/'
@@ -88,6 +90,21 @@ const tx = driver.Transaction.makeCreateTransaction(
 
 // Sign the transaction with private keys
 const txSigned = driver.Transaction.signTransaction(tx, alice.privateKey)
+
+// Or use delegateSignTransaction to provide your own signature function
+function signTransaction() {
+    // get privateKey from somewhere
+    const privateKeyBuffer = Buffer.from(base58.decode(alice.privateKey))
+    return function sign(transaction, input, transactionHash) {
+        const ed25519Fulfillment = new Ed25519Sha256();
+        ed25519Fulfillment.sign(
+            Buffer.from(transactionHash, 'hex'),
+            privateKeyBuffer
+        );
+        return ed25519Fulfillment.serializeUri();
+    };
+}
+const txSigned = driver.Transaction.delegateSignTransaction(tx, signTransaction())
 
 // Send the transaction off to BigchainDB
 const conn = new driver.Connection(API_PATH)
@@ -193,7 +210,7 @@ See the file named [RELEASE_PROCESS.md](RELEASE_PROCESS.md).
 ## Authors
 
 * inspired by [`js-bigchaindb-quickstart`](https://github.com/sohkai/js-bigchaindb-quickstart) of @sohkhai [thanks]
-* BigchainDB <devs@bigchaindb.com>
+* BigchainDB <contact@ipdb.global>
 * BigchainDB contributors
 
 ## Licenses
