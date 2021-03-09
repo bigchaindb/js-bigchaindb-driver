@@ -10,9 +10,9 @@ services:
 language: node_js
 
 node_js:
-  - 8
-  - 9
   - 10
+  - 12
+  - 14
 
 cache:
     directories:
@@ -20,7 +20,7 @@ cache:
 
 env:
   global:
-    - DOCKER_COMPOSE_VERSION=1.19.0
+    - DOCKER_COMPOSE_VERSION=1.28.5
 
 before_install:
   - .ci/travis-before-install.sh
