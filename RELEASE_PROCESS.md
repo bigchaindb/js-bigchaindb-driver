@@ -34,7 +34,7 @@ We follow [BEP-1](https://github.com/bigchaindb/BEPs/tree/master/1), which is ou
 
    If that fails, then get it working.
 1. We use the [release-it](https://www.npmjs.com/package/release-it) package (from npm) to automate most of the release. Make sure you have a recent version.
-1. Login to npm using your npm credentials, so you can publish a new [bigchaindb-driver](https://www.npmjs.com/package/bigchaindb-driver) package there. (The npm account must haver permission to do so).
+1. Login to npm using your npm credentials, so you can publish a new [bigchaindb-driver](https://www.npmjs.com/package/bigchaindb-driver) package there. (The npm account must have permission to do so).
 
    `npm login`
 
