@@ -7,7 +7,7 @@
 'use strict'
 
 const path = require('path')
-const merge = require('webpack-merge')
+const { merge } = require('webpack-merge')
 
 const development = require('./webpack.development.js')
 const production = require('./webpack.production.js')
