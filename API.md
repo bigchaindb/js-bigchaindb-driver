@@ -171,7 +171,7 @@ Type: [Object][52]
 
 ## Transaction
 
-[src/transaction.js:16-284][67]
+[src/transaction.js:16-280][67]
 
 Construct Transactions
 
@@ -316,7 +316,7 @@ Returns **[Object][52]** The signed version of `transaction`.
 
 ### delegateSignTransaction
 
-[src/transaction.js:266-283][79]
+[src/transaction.js:266-279][79]
 
 Delegate signing of the given `transaction` returning a new copy of `transaction`
 that's been signed.
@@ -452,7 +452,7 @@ Returns **[Object][52]** Ed25519 Condition (that will need to wrapped in an Outp
 
 [50]: #parameters-23
 
-[51]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/Ed25519Keypair.js#L16-L21 "Source code on GitHub"
+[51]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/Ed25519Keypair.js#L16-L21 "Source code on GitHub"
 
 [52]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
@@ -460,58 +460,58 @@ Returns **[Object][52]** Ed25519 Condition (that will need to wrapped in an Outp
 
 [54]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[55]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/connection.js#L21-L201 "Source code on GitHub"
+[55]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L21-L201 "Source code on GitHub"
 
-[56]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/connection.js#L79-L85 "Source code on GitHub"
+[56]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L79-L85 "Source code on GitHub"
 
-[57]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/connection.js#L90-L96 "Source code on GitHub"
+[57]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L90-L96 "Source code on GitHub"
 
-[58]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/connection.js#L102-L108 "Source code on GitHub"
+[58]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L102-L108 "Source code on GitHub"
 
-[59]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/connection.js#L114-L126 "Source code on GitHub"
+[59]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L114-L126 "Source code on GitHub"
 
-[60]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/connection.js#L132-L139 "Source code on GitHub"
+[60]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L132-L139 "Source code on GitHub"
 
-[61]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/connection.js#L144-L146 "Source code on GitHub"
+[61]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L144-L146 "Source code on GitHub"
 
-[62]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/connection.js#L151-L156 "Source code on GitHub"
+[62]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L151-L156 "Source code on GitHub"
 
-[63]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/connection.js#L162-L167 "Source code on GitHub"
+[63]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L162-L167 "Source code on GitHub"
 
-[64]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/connection.js#L173-L178 "Source code on GitHub"
+[64]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L173-L178 "Source code on GitHub"
 
-[65]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/connection.js#L183-L189 "Source code on GitHub"
+[65]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L183-L189 "Source code on GitHub"
 
-[66]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/connection.js#L194-L200 "Source code on GitHub"
+[66]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L194-L200 "Source code on GitHub"
 
-[67]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/transaction.js#L16-L284 "Source code on GitHub"
+[67]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L16-L280 "Source code on GitHub"
 
-[68]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/transaction.js#L22-L29 "Source code on GitHub"
+[68]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L22-L29 "Source code on GitHub"
 
-[69]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/transaction.js#L80-L87 "Source code on GitHub"
+[69]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L80-L87 "Source code on GitHub"
 
 [70]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[71]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/transaction.js#L96-L107 "Source code on GitHub"
+[71]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L96-L107 "Source code on GitHub"
 
 [72]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[73]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/transaction.js#L117-L137 "Source code on GitHub"
+[73]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L117-L137 "Source code on GitHub"
 
-[74]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/transaction.js#L145-L153 "Source code on GitHub"
+[74]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L145-L153 "Source code on GitHub"
 
-[75]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/transaction.js#L162-L176 "Source code on GitHub"
+[75]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L162-L176 "Source code on GitHub"
 
 [76]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[77]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/transaction.js#L199-L220 "Source code on GitHub"
+[77]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L199-L220 "Source code on GitHub"
 
-[78]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/transaction.js#L233-L257 "Source code on GitHub"
+[78]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L233-L257 "Source code on GitHub"
 
-[79]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/transaction.js#L266-L283 "Source code on GitHub"
+[79]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L266-L279 "Source code on GitHub"
 
 [80]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[81]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/utils/ccJsonLoad.js#L14-L44 "Source code on GitHub"
+[81]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/utils/ccJsonLoad.js#L14-L44 "Source code on GitHub"
 
-[82]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/6dbafa8fad51ae945f854fa63b9a9be02d35198a/src/utils/ccJsonify.js#L12-L65 "Source code on GitHub"
+[82]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/utils/ccJsonify.js#L12-L65 "Source code on GitHub"
