@@ -46,28 +46,21 @@ export default class Transport {
             connection = this.pickConnection()
             // Date in milliseconds
             const startTime = Date.now()
-            try {
-                // eslint-disable-next-line no-await-in-loop
-                response = await connection.request(
-                    path,
-                    headers,
-                    this.timeout,
-                    this.maxBackoffTime
-                )
-                const elapsed = Date.now() - startTime
-                if (connection.backoffTime > 0 && this.timeout > 0) {
-                    this.timeout -= elapsed
-                } else {
-                    // No connection error, the response is valid
-                    return response
-                }
-            } catch (err) {
-                throw err
+            // eslint-disable-next-line no-await-in-loop
+            response = await connection.request(
+                path,
+                headers,
+                this.timeout,
+                this.maxBackoffTime
+            )
+            const elapsed = Date.now() - startTime
+            if (connection.backoffTime > 0 && this.timeout > 0) {
+                this.timeout -= elapsed
+            } else {
+                // No connection error, the response is valid
+                return response
             }
         }
-        const errorObject = {
-            message: 'TimeoutError',
-        }
-        throw errorObject
+        throw new Error('TimeoutError')
     }
 }
