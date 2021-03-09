@@ -1,12 +1,29 @@
 {
-    "presets": [
-        "env"
-    ],
-    "plugins": [
-        "transform-export-extensions",
-        "transform-object-assign",
-        "transform-object-rest-spread",
-        ["transform-runtime", { "polyfill": false, "regenerator": true }]
-    ],
-    "sourceMaps": true
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": [
+          "> 0.25%, not dead",
+          "not IE 11",
+          "maintained node versions"
+        ]
+      }
+    ]
+  ],
+  "plugins": [
+    "@babel/plugin-proposal-export-default-from",
+    "@babel/plugin-transform-object-assign",
+    "@babel/plugin-proposal-object-rest-spread",
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "absoluteRuntime": false,
+        "corejs": 3,
+        "helpers": true,
+        "regenerator": true
+      }
+    ]
+  ],
+  "sourceMaps": true
 }
