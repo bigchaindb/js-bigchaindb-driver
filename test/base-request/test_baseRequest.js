@@ -20,14 +20,11 @@ test('HandleResponse does not throw error for response ok', t => {
 })
 
 test('baseRequest test query and vsprint', async t => {
-    const target = {
-        message: 'HTTP Error: Requested page not reachable',
-        requestURI: 'https://www.google.com/teapot',
-        status: '418 I\'m a Teapot',
-    }
-    const error = await t.throws(baseRequest('https://%s.com/', {
+    const error = await t.throwsAsync(baseRequest('https://%s.com/', {
         urlTemplateSpec: ['google'],
         query: 'teapot'
-    }))
-    t.deepEqual(target, error)
+    }), { instanceOf: Error, message: 'HTTP Error: Requested page not reachable' })
+
+    t.is(error.requestURI, 'https://www.google.com/teapot')
+    t.is(error.status, '418 I\'m a Teapot')
 })

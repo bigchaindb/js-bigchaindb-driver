@@ -41,12 +41,10 @@ test('formatText test type 3', t => {
 })
 
 test('formatText test throws', t => {
-    const error = t.throws(() => {
+    t.throws(() => {
         formatText(
             'This will give ${error.}', // eslint-disable-line no-template-curly-in-string
             { error: [{}] }
         )
-    }, SyntaxError)
-
-    t.is(error.message, '[formatText] failed to parse named argument key: error.')
+    }, { instanceOf: SyntaxError, message: '[formatText] failed to parse named argument key: error.' })
 })
