@@ -7,7 +7,6 @@
 const driver = require('bigchaindb-driver')
 require('dotenv').config()
 
-
 // ======== Preparation ======== //
 const conn = new driver.Connection('https://example.com/api/v1/', {
     header1: 'header1_value',
@@ -16,7 +15,6 @@ const conn = new driver.Connection('https://example.com/api/v1/', {
 
 const alice = new driver.Ed25519Keypair()
 
-
 // ======== Asset Array ======== //
 const assetArray = []
 assetArray.push({ 'bicycle': { 'serial_number': 'abc', 'manufacturer': 'BicyclesInc' } })
@@ -24,7 +22,6 @@ assetArray.push({ 'bicycle': { 'serial_number': 'cde', 'manufacturer': 'Bicycles
 assetArray.push({ 'bicycle': { 'serial_number': 'fgh', 'manufacturer': 'BicyclesInc' } })
 
 const metadata = { 'planet': 'Pluto' }
-
 
 // ======== Create Transactions for bicycles ======== //
 function createTx(assetdata) {
@@ -41,15 +38,12 @@ function createTx(assetdata) {
     return conn.postTransactionCommit(txCreateSigned)
 }
 
-
 // ======== Execute all promises in order to post transactions and fetch them ======== //
 Promise.all(assetArray.map(createTx))
-
 
 // ======== Querying Assets for Assetdata ======== //
     .then(() => conn.searchAssets('BicyclesInc'))
     .then(assets => console.log('Found assets with serial number "BicyclesInc":', assets)) // eslint-disable-line no-console
-
 
 // ======== Querying Assets for Metadata ======== //
     .then(() => conn.searchMetadata('Pluto'))
