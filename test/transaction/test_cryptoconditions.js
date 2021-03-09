@@ -34,7 +34,6 @@ test('Sha256Condition fulfillment', t => {
     t.deepEqual(target, Transaction.makeSha256Condition(preimage))
 })
 
-
 test('Threshold condition encoding', t => {
     const publicKey = '4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS'
     const ed25519 = Transaction.makeEd25519Condition(publicKey, false)
@@ -63,7 +62,6 @@ test('Threshold condition encoding', t => {
     }
     t.deepEqual(target, output)
 })
-
 
 test('Fulfillment correctly formed', t => {
     const alice = new Ed25519Keypair()
@@ -114,23 +112,6 @@ test('Delegated signature is correct', t => {
     )
     t.deepEqual(signCreateTransaction, delegatedSignCreateTransaction)
 })
-
-
-test('CryptoConditions JSON load', t => {
-    const cond = ccJsonLoad({
-        type: 'threshold-sha-256',
-        threshold: 1,
-        subconditions: [{
-            type: 'ed25519-sha-256',
-            public_key: 'a'
-        },
-        {
-            hash: 'a'
-        }],
-    })
-    t.truthy(cond.subconditions.length === 2)
-})
-
 
 test('CryptoConditions JSON load', t => {
     const cond = ccJsonLoad({

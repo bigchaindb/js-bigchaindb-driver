@@ -22,8 +22,13 @@ test('Payload thrown at incorrect API_PATH', async t => {
         status: '404 NOT FOUND',
         requestURI: 'http://localhost:9984/api/wrong/transactions/transactionId'
     }
-    const error = await t.throws(connection.getTransaction('transactionId'))
-    t.deepEqual(target, error)
+    const error = await t.throwsAsync(connection.getTransaction('transactionId'), {
+        instanceOf: Error, message: target.message
+    })
+
+    t.is('ResponseError', error.name)
+    t.is(target.status, error.status)
+    t.is(target.requestURI, error.requestURI)
 })
 
 test('Generate API URLS', t => {
@@ -100,7 +105,6 @@ test('Request with custom headers', t => {
     t.truthy(testConn.transport.forwardRequest.calledWith(PATH, expectedOptions))
 })
 
-
 test('Get block for a block id', t => {
     const expectedPath = 'path'
     const blockHeight = 'abc'
@@ -115,7 +119,6 @@ test('Get block for a block id', t => {
     ))
 })
 
-
 test('Get transaction for a transaction id', t => {
     const expectedPath = 'path'
     const transactionId = 'abc'
@@ -129,7 +132,6 @@ test('Get transaction for a transaction id', t => {
         { urlTemplateSpec: { transactionId } }
     ))
 })
-
 
 test('Get list of blocks for a transaction id', t => {
     const expectedPath = 'path'
@@ -148,7 +150,6 @@ test('Get list of blocks for a transaction id', t => {
         }
     ))
 })
-
 
 test('Get list of transactions for an asset id', t => {
     const expectedPath = 'path'
@@ -170,7 +171,6 @@ test('Get list of transactions for an asset id', t => {
     ))
 })
 
-
 test('Get outputs for a public key and no spent flag', t => {
     const expectedPath = 'path'
     const publicKey = 'publicKey'
@@ -184,7 +184,6 @@ test('Get outputs for a public key and no spent flag', t => {
         { query: { public_key: publicKey } }
     ))
 })
-
 
 test('Get outputs for a public key and spent=false', t => {
     const expectedPath = 'path'
@@ -201,7 +200,6 @@ test('Get outputs for a public key and spent=false', t => {
     ))
 })
 
-
 test('Get outputs for a public key and spent=true', t => {
     const expectedPath = 'path'
     const publicKey = 'publicKey'
@@ -217,7 +215,6 @@ test('Get outputs for a public key and spent=true', t => {
     ))
 })
 
-
 test('Get asset for text', t => {
     const expectedPath = 'path'
     const search = 'abc'
@@ -231,7 +228,6 @@ test('Get asset for text', t => {
         { query: { search } }
     ))
 })
-
 
 test('Get metadata for text', t => {
     const expectedPath = 'path'

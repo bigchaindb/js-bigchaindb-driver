@@ -5,7 +5,6 @@
 import test from 'ava'
 import Connection from '../../src/connection'
 
-
 const conn = new Connection()
 
 test('Ensure that BackoffTimedelta works properly', t => {
@@ -18,14 +17,10 @@ test('Ensure that BackoffTimedelta works properly', t => {
 
 test('Ensure that updateBackoffTime throws and error on TimeoutError', async t => {
     const req = conn.transport.pickConnection()
-    const target = {
-        message: 'TimeoutError'
-    }
-    req.connectionError = target
+    const errorMessage = 'TimeoutError'
+    req.connectionError = new Error(errorMessage)
 
-    const error = t.throws(() => {
+    t.throws(() => {
         req.updateBackoffTime()
-    })
-
-    t.deepEqual(target, error)
+    }, { instanceOf: Error, message: errorMessage })
 })
