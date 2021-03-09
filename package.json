@@ -17,7 +17,7 @@
   "browser": "./dist/browser/bigchaindb-driver.cjs2.min.js",
   "sideEffects": false,
   "scripts": {
-    "lint": "eslint ./{src,test,examples}/**/*.js",
+    "lint": "eslint .",
     "build": "npm run clean && npm run build:cjs && npm run build:dist",
     "build:bundle": "webpack",
     "build:cjs": "cross-env BABEL_ENV=cjs babel ./src -d dist/node",
