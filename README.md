@@ -63,6 +63,7 @@ import driver from 'bigchaindb-driver'
 ```js
 const driver = require('bigchaindb-driver')
 const base58 = require('bs58');
+const crypto = require('crypto');
 const { Ed25519Sha256 } = require('crypto-conditions');
 
 // BigchainDB server instance (e.g. https://example.com/api/v1/)
@@ -95,12 +96,13 @@ const txSigned = driver.Transaction.signTransaction(tx, alice.privateKey)
 function signTransaction() {
     // get privateKey from somewhere
     const privateKeyBuffer = Buffer.from(base58.decode(alice.privateKey))
-    return function sign(transaction, input, transactionHash) {
+    return function sign(serializedTransaction, input, index) {
+        const transactionUniqueFulfillment = input.fulfills ? serializedTransaction
+                .concat(input.fulfills.transaction_id)
+                .concat(input.fulfills.output_index) : serializedTransaction
+        const transactionHash = crypto.createHash('sha3-256').update(transactionUniqueFulfillment).digest()
         const ed25519Fulfillment = new Ed25519Sha256();
-        ed25519Fulfillment.sign(
-            Buffer.from(transactionHash, 'hex'),
-            privateKeyBuffer
-        );
+        ed25519Fulfillment.sign(transactionHash, privateKeyBuffer);
         return ed25519Fulfillment.serializeUri();
     };
 }
