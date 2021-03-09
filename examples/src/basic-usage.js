@@ -7,9 +7,8 @@
 const driver = require('bigchaindb-driver')
 require('dotenv').config()
 
-
 // ======== Preparation ======== //
-const conn = new driver.Connection('https://example.com/api/v1/', {
+const conn = new driver.Connection('https://test.ipdb.io/api/v1/', {
     header1: 'header1_value',
     header2: 'header2_value'
 })
@@ -25,7 +24,6 @@ const assetdata = {
 }
 
 const metadata = { 'planet': 'earth' }
-
 
 // ======== Create Transaction Bicycle ======== //
 const txCreateAliceSimple = driver.Transaction.makeCreateTransaction(
@@ -59,7 +57,6 @@ conn.postTransactionCommit(txCreateAliceSimpleSigned)
         console.log('Is Bob the owner?', tx.outputs[0].public_keys[0] === bob.publicKey) // eslint-disable-line no-console
         console.log('Was Alice the previous owner?', tx.inputs[0].owners_before[0] === alice.publicKey) // eslint-disable-line no-console
     })
-
 
 // ======== Search Asset by Serial Number ======== //
     .then(() => conn.searchAssets('Bicycle Inc.'))

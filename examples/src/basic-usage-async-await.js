@@ -7,9 +7,8 @@
 const driver = require('bigchaindb-driver')
 require('dotenv').config()
 
-
 // ======== Preparation ======== //
-const conn = new driver.Connection('https://example.com/api/v1/', {
+const conn = new driver.Connection('https://test.ipdb.io/api/v1/', {
     header1: 'header1_value',
     header2: 'header2_value'
 })
@@ -26,10 +25,8 @@ const assetdata = {
 
 const metadata = { 'planet': 'earth' }
 
-
 // Call async basic usage function
 basicUsage()
-
 
 async function basicUsage() {
     // ======== Create Transaction Bicycle ======== //
@@ -45,7 +42,6 @@ async function basicUsage() {
     const txCreateAliceSimpleSigned =
         driver.Transaction.signTransaction(txCreateAliceSimple, alice.privateKey)
 
-
     // ======== POST CREATE Transaction ======== //
     const createdTx = await conn.postTransactionCommit(txCreateAliceSimpleSigned)
 
@@ -59,7 +55,6 @@ async function basicUsage() {
     const txTransferBobSigned = driver.Transaction.signTransaction(txTransferBob, alice.privateKey)
 
     await conn.postTransactionCommit(txTransferBobSigned)
-
 
     // ======== Querying Assets ======== //
     const assets = await conn.searchAssets('Bicycle Inc.')
