@@ -26,17 +26,12 @@
     "clean": "rimraf dist/bundle dist/browser dist/node",
     "test": "npm run lint && nyc ava && npm run report-coverage",
     "thanks": "cowsay Hi, thanks for your interest in BigchainDB. We appreciate your contribution!",
-    "release": "release-it --git.tagName='v${version}' --github.release --npm.publish --non-interactive",
-    "release-minor": "release-it minor --git.tagName='v${version}' --github.release --npm.publish --non-interactive",
-    "release-major": "release-it major --git.tagName='v${version}' --github.release --npm.publish --non-interactive",
+    "release": "read -p 'GITHUB_TOKEN: ' GITHUB_TOKEN && export GITHUB_TOKEN=$GITHUB_TOKEN && release-it --src.tagName='v%s'",
+    "release-minor": "release-it minor --non-interactive",
+    "release-major": "release-it major --non-interactive",
     "prepublishOnly": "npm run build",
     "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "doc": "documentation build src/index.js -f md -o API.md -g --markdown-toc"
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint"
-    ]
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
@@ -54,6 +49,7 @@
     "@babel/register": "^7.13.8",
     "ava": "^3.15.0",
     "babel-loader": "^8.2.2",
+    "codecov": "^3.8.1",
     "cross-env": "^7.0.3",
     "documentation": "^13.1.1",
     "eslint": "^7.21.0",
@@ -97,6 +93,11 @@
     "decentralized",
     "dapp"
   ],
+  "lint-staged": {
+    "*.js": [
+      "eslint"
+    ]
+  },
   "ava": {
     "files": [
       "test/**/*.js",
@@ -119,6 +120,22 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
+    }
+  },
+  "release-it": {
+    "github": {
+      "release": true
+    },
+    "git": {
+      "tagName": "v${version}"
+    },
+    "hooks": {
+      "before:init": [
+        "npm run test"
+      ]
+    },
+    "npm": {
+      "publish": true
     }
   }
 }
