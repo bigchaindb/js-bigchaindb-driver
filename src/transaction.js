@@ -94,7 +94,7 @@ export default class Transaction {
      * @returns {Object} Ed25519 Condition (that will need to wrapped in an Output)
      */
     static makeEd25519Condition(publicKey, json = true) {
-        const publicKeyBuffer = Buffer.from(base58.decode(publicKey))
+        const publicKeyBuffer = base58.decode(publicKey)
 
         const ed25519Fulfillment = new cc.Ed25519Sha256()
         ed25519Fulfillment.setPublicKey(publicKeyBuffer)
@@ -144,7 +144,7 @@ export default class Transaction {
      */
     static makeSha256Condition(preimage, json = true) {
         const sha256Fulfillment = new cc.PreimageSha256()
-        sha256Fulfillment.preimage = Buffer.from(preimage)
+        sha256Fulfillment.setPreimage(Buffer.from(preimage))
 
         if (json) {
             return ccJsonify(sha256Fulfillment)
@@ -161,11 +161,12 @@ export default class Transaction {
      */
     static makeThresholdCondition(threshold, subconditions = [], json = true) {
         const thresholdCondition = new cc.ThresholdSha256()
-        thresholdCondition.threshold = threshold
+        thresholdCondition.setThreshold(threshold)
 
         subconditions.forEach((subcondition) => {
-            // TODO: add support for Condition and URIs
+            // TODO: add support for Condition
             thresholdCondition.addSubfulfillment(subcondition)
+            //? Should be thresholdCondition.addSubcondition(subcondition)
         })
 
         if (json) {
@@ -237,7 +238,7 @@ export default class Transaction {
 
         signedTx.inputs.forEach((input, index) => {
             const privateKey = privateKeys[index]
-            const privateKeyBuffer = Buffer.from(base58.decode(privateKey))
+            const privateKeyBuffer = base58.decode(privateKey)
 
             const transactionUniqueFulfillment = input.fulfills ? serializedTransaction
                 .concat(input.fulfills.transaction_id)
@@ -268,12 +269,8 @@ export default class Transaction {
         const serializedTransaction =
             Transaction.serializeTransactionIntoCanonicalString(transaction)
 
-        signedTx.inputs.forEach((input) => {
-            const transactionUniqueFulfillment = input.fulfills ? serializedTransaction
-                .concat(input.fulfills.transaction_id)
-                .concat(input.fulfills.output_index) : serializedTransaction
-            const transactionHash = sha256Hash(transactionUniqueFulfillment)
-            const fulfillmentUri = signFn(input, transactionHash)
+        signedTx.inputs.forEach((input, index) => {
+            const fulfillmentUri = signFn(serializedTransaction, input, index)
             input.fulfillment = fulfillmentUri
         })
 
