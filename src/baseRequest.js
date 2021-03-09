@@ -11,7 +11,7 @@ import stringifyAsQueryParam from './stringify_as_query_param'
 
 const fetch = fetchPonyfill(Promise)
 
-export function ResponseError(message,  status, requestURI) {
+export function ResponseError(message, status, requestURI) {
     this.name = 'ResponseError'
     this.message = message
     this.status = status
@@ -19,7 +19,7 @@ export function ResponseError(message,  status, requestURI) {
     this.stack = (new Error()).stack
 }
 
-ResponseError.prototype = new Error;
+ResponseError.prototype = new Error()
 
 /**
  * @private
@@ -50,11 +50,14 @@ function handleResponse(res) {
     // If status is not a 2xx (based on Response.ok), assume it's an error
     // See https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch/fetch
     if (!(res && res.ok)) {
-        throw new ResponseError('HTTP Error: Requested page not reachable', `${res.status} ${res.statusText}`, res.url)
+        throw new ResponseError(
+            'HTTP Error: Requested page not reachable',
+            `${res.status} ${res.statusText}`,
+            res.url
+        )
     }
     return res
 }
-
 
 /**
  * @private

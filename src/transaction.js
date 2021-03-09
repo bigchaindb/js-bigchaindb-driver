@@ -166,7 +166,7 @@ export default class Transaction {
         subconditions.forEach((subcondition) => {
             // TODO: add support for Condition
             thresholdCondition.addSubfulfillment(subcondition)
-            //? Should be thresholdCondition.addSubcondition(subcondition)
+            // ? Should be thresholdCondition.addSubcondition(subcondition)
         })
 
         if (json) {

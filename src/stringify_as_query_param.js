@@ -6,7 +6,6 @@ import 'core-js/features/object/entries'
 import decamelize from 'decamelize'
 import queryString from 'query-string'
 
-
 /**
  * @private
  * imported from https://github.com/bigchaindb/js-utility-belt/

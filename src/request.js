@@ -19,7 +19,6 @@ const ERROR_FROM_SERVER = 'HTTP Error: Requested page not reachable'
  * default settings, and response handling.
  */
 
-
 export default class Request {
     constructor(node) {
         this.node = node
@@ -33,14 +32,15 @@ export default class Request {
             return Promise.reject(new Error('Request was not given a url.'))
         }
         // Load default fetch configuration and remove any falsy query parameters
-        const requestConfig = Object.assign({}, this.node.headers, DEFAULT_REQUEST_CONFIG, config, {
+        const requestConfig = {
+            ...this.node.headers,
+            ...DEFAULT_REQUEST_CONFIG,
+            ...config,
             query: config.query && sanitize(config.query)
-        })
+        }
         const apiUrl = this.node.endpoint + urlPath
         if (requestConfig.jsonBody) {
-            requestConfig.headers = Object.assign({}, requestConfig.headers, {
-                'Content-Type': 'application/json'
-            })
+            requestConfig.headers = { ...requestConfig.headers, 'Content-Type': 'application/json' }
         }
 
         // If connectionError occurs, a timestamp equal to now +
