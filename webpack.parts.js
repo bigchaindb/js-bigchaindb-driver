@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 // Code is Apache-2.0 and docs are CC-BY-4.0
 
-/* eslint-disable strict, no-console, object-shorthand */
+/* eslint-disable strict, no-console, object-shorthand, import/no-extraneous-dependencies */
 
 'use strict'
 

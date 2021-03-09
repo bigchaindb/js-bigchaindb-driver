@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 // Code is Apache-2.0 and docs are CC-BY-4.0
 
+/* eslint-disable strict, no-console, object-shorthand, import/no-extraneous-dependencies */
+
 const { ConcatSource } = require('webpack-sources')
 
 module.exports = class AddVendorsPlugin {
@@ -28,7 +30,7 @@ module.exports = class AddVendorsPlugin {
                     compilation.assets[this.base] = main
                     compilation.assets[`${this.base}.map`] = mainMap
                 }
-                
+
                 callback()
             }
         )

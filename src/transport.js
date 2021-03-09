@@ -4,7 +4,6 @@
 
 import Request from './request'
 
-
 /**
  *
  * @private
@@ -12,7 +11,6 @@ import Request from './request'
  * requests to different nodes in a round-robin fashion (this will be
  * customizable in the future).
  */
-
 
 export default class Transport {
     constructor(nodes, timeout) {

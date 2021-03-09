@@ -2,9 +2,8 @@
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 // Code is Apache-2.0 and docs are CC-BY-4.0
 
-import 'core-js/features/array/includes';
-import 'core-js/features/object/entries'; 
-
+import 'core-js/features/array/includes'
+import 'core-js/features/object/entries'
 
 /**
  * @private
@@ -32,7 +31,7 @@ function filterFromObject(obj, filter, { isInclusion = true } = {}) {
  */
 function applyFilterOnObject(obj, filterFn) {
     if (filterFn == null) {
-        return Object.assign({}, obj)
+        return { ...obj }
     }
 
     const filteredObj = {}
