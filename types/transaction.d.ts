@@ -4,11 +4,8 @@ import type {
   PreimageSha256,
   ThresholdSha256,
 } from 'crypto-conditions';
-import { TypeId } from 'crypto-conditions/types/types';
 import {
   Ed25519Sha256JSONCondition,
-  JSONConditions,
-  JSONConditionUnion,
   PreimageSha256JSONCondition,
   ThresholdSha256JSONCondition,
 } from './utils/ccJsonify';
@@ -166,12 +163,10 @@ export default class Transaction {
   ): TransactionInput;
 
   static makeOutput(
-    condition: JSONConditionUnion,
-    amount: string = '1'
-  ): TransactionOutput;
-
-  static makeOutput<T = TypeId.Ed25519Sha256>(
-    condition: JSONConditions[T],
+    condition:
+      | PreimageSha256JSONCondition
+      | ThresholdSha256JSONCondition
+      | Ed25519Sha256JSONCondition,
     amount: string = '1'
   ): TransactionOutput;
 
