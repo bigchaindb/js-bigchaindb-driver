@@ -20,8 +20,10 @@ export interface TransactionInput {
 }
 export interface TransactionOutput {
   amount: string;
-  // TODO: specifiy JSON conditions
-  condition: any[];
+  condition:
+    | PreimageSha256JSONCondition
+    | ThresholdSha256JSONCondition
+    | Ed25519Sha256JSONCondition;
   public_keys: string[];
 }
 
