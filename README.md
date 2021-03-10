@@ -124,7 +124,7 @@ conn.postTransactionCommit(txSigned)
         <meta charset="utf-8">
         <title>BigchainDB boilerplate</title>
         <!-- Adjust version to your needs -->
-        <script src="https://unpkg.com/bigchaindb-driver@4.0.0/dist/browser/bigchaindb-driver.window.min.js"></script>
+        <script src="https://unpkg.com/bigchaindb-driver@4.2.0/dist/browser/bigchaindb-driver.window.min.js"></script>
 
         <script>
             // BigchainDB server instance (e.g. https://example.com/api/v1/)

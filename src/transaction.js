@@ -6,7 +6,7 @@ import { Buffer } from 'buffer'
 import stableStringify from 'json-stable-stringify'
 import clone from 'clone'
 import base58 from 'bs58'
-import cc from 'crypto-conditions'
+import { Ed25519Sha256, PreimageSha256, ThresholdSha256 } from 'crypto-conditions'
 import ccJsonify from './utils/ccJsonify'
 import sha256Hash from './sha256Hash'
 
@@ -96,7 +96,7 @@ export default class Transaction {
     static makeEd25519Condition(publicKey, json = true) {
         const publicKeyBuffer = base58.decode(publicKey)
 
-        const ed25519Fulfillment = new cc.Ed25519Sha256()
+        const ed25519Fulfillment = new Ed25519Sha256()
         ed25519Fulfillment.setPublicKey(publicKeyBuffer)
 
         if (json) {
@@ -143,7 +143,7 @@ export default class Transaction {
      * @returns {Object} Preimage-Sha256 Condition (that will need to wrapped in an Output)
      */
     static makeSha256Condition(preimage, json = true) {
-        const sha256Fulfillment = new cc.PreimageSha256()
+        const sha256Fulfillment = new PreimageSha256()
         sha256Fulfillment.setPreimage(Buffer.from(preimage))
 
         if (json) {
@@ -160,7 +160,7 @@ export default class Transaction {
      * @returns {Object} Sha256 Threshold Condition (that will need to wrapped in an Output)
      */
     static makeThresholdCondition(threshold, subconditions = [], json = true) {
-        const thresholdCondition = new cc.ThresholdSha256()
+        const thresholdCondition = new ThresholdSha256()
         thresholdCondition.setThreshold(threshold)
 
         subconditions.forEach((subcondition) => {
@@ -244,7 +244,7 @@ export default class Transaction {
                 .concat(input.fulfills.transaction_id)
                 .concat(input.fulfills.output_index) : serializedTransaction
             const transactionHash = sha256Hash(transactionUniqueFulfillment)
-            const ed25519Fulfillment = new cc.Ed25519Sha256()
+            const ed25519Fulfillment = new Ed25519Sha256()
             ed25519Fulfillment.sign(Buffer.from(transactionHash, 'hex'), privateKeyBuffer)
             const fulfillmentUri = ed25519Fulfillment.serializeUri()
 
