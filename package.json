@@ -15,6 +15,7 @@
   ],
   "main": "./dist/node/index.js",
   "browser": "./dist/browser/bigchaindb-driver.cjs2.min.js",
+  "types": "./types/index.d.ts",
   "sideEffects": false,
   "scripts": {
     "lint": "eslint .",
