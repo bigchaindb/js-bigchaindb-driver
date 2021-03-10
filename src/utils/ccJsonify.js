@@ -19,8 +19,8 @@ export default function ccJsonify(fulfillment) {
     }
 
     const jsonBody = {
-        'details': {},
-        'uri': conditionUri,
+        details: {},
+        uri: conditionUri,
     }
 
     if (fulfillment.getTypeId() === 0) {
@@ -35,15 +35,15 @@ export default function ccJsonify(fulfillment) {
 
     if (fulfillment.getTypeId() === 2) {
         return {
-            'details': {
-                'type': 'threshold-sha-256',
-                'threshold': fulfillment.threshold,
-                'subconditions': fulfillment.subconditions.map((subcondition) => {
+            details: {
+                type: 'threshold-sha-256',
+                threshold: fulfillment.threshold,
+                subconditions: fulfillment.subconditions.map((subcondition) => {
                     const subconditionJson = ccJsonify(subcondition.body)
                     return subconditionJson.details
                 })
             },
-            'uri': conditionUri,
+            uri: conditionUri,
         }
     }
 

@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 // Code is Apache-2.0 and docs are CC-BY-4.0
 
+import { createHash } from 'crypto'
+import { validateFulfillment } from 'crypto-conditions'
 import test from 'ava'
-import cc from 'crypto-conditions'
+import base58 from 'bs58'
 import { Ed25519Keypair, Transaction, ccJsonLoad } from '../../src'
 import { delegatedSignTransaction } from '../constants'
 import sha256Hash from '../../src/sha256Hash'
@@ -89,7 +91,7 @@ test('Fulfillment correctly formed', t => {
         .concat(txTransfer.inputs[0].fulfills.output_index) : msg
     const msgHash = sha256Hash(msgUniqueFulfillment)
 
-    t.truthy(cc.validateFulfillment(
+    t.truthy(validateFulfillment(
         txSigned.inputs[0].fulfillment, txCreate.outputs[0].condition.uri,
         Buffer.from(msgHash, 'hex')
     ))
@@ -114,15 +116,16 @@ test('Delegated signature is correct', t => {
 })
 
 test('CryptoConditions JSON load', t => {
+    const publicKey = '4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS'
     const cond = ccJsonLoad({
         type: 'threshold-sha-256',
         threshold: 1,
         subconditions: [{
             type: 'ed25519-sha-256',
-            public_key: 'a'
+            public_key: publicKey
         },
         {
-            hash: 'a'
+            hash: base58.encode(createHash('sha256').update('a').digest())
         }],
     })
     t.truthy(cond.subconditions.length === 2)
