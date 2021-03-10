@@ -106,23 +106,23 @@ export default class Connection {
 
   getBlock(
     blockHeight: number | string
-  ): Promise<EndpointsUrl[Endpoints.blocksDetail]>;
+  ): Promise<EndpointsResponse[Endpoints.blocksDetail]>;
 
   getTransaction<O = TransactionOperations.CREATE>(
     transactionId: string
-  ): Promise<EndpointsUrl<O>[Endpoints.transactionsDetail]>;
+  ): Promise<EndpointsResponse<O>[Endpoints.transactionsDetail]>;
 
-  listBlocks(transactionId: string): Promise<EndpointsUrl[Endpoints.blocks]>;
+  listBlocks(transactionId: string): Promise<EndpointsResponse[Endpoints.blocks]>;
 
   listOutputs(
     publicKey: string,
     spent?: boolean
-  ): Promise<EndpointsUrl[Endpoints.outputs]>;
+  ): Promise<EndpointsResponse[Endpoints.outputs]>;
 
-  listTransactions<O = TransactionOperations.CREATE>(
+  listTransactions(
     assetId: string,
-    operation: O
-  ): Promise<EndpointsUrl<O>[Endpoints.transactions]>;
+    operation?: TransactionOperations
+  ): Promise<EndpointsResponse<typeof operation>[Endpoints.transactions]>;
 
   postTransaction<
     O = TransactionOperations.CREATE,
@@ -130,7 +130,7 @@ export default class Connection {
     M = Record<string, any>
   >(
     transaction: TransactionCommon<O>
-  ): Promise<EndpointsUrl<O, A, M>[Endpoints.transactionsCommit]>;
+  ): Promise<EndpointsResponse<O, A, M>[Endpoints.transactionsCommit]>;
 
   postTransactionSync<
     O = TransactionOperations.CREATE,
@@ -138,7 +138,7 @@ export default class Connection {
     M = Record<string, any>
   >(
     transaction: TransactionCommon<O>
-  ): Promise<EndpointsUrl<O, A, M>[Endpoints.transactionsSync]>;
+  ): Promise<EndpointsResponse<O, A, M>[Endpoints.transactionsSync]>;
 
   postTransactionAsync<
     O = TransactionOperations.CREATE,
@@ -146,7 +146,7 @@ export default class Connection {
     M = Record<string, any>
   >(
     transaction: TransactionCommon<O>
-  ): Promise<EndpointsUrl<O, A, M>[Endpoints.transactionsAsync]>;
+  ): Promise<EndpointsResponse<O, A, M>[Endpoints.transactionsAsync]>;
 
   postTransactionCommit<
     O = TransactionOperations.CREATE,
@@ -154,9 +154,9 @@ export default class Connection {
     M = Record<string, any>
   >(
     transaction: TransactionCommon<O>
-  ): Promise<EndpointsUrl<O, A, M>[Endpoints.transactionsCommit]>;
+  ): Promise<EndpointsResponse<O, A, M>[Endpoints.transactionsCommit]>;
 
-  searchAssets(search: string): Promise<EndpointsUrl[Endpoints.assets]>;
+  searchAssets(search: string): Promise<EndpointsResponse[Endpoints.assets]>;
 
-  searchMetadata(search: string): Promise<EndpointsUrl[Endpoints.metadata]>;
+  searchMetadata(search: string): Promise<EndpointsResponse[Endpoints.metadata]>;
 }

@@ -4,9 +4,11 @@ import type {
   PreimageSha256,
   ThresholdSha256,
 } from 'crypto-conditions';
+import { TypeId } from 'crypto-conditions/types/types';
 import {
   Ed25519Sha256JSONCondition,
-  JSONCondition,
+  JSONConditions,
+  JSONConditionUnion,
   PreimageSha256JSONCondition,
   ThresholdSha256JSONCondition,
 } from './utils/ccJsonify';
@@ -19,7 +21,6 @@ export interface TransactionInput {
   } | null;
   owners_before: string[];
 }
-
 export interface TransactionOutput {
   amount: string;
   // TODO: specifiy JSON conditions
@@ -81,6 +82,11 @@ export interface TransferTransaction<M = Record<string, unknown>>
   operation: TransactionOperations.TRANSFER;
 }
 
+export interface TransactionUnspentOutput {
+  tx: TransactionCommon;
+  output_index: number;
+}
+
 interface TxTemplate {
   id: null;
   operation: null;
@@ -102,55 +108,55 @@ export default class Transaction {
     transaction: CreateTransaction | TransferTransaction
   ): string;
 
+  static makeEd25519Condition(publicKey: string): Ed25519Sha256JSONCondition;
+
   static makeEd25519Condition(
     publicKey: string,
-    json = true
+    json: true
   ): Ed25519Sha256JSONCondition;
 
-  static makeEd25519Condition(publicKey: string, json = false): Ed25519Sha256;
-
-  // static makeEd25519Condition(publicKey: string): Ed25519Sha256JSONCondition;
+  static makeEd25519Condition(publicKey: string, json: false): Ed25519Sha256;
 
   static makeEd25519Condition(
     publicKey: string,
-    json?: boolean
+    json: boolean = true
   ): Ed25519Sha256 | Ed25519Sha256JSONCondition;
 
+  static makeSha256Condition(preimage: string): PreimageSha256JSONCondition;
+
   static makeSha256Condition(
     preimage: string,
-    json = true
+    json: true
   ): PreimageSha256JSONCondition;
 
-  static makeSha256Condition(preimage: string, json = false): PreimageSha256;
-
-  // static makeSha256Condition(preimage: string): PreimageSha256JSONCondition;
+  static makeSha256Condition(preimage: string, json: false): PreimageSha256;
 
   static makeSha256Condition(
     preimage: string,
-    json?: boolean
+    json: boolean = true
   ): PreimageSha256 | PreimageSha256JSONCondition;
 
   static makeThresholdCondition(
     threshold: number,
-    subconditions: (string | Fulfillment)[],
-    json = true
+    subconditions: (string | Fulfillment)[]
   ): ThresholdSha256JSONCondition;
 
   static makeThresholdCondition(
     threshold: number,
     subconditions: (string | Fulfillment)[],
-    json = false
-  ): ThresholdSha256;
-
-  // static makeThresholdCondition(
-  //   threshold: number,
-  //   subconditions: (string | Fulfillment)[]
-  // ): ThresholdSha256JSONCondition;
+    json: true
+  ): ThresholdSha256JSONCondition;
 
   static makeThresholdCondition(
     threshold: number,
     subconditions: (string | Fulfillment)[],
-    json?: boolean
+    json: false
+  ): ThresholdSha256;
+
+  static makeThresholdCondition(
+    threshold: number,
+    subconditions: (string | Fulfillment)[],
+    json: boolean = true
   ): ThresholdSha256 | ThresholdSha256JSONCondition;
 
   static makeInputTemplate(
@@ -160,8 +166,13 @@ export default class Transaction {
   ): TransactionInput;
 
   static makeOutput(
-    condition: JSONCondition,
-    amount: string
+    condition: JSONConditionUnion,
+    amount: string = '1'
+  ): TransactionOutput;
+
+  static makeOutput<T = TypeId.Ed25519Sha256>(
+    condition: JSONConditions[T],
+    amount: string = '1'
   ): TransactionOutput;
 
   static makeTransactionTemplate(): TxTemplate;
@@ -189,7 +200,7 @@ export default class Transaction {
   ): CreateTransaction<A, M>;
 
   static makeTransferTransaction<M = Record<string, any>>(
-    unspentOutputs: TransactionOutput[],
+    unspentOutputs: TransactionUnspentOutput[],
     outputs: TransactionOutput[],
     metadata: M
   ): TransferTransaction<M>;

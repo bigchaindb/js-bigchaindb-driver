@@ -16,11 +16,10 @@ interface BaseJSONCondition {
   uri: string;
 }
 
-interface Ed25519Sha256JSONCondition extends BaseJSONCondition {
+export interface Ed25519Sha256JSONCondition extends BaseJSONCondition {
   details: { type: TypeName.Ed25519Sha256; publicKey?: string };
 }
-
-interface PreimageSha256JSONCondition extends BaseJSONCondition {
+export interface PreimageSha256JSONCondition extends BaseJSONCondition {
   details: {
     type: TypeName.PreimageSha256;
     type_id: 0;
@@ -30,14 +29,19 @@ interface PreimageSha256JSONCondition extends BaseJSONCondition {
   };
 }
 
-interface ThresholdSha256JSONCondition extends BaseJSONCondition {
+export interface ThresholdSha256JSONCondition extends BaseJSONCondition {
   details: {
     type: TypeName.ThresholdSha256;
     subConditions: (Ed25519Sha256JSONCondition | PreimageSha256JSONCondition)[];
   };
 }
 
-export interface JSONCondition {
+export type JSONConditionUnion =
+  | PreimageSha256JSONCondition
+  | Ed25519Sha256JSONCondition
+  | ThresholdSha256JSONCondition;
+
+export interface JSONConditions {
   [TypeId.ThresholdSha256]: ThresholdSha256JSONCondition;
   [TypeId.PreimageSha256]: PreimageSha256JSONCondition;
   [TypeId.Ed25519Sha256]: Ed25519Sha256JSONCondition;
@@ -45,4 +49,4 @@ export interface JSONCondition {
 
 export default function ccJsonify<T = TypeId.Ed25519Sha256>(
   fulfillment: Fulfillment | Condition
-): JSONCondition[T];
+): JSONConditions[T];
