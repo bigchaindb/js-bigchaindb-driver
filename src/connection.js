@@ -22,7 +22,7 @@ export default class Connection {
     // This driver implements the BEP-14 https://github.com/bigchaindb/BEPs/tree/master/14
     constructor(nodes, headers = {}, timeout = DEFAULT_TIMEOUT) {
         // Copy object
-        this.headers = Object.assign({}, headers)
+        this.headers = { ...headers }
 
         // Validate headers
         Object.keys(headers).forEach(header => {
@@ -49,7 +49,7 @@ export default class Connection {
         if (typeof node === 'string') {
             return { 'endpoint': node, 'headers': headers }
         } else {
-            const allHeaders = Object.assign({}, headers, node.headers)
+            const allHeaders = { ...headers, ...node.headers }
             return { 'endpoint': node.endpoint, 'headers': allHeaders }
         }
     }
@@ -155,7 +155,6 @@ export default class Connection {
         })
     }
 
-
     /**
      * @param transaction
      */
@@ -165,7 +164,6 @@ export default class Connection {
             jsonBody: transaction
         })
     }
-
 
     /**
      * @param transaction

@@ -2,10 +2,9 @@
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 // Code is Apache-2.0 and docs are CC-BY-4.0
 
-import coreObjectEntries from 'core-js/library/fn/object/entries'
+import 'core-js/features/object/entries'
 import decamelize from 'decamelize'
 import queryString from 'query-string'
-
 
 /**
  * @private
@@ -38,7 +37,7 @@ export default function stringifyAsQueryParam(obj, transform = decamelize) {
         return ''
     }
 
-    const transformedKeysObj = coreObjectEntries(obj).reduce((paramsObj, [key, value]) => {
+    const transformedKeysObj = Object.entries(obj).reduce((paramsObj, [key, value]) => {
         paramsObj[transform(key)] = value
         return paramsObj
     }, {})

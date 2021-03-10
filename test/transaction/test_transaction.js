@@ -15,7 +15,6 @@ import {
     transferTx
 } from '../constants'
 
-
 test('Create valid output with default amount', t => {
     const condition = {
         details: {
@@ -31,7 +30,6 @@ test('Create valid output with default amount', t => {
     const res = Transaction.makeOutput(condition)
     t.deepEqual(res, expected)
 })
-
 
 test('Create valid output with custom amount', t => {
     const condition = {
@@ -65,11 +63,9 @@ test('Pass condition not based on public_keys to makeOutput', t => {
     t.deepEqual(res, expected)
 })
 
-
 test('makeOutput throws TypeError with incorrect amount type', t => {
-    t.throws(() => Transaction.makeOutput({}, 1337), TypeError)
+    t.throws(() => Transaction.makeOutput({}, 1337), { instanceOf: TypeError })
 })
-
 
 test('Create TRANSFER transaction based on CREATE transaction', t => {
     sinon.spy(Transaction, 'makeTransaction')
@@ -94,7 +90,6 @@ test('Create TRANSFER transaction based on CREATE transaction', t => {
     t.truthy(Transaction.makeTransaction.calledWith(...expected))
     Transaction.makeTransaction.restore()
 })
-
 
 test('Create TRANSFER transaction based on TRANSFER transaction', t => {
     sinon.spy(Transaction, 'makeTransaction')

@@ -2,19 +2,24 @@
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 // Code is Apache-2.0 and docs are CC-BY-4.0
 
-import {
-    Promise
-} from 'es6-promise'
+import { Promise } from 'es6-promise'
 import fetchPonyfill from 'fetch-ponyfill'
-import {
-    vsprintf
-} from 'sprintf-js'
+import { vsprintf } from 'sprintf-js'
 
 import formatText from './format_text'
 import stringifyAsQueryParam from './stringify_as_query_param'
 
 const fetch = fetchPonyfill(Promise)
 
+export function ResponseError(message, status, requestURI) {
+    this.name = 'ResponseError'
+    this.message = message
+    this.status = status
+    this.requestURI = requestURI
+    this.stack = (new Error()).stack
+}
+
+ResponseError.prototype = new Error()
 
 /**
  * @private
@@ -45,16 +50,14 @@ function handleResponse(res) {
     // If status is not a 2xx (based on Response.ok), assume it's an error
     // See https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch/fetch
     if (!(res && res.ok)) {
-        const errorObject = {
-            message: 'HTTP Error: Requested page not reachable',
-            status: `${res.status} ${res.statusText}`,
-            requestURI: res.url
-        }
-        throw errorObject
+        throw new ResponseError(
+            'HTTP Error: Requested page not reachable',
+            `${res.status} ${res.statusText}`,
+            res.url
+        )
     }
     return res
 }
-
 
 /**
  * @private

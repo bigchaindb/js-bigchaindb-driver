@@ -17,7 +17,6 @@ import {
     delegatedSignTransaction
 } from '../constants'
 
-
 test('Keypair is created', t => {
     const keyPair = new Ed25519Keypair()
 
@@ -25,10 +24,6 @@ test('Keypair is created', t => {
     t.truthy(keyPair.privateKey)
 })
 
-
-// TODO: The following tests are a bit messy currently, please do:
-//
-//  - tidy up dependency on `pollStatusAndFetchTransaction`
 test('Valid CREATE transaction with default node', t => {
     const conn = new Connection()
 
@@ -46,7 +41,6 @@ test('Valid CREATE transaction with default node', t => {
         })
 })
 
-
 test('Valid CREATE transaction using async', t => {
     const conn = new Connection(API_PATH)
 
@@ -62,7 +56,6 @@ test('Valid CREATE transaction using async', t => {
         .then(resTx => t.truthy(resTx))
 })
 
-
 test('Valid CREATE transaction using sync', t => {
     const conn = new Connection(API_PATH)
 
@@ -77,7 +70,6 @@ test('Valid CREATE transaction using sync', t => {
     return conn.postTransactionSync(txSigned)
         .then(resTx => t.truthy(resTx))
 })
-
 
 test('Valid TRANSFER transaction with single Ed25519 input', t => {
     const conn = new Connection(API_PATH)
@@ -108,7 +100,6 @@ test('Valid TRANSFER transaction with single Ed25519 input', t => {
         })
 })
 
-
 test('Valid TRANSFER transaction with multiple Ed25519 inputs', t => {
     const conn = new Connection(API_PATH)
     const createTx = Transaction.makeCreateTransaction(
@@ -138,7 +129,6 @@ test('Valid TRANSFER transaction with multiple Ed25519 inputs', t => {
                 .then(resTx => t.truthy(resTx))
         })
 })
-
 
 test('Valid TRANSFER transaction with multiple Ed25519 inputs from different transactions', t => {
     const conn = new Connection(API_PATH)
@@ -264,7 +254,6 @@ test('Search for spent and unspent outputs of a given public key', t => {
     const trentCondition = Transaction.makeEd25519Condition(trent.publicKey)
     const trentOutput = Transaction.makeOutput(trentCondition)
 
-
     const createTx = Transaction.makeCreateTransaction(
         asset(),
         metaData,
@@ -294,7 +283,6 @@ test('Search for spent and unspent outputs of a given public key', t => {
         // now listOutputs should return us outputs 0 and 1 (unfiltered)
         .then(outputs => t.truthy(outputs.length === 2))
 })
-
 
 test('Search for unspent outputs for a given public key', t => {
     const conn = new Connection(API_PATH)
@@ -335,7 +323,6 @@ test('Search for unspent outputs for a given public key', t => {
         .then(outputs => t.truthy(outputs.length === 2))
 })
 
-
 test('Search for spent outputs for a given public key', t => {
     const conn = new Connection(API_PATH)
     const carol = new Ed25519Keypair()
@@ -375,7 +362,6 @@ test('Search for spent outputs for a given public key', t => {
         .then(outputs => t.truthy(outputs.length === 1))
 })
 
-
 test('Search for an asset', t => {
     const conn = new Connection(API_PATH)
 
@@ -397,7 +383,6 @@ test('Search for an asset', t => {
             createTxSigned.asset.data.message
         ))
 })
-
 
 test('Search for metadata', t => {
     const conn = new Connection(API_PATH)
@@ -421,7 +406,6 @@ test('Search for metadata', t => {
         ))
 })
 
-
 test('Search blocks containing a transaction', t => {
     const conn = new Connection(API_PATH)
 
@@ -442,7 +426,6 @@ test('Search blocks containing a transaction', t => {
         .then(({ transactions }) => transactions.filter(({ id }) => id === createTxSigned.id))
         .then(transactions => t.truthy(transactions.length === 1))
 })
-
 
 test('Search transaction containing an asset', t => {
     const conn = new Connection(API_PATH)
@@ -465,7 +448,8 @@ test('Search transaction containing an asset', t => {
         })
 })
 
-
 test('Content-Type cannot be set', t => {
-    t.throws(() => new Connection(API_PATH, { 'Content-Type': 'application/json' }), Error)
+    t.throws(() => new Connection(API_PATH, { 'Content-Type': 'application/json' }), {
+        instanceOf: Error
+    })
 })

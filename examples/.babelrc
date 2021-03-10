@@ -1,4 +1,16 @@
 {
-  "presets": ["es2015", "stage-3"],
-  "plugins": ["syntax-async-functions", "transform-runtime", "transform-regenerator", "transform-async-to-generator"]
+  "presets": [["@babel/preset-env"]],
+  "plugins": [
+    "@babel/plugin-syntax-async-generators",
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "absoluteRuntime": false,
+        "helpers": true,
+        "regenerator": true
+      }
+    ],
+    "@babel/plugin-transform-regenerator",
+    "@babel/plugin-transform-async-to-generator"
+  ]
 }

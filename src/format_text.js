@@ -4,7 +4,6 @@
 
 import { sprintf } from 'sprintf-js'
 
-
 // Regexes taken from or inspired by sprintf-js
 const Regex = {
     TEMPLATE_LITERAL: /\${([^)]+?)}/g,

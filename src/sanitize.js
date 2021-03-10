@@ -2,9 +2,8 @@
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 // Code is Apache-2.0 and docs are CC-BY-4.0
 
-import coreIncludes from 'core-js/library/fn/array/includes'
-import coreObjectEntries from 'core-js/library/fn/object/entries'
-
+import 'core-js/features/array/includes'
+import 'core-js/features/object/entries'
 
 /**
  * @private
@@ -14,8 +13,8 @@ import coreObjectEntries from 'core-js/library/fn/object/entries'
  */
 function filterFromObject(obj, filter, { isInclusion = true } = {}) {
     if (filter && Array.isArray(filter)) {
-        return applyFilterOnObject(obj, isInclusion ? (val => coreIncludes(filter, val))
-            : (val => !coreIncludes(filter, val)))
+        return applyFilterOnObject(obj, isInclusion ? (val => filter.includes(val))
+            : (val => !filter.includes(val)))
     } else if (filter && typeof filter === 'function') {
         // Flip the filter fn's return if it's for inclusion
         return applyFilterOnObject(obj, isInclusion ? filter
@@ -32,11 +31,11 @@ function filterFromObject(obj, filter, { isInclusion = true } = {}) {
  */
 function applyFilterOnObject(obj, filterFn) {
     if (filterFn == null) {
-        return Object.assign({}, obj)
+        return { ...obj }
     }
 
     const filteredObj = {}
-    coreObjectEntries(obj).forEach(([key, val]) => {
+    Object.entries(obj).forEach(([key, val]) => {
         if (filterFn(val, key)) {
             filteredObj[key] = val
         }
