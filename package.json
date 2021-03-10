@@ -11,7 +11,8 @@
   "license": "Apache-2.0",
   "author": "BigchainDB",
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "main": "./dist/node/index.js",
   "browser": "./dist/browser/bigchaindb-driver.cjs2.min.js",
@@ -77,7 +78,7 @@
     "buffer": "^6.0.3",
     "clone": "^2.1.2",
     "core-js": "^3.9.1",
-    "crypto-conditions": "^2.1.1",
+    "crypto-conditions": "2.1.1",
     "decamelize": "^5.0.0",
     "es6-promise": "^4.2.8",
     "fetch-ponyfill": "^7.1.0",
