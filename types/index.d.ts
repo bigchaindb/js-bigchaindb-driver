@@ -8,6 +8,4 @@ import Transaction from './transaction'
 import ccJsonLoad from './utils/ccJsonLoad'
 import ccJsonify from './utils/ccJsonify'
 
-export {
-    ccJsonLoad, ccJsonify, Connection, Ed25519Keypair, Transaction
-}
+export { ccJsonLoad, ccJsonify, Connection, Ed25519Keypair, Transaction } 
