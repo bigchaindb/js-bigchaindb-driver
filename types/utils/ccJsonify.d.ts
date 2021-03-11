@@ -8,7 +8,7 @@ import type {
   PreimageSha256,
   ThresholdSha256,
 } from 'crypto-conditions';
-import type { TypeId } from 'crypto-conditions/types/types';
+import type { TypeId, TypeName } from 'crypto-conditions/types/types';
 
 interface BaseJSONCondition {
   details: {

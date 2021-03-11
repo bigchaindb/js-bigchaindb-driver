@@ -96,13 +96,23 @@ interface TxTemplate {
   version: '2.0';
 }
 
-declare function DelegateSignFunction(
+declare type DelegateSignFunction = (
   serializedTransaction: string,
   input: TransactionInput,
   index?: number
-): string;
+) => string;
+
+declare type DelegateSignFunctionAsync = (
+  serializedTransaction: string,
+  input: TransactionInput,
+  index?: number
+) => Promise<string>;
 
 export default class Transaction {
+  static serializeTransactionIntoCanonicalString<O = TransactionOperations>(
+    transaction: TransactionCommon<O>
+  ): string;
+
   static serializeTransactionIntoCanonicalString(
     transaction: CreateTransaction | TransferTransaction
   ): string;
@@ -118,7 +128,7 @@ export default class Transaction {
 
   static makeEd25519Condition(
     publicKey: string,
-    json: boolean = true
+    json?: boolean
   ): Ed25519Sha256 | Ed25519Sha256JSONCondition;
 
   static makeSha256Condition(preimage: string): PreimageSha256JSONCondition;
@@ -132,7 +142,7 @@ export default class Transaction {
 
   static makeSha256Condition(
     preimage: string,
-    json: boolean = true
+    json?: boolean
   ): PreimageSha256 | PreimageSha256JSONCondition;
 
   static makeThresholdCondition(
@@ -155,7 +165,7 @@ export default class Transaction {
   static makeThresholdCondition(
     threshold: number,
     subconditions: (string | Fulfillment)[],
-    json: boolean = true
+    json?: boolean
   ): ThresholdSha256 | ThresholdSha256JSONCondition;
 
   static makeInputTemplate(
@@ -169,7 +179,7 @@ export default class Transaction {
       | PreimageSha256JSONCondition
       | ThresholdSha256JSONCondition
       | Ed25519Sha256JSONCondition,
-    amount: string = '1'
+    amount?: string
   ): TransactionOutput;
 
   static makeTransactionTemplate(): TxTemplate;
@@ -207,8 +217,14 @@ export default class Transaction {
     ...privateKeys: string[]
   ): TransactionCommonSigned<O>;
 
+
   static delegateSignTransaction<O = TransactionOperations.CREATE>(
     transaction: TransactionCommon<O>,
     signFn: DelegateSignFunction
   ): TransactionCommonSigned<O>;
+
+  static delegateSignTransactionAsync<O = TransactionOperations.CREATE>(
+    transaction: TransactionCommon<O>,
+    signFn: DelegateSignFunctionAsync
+  ): Promise<TransactionCommonSigned<O>>;
 }

@@ -17,9 +17,9 @@ export default class Request {
 
   constructor(node: Node);
 
-  async request<O = Record<string, any>>(
+  request<O = Record<string, any>>(
     urlPath: string,
-    config: RequestConfig = {},
+    config?: RequestConfig,
     timeout?: number,
     maxBackoffTime?: number
   ): Promise<O>;

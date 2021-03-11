@@ -12,7 +12,6 @@ import type {
   TransactionCommon,
 } from './transaction';
 
-declare const HEADER_BLACKLIST = ['content-type'];
 declare const DEFAULT_NODE = 'http://localhost:9984/api/v1/';
 declare const DEFAULT_TIMEOUT = 20000; // The default value is 20 seconds
 
@@ -88,7 +87,7 @@ export default class Connection {
 
   constructor(
     nodes: string | InputNode | (string | InputNode)[],
-    headers: Record<string, string | string[]> = {},
+    headers?: Record<string, string | string[]>,
     timeout?: number
   );
 
@@ -97,11 +96,11 @@ export default class Connection {
     headers: Record<string, string | string[]>
   ): Node;
 
-  static getApiUrls<E = Endpoint>(endpoint: E): EndpointsUrl[E];
+  static getApiUrls<E extends keyof EndpointsUrl>(endpoint: E): EndpointsUrl[E];
 
-  private _req<E = Endpoint, O = Record<string, any>>(
+  private _req<E extends keyof EndpointsUrl, O = Record<string, any>>(
     path: EndpointsUrl[E],
-    options: RequestConfig = {}
+    options: RequestConfig
   ): Promise<O>;
 
   getBlock(

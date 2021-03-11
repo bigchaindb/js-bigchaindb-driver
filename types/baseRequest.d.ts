@@ -26,6 +26,6 @@ declare function handleResponse(res: Response): Response;
 
 export default function baseRequest(
   url: string,
-  config: RequestConfig = {},
+  config: RequestConfig,
   requestTimeout?: number
 ): Promise<Response>;

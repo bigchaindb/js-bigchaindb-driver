@@ -14,7 +14,7 @@ export default class Transport {
 
   pickConnection(): Request;
 
-  async forwardRequest<O = Record<string, any>>(
+  forwardRequest<O = Record<string, any>>(
     path: string,
     config: RequestConfig
   ): Promise<O>;
