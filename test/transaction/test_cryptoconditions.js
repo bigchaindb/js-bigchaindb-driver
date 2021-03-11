@@ -115,6 +115,24 @@ test('Delegated signature is correct', t => {
     t.deepEqual(signCreateTransaction, delegatedSignCreateTransaction)
 })
 
+test('Delegated async signature is correct', async t => {
+    const alice = new Ed25519Keypair()
+
+    const txCreate = Transaction.makeCreateTransaction(
+        {},
+        {},
+        [Transaction.makeOutput(Transaction.makeEd25519Condition(alice.publicKey))],
+        alice.publicKey
+    )
+
+    const signCreateTransaction = Transaction.signTransaction(txCreate, alice.privateKey)
+    const delegatedSignCreateTransaction = await Transaction.delegateSignTransactionAsync(
+        txCreate,
+        delegatedSignTransaction(alice)
+    )
+    t.deepEqual(signCreateTransaction, delegatedSignCreateTransaction)
+})
+
 test('CryptoConditions JSON load', t => {
     const publicKey = '4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS'
     const cond = ccJsonLoad({

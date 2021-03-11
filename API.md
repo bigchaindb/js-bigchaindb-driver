@@ -48,39 +48,41 @@
         -   [Parameters][44]
     -   [delegateSignTransaction][45]
         -   [Parameters][46]
--   [ccJsonLoad][47]
-    -   [Parameters][48]
--   [ccJsonify][49]
+    -   [delegateSignTransactionAsync][47]
+        -   [Parameters][48]
+-   [ccJsonLoad][49]
     -   [Parameters][50]
+-   [ccJsonify][51]
+    -   [Parameters][52]
 
 ## Ed25519Keypair
 
-[src/Ed25519Keypair.js:16-21][51]
+[src/Ed25519Keypair.js:16-21][53]
 
-Type: [Object][52]
+Type: [Object][54]
 
 ### Parameters
 
--   `seed` **[Buffer][53]?** A seed that will be used as a key derivation function
+-   `seed` **[Buffer][55]?** A seed that will be used as a key derivation function
 
 ### Properties
 
--   `publicKey` **[string][54]** 
--   `privateKey` **[string][54]** 
+-   `publicKey` **[string][56]** 
+-   `privateKey` **[string][56]** 
 
 ## Connection
 
-[src/connection.js:21-201][55]
+[src/connection.js:21-199][57]
 
 ### Parameters
 
 -   `nodes`  
--   `headers` **[Object][52]** Common headers for every request (optional, default `{}`)
+-   `headers` **[Object][54]** Common headers for every request (optional, default `{}`)
 -   `timeout` **float** Optional timeout in secs (optional, default `DEFAULT_TIMEOUT`)
 
 ### getBlock
 
-[src/connection.js:79-85][56]
+[src/connection.js:79-85][58]
 
 #### Parameters
 
@@ -88,7 +90,7 @@ Type: [Object][52]
 
 ### getTransaction
 
-[src/connection.js:90-96][57]
+[src/connection.js:90-96][59]
 
 #### Parameters
 
@@ -96,7 +98,7 @@ Type: [Object][52]
 
 ### listBlocks
 
-[src/connection.js:102-108][58]
+[src/connection.js:102-108][60]
 
 #### Parameters
 
@@ -105,7 +107,7 @@ Type: [Object][52]
 
 ### listOutputs
 
-[src/connection.js:114-126][59]
+[src/connection.js:114-126][61]
 
 #### Parameters
 
@@ -114,7 +116,7 @@ Type: [Object][52]
 
 ### listTransactions
 
-[src/connection.js:132-139][60]
+[src/connection.js:132-139][62]
 
 #### Parameters
 
@@ -123,7 +125,7 @@ Type: [Object][52]
 
 ### postTransaction
 
-[src/connection.js:144-146][61]
+[src/connection.js:144-146][63]
 
 #### Parameters
 
@@ -131,7 +133,7 @@ Type: [Object][52]
 
 ### postTransactionSync
 
-[src/connection.js:151-156][62]
+[src/connection.js:151-156][64]
 
 #### Parameters
 
@@ -139,7 +141,7 @@ Type: [Object][52]
 
 ### postTransactionAsync
 
-[src/connection.js:162-167][63]
+[src/connection.js:161-166][65]
 
 #### Parameters
 
@@ -147,7 +149,7 @@ Type: [Object][52]
 
 ### postTransactionCommit
 
-[src/connection.js:173-178][64]
+[src/connection.js:171-176][66]
 
 #### Parameters
 
@@ -155,7 +157,7 @@ Type: [Object][52]
 
 ### searchAssets
 
-[src/connection.js:183-189][65]
+[src/connection.js:181-187][67]
 
 #### Parameters
 
@@ -163,7 +165,7 @@ Type: [Object][52]
 
 ### searchMetadata
 
-[src/connection.js:194-200][66]
+[src/connection.js:192-198][68]
 
 #### Parameters
 
@@ -171,65 +173,65 @@ Type: [Object][52]
 
 ## Transaction
 
-[src/transaction.js:16-280][67]
+[src/transaction.js:16-288][69]
 
 Construct Transactions
 
 ### serializeTransactionIntoCanonicalString
 
-[src/transaction.js:22-29][68]
+[src/transaction.js:22-29][70]
 
 Canonically serializes a transaction into a string by sorting the keys
 
 #### Parameters
 
 -   `transaction`  
--   `null` **[Object][52]** (transaction)
+-   `null` **[Object][54]** (transaction)
 
-Returns **[string][54]** a canonically serialized Transaction
+Returns **[string][56]** a canonically serialized Transaction
 
 ### makeCreateTransaction
 
-[src/transaction.js:80-87][69]
+[src/transaction.js:80-87][71]
 
 Generate a `CREATE` transaction holding the `asset`, `metadata`, and `outputs`, to be signed by
 the `issuers`.
 
 #### Parameters
 
--   `asset` **[Object][52]** Created asset's data
--   `metadata` **[Object][52]** Metadata for the Transaction
--   `outputs` **[Array][70]&lt;[Object][52]>** Array of Output objects to add to the Transaction.
+-   `asset` **[Object][54]** Created asset's data
+-   `metadata` **[Object][54]** Metadata for the Transaction
+-   `outputs` **[Array][72]&lt;[Object][54]>** Array of Output objects to add to the Transaction.
                               Think of these as the recipients of the asset after the transaction.
                               For `CREATE` Transactions, this should usually just be a list of
                               Outputs wrapping Ed25519 Conditions generated from the issuers' public
                               keys (so that the issuers are the recipients of the created asset).
--   `issuers` **...[Array][70]&lt;[string][54]>** Public key of one or more issuers to the asset being created by this
+-   `issuers` **...[Array][72]&lt;[string][56]>** Public key of one or more issuers to the asset being created by this
                                  Transaction.
                                  Note: Each of the private keys corresponding to the given public
                                  keys MUST be used later (and in the same order) when signing the
                                  Transaction (`signTransaction()`).
 
-Returns **[Object][52]** Unsigned transaction -- make sure to call signTransaction() on it before
+Returns **[Object][54]** Unsigned transaction -- make sure to call signTransaction() on it before
                   sending it off!
 
 ### makeEd25519Condition
 
-[src/transaction.js:96-107][71]
+[src/transaction.js:96-101][73]
 
 Create an Ed25519 Cryptocondition from an Ed25519 public key
 to put into an Output of a Transaction
 
 #### Parameters
 
--   `publicKey` **[string][54]** base58 encoded Ed25519 public key for the recipient of the Transaction
--   `json` **[boolean][72]** If true returns a json object otherwise a crypto-condition type (optional, default `true`)
+-   `publicKey` **[string][56]** base58 encoded Ed25519 public key for the recipient of the Transaction
+-   `json` **[boolean][74]** If true returns a json object otherwise a crypto-condition type (optional, default `true`)
 
-Returns **[Object][52]** Ed25519 Condition (that will need to wrapped in an Output)
+Returns **[Object][54]** Ed25519 Condition (that will need to wrapped in an Output)
 
 ### makeOutput
 
-[src/transaction.js:117-137][73]
+[src/transaction.js:111-131][75]
 
 Create an Output from a Condition.
 Note: Assumes the given Condition was generated from a
@@ -237,41 +239,41 @@ single public key (e.g. a Ed25519 Condition)
 
 #### Parameters
 
--   `condition` **[Object][52]** Condition (e.g. a Ed25519 Condition from `makeEd25519Condition()`)
--   `amount` **[string][54]** Amount of the output (optional, default `'1'`)
+-   `condition` **[Object][54]** Condition (e.g. a Ed25519 Condition from `makeEd25519Condition()`)
+-   `amount` **[string][56]** Amount of the output (optional, default `'1'`)
 
-Returns **[Object][52]** An Output usable in a Transaction
+Returns **[Object][54]** An Output usable in a Transaction
 
 ### makeSha256Condition
 
-[src/transaction.js:145-153][74]
+[src/transaction.js:139-143][76]
 
 Create a Preimage-Sha256 Cryptocondition from a secret to put into an Output of a Transaction
 
 #### Parameters
 
--   `preimage` **[string][54]** Preimage to be hashed and wrapped in a crypto-condition
--   `json` **[boolean][72]** If true returns a json object otherwise a crypto-condition type (optional, default `true`)
+-   `preimage` **[string][56]** Preimage to be hashed and wrapped in a crypto-condition
+-   `json` **[boolean][74]** If true returns a json object otherwise a crypto-condition type (optional, default `true`)
 
-Returns **[Object][52]** Preimage-Sha256 Condition (that will need to wrapped in an Output)
+Returns **[Object][54]** Preimage-Sha256 Condition (that will need to wrapped in an Output)
 
 ### makeThresholdCondition
 
-[src/transaction.js:162-176][75]
+[src/transaction.js:152-162][77]
 
 Create an Sha256 Threshold Cryptocondition from threshold to put into an Output of a Transaction
 
 #### Parameters
 
--   `threshold` **[number][76]** 
--   `subconditions` **[Array][70]**  (optional, default `[]`)
--   `json` **[boolean][72]** If true returns a json object otherwise a crypto-condition type (optional, default `true`)
+-   `threshold` **[number][78]** 
+-   `subconditions` **[Array][72]**  (optional, default `[]`)
+-   `json` **[boolean][74]** If true returns a json object otherwise a crypto-condition type (optional, default `true`)
 
-Returns **[Object][52]** Sha256 Threshold Condition (that will need to wrapped in an Output)
+Returns **[Object][54]** Sha256 Threshold Condition (that will need to wrapped in an Output)
 
 ### makeTransferTransaction
 
-[src/transaction.js:199-220][77]
+[src/transaction.js:185-206][79]
 
 Generate a `TRANSFER` transaction holding the `asset`, `metadata`, and `outputs`, that fulfills
 the `fulfilledOutputs` of `unspentTransaction`.
@@ -279,26 +281,26 @@ the `fulfilledOutputs` of `unspentTransaction`.
 #### Parameters
 
 -   `unspentOutputs`  
--   `outputs` **[Array][70]&lt;[Object][52]>** Array of Output objects to add to the Transaction.
+-   `outputs` **[Array][72]&lt;[Object][54]>** Array of Output objects to add to the Transaction.
                               Think of these as the recipients of the asset after the transaction.
                               For `TRANSFER` Transactions, this should usually just be a list of
                               Outputs wrapping Ed25519 Conditions generated from the public keys of
                               the recipients.
--   `metadata` **[Object][52]** Metadata for the Transaction
--   `unspentTransaction` **[Object][52]** Previous Transaction you have control over (i.e. can fulfill
+-   `metadata` **[Object][54]** Metadata for the Transaction
+-   `unspentTransaction` **[Object][54]** Previous Transaction you have control over (i.e. can fulfill
                                        its Output Condition)
--   `OutputIndices` **...[number][76]** Indices of the Outputs in `unspentTransaction` that this
+-   `OutputIndices` **...[number][78]** Indices of the Outputs in `unspentTransaction` that this
                                         Transaction fulfills.
                                         Note that listed public keys listed must be used (and in
                                         the same order) to sign the Transaction
                                         (`signTransaction()`).
 
-Returns **[Object][52]** Unsigned transaction -- make sure to call signTransaction() on it before
+Returns **[Object][54]** Unsigned transaction -- make sure to call signTransaction() on it before
                   sending it off!
 
 ### signTransaction
 
-[src/transaction.js:233-257][78]
+[src/transaction.js:219-243][80]
 
 Sign the given `transaction` with the given `privateKey`s, returning a new copy of `transaction`
 that's been signed.
@@ -307,42 +309,56 @@ an exercise for the user.
 
 #### Parameters
 
--   `transaction` **[Object][52]** Transaction to sign. `transaction` is not modified.
--   `privateKeys` **...[string][54]** Private keys associated with the issuers of the `transaction`.
+-   `transaction` **[Object][54]** Transaction to sign. `transaction` is not modified.
+-   `privateKeys` **...[string][56]** Private keys associated with the issuers of the `transaction`.
                                    Looped through to iteratively sign any Input Fulfillments found in
                                    the `transaction`.
 
-Returns **[Object][52]** The signed version of `transaction`.
+Returns **[Object][54]** The signed version of `transaction`.
 
 ### delegateSignTransaction
 
-[src/transaction.js:266-279][79]
+[src/transaction.js:252-265][81]
 
 Delegate signing of the given `transaction` returning a new copy of `transaction`
 that's been signed.
 
 #### Parameters
 
--   `transaction` **[Object][52]** Transaction to sign. `transaction` is not modified.
--   `signFn` **[Function][80]** Function signing the transaction, expected to return the fulfillment.
+-   `transaction` **[Object][54]** Transaction to sign. `transaction` is not modified.
+-   `signFn` **[Function][82]** Function signing the transaction, expected to return the fulfillment.
 
-Returns **[Object][52]** The signed version of `transaction`.
+Returns **[Object][54]** The signed version of `transaction`.
+
+### delegateSignTransactionAsync
+
+[src/transaction.js:274-287][83]
+
+Delegate signing of the given `transaction` returning a new copy of `transaction`
+that's been signed.
+
+#### Parameters
+
+-   `transaction` **[Object][54]** Transaction to sign. `transaction` is not modified.
+-   `signFn` **[Function][82]** Function signing the transaction, expected to resolve the fulfillment.
+
+Returns **[Promise][84]&lt;[Object][54]>** The signed version of `transaction`.
 
 ## ccJsonLoad
 
-[src/utils/ccJsonLoad.js:14-44][81]
+[src/utils/ccJsonLoad.js:13-44][85]
 
 Loads a crypto-condition class (Fulfillment or Condition) from a BigchainDB JSON object
 
 ### Parameters
 
--   `conditionJson` **[Object][52]** 
+-   `conditionJson` **[Object][54]** 
 
 Returns **cc.Condition** Ed25519 Condition (that will need to wrapped in an Output)
 
 ## ccJsonify
 
-[src/utils/ccJsonify.js:12-65][82]
+[src/utils/ccJsonify.js:12-65][86]
 
 Serializes a crypto-condition class (Condition or Fulfillment) into a BigchainDB-compatible JSON
 
@@ -350,7 +366,7 @@ Serializes a crypto-condition class (Condition or Fulfillment) into a BigchainDB
 
 -   `fulfillment` **cc.Fulfillment** base58 encoded Ed25519 public key for recipient of the Transaction
 
-Returns **[Object][52]** Ed25519 Condition (that will need to wrapped in an Output)
+Returns **[Object][54]** Ed25519 Condition (that will need to wrapped in an Output)
 
 [1]: #ed25519keypair
 
@@ -444,74 +460,82 @@ Returns **[Object][52]** Ed25519 Condition (that will need to wrapped in an Outp
 
 [46]: #parameters-21
 
-[47]: #ccjsonload
+[47]: #delegatesigntransactionasync
 
 [48]: #parameters-22
 
-[49]: #ccjsonify
+[49]: #ccjsonload
 
 [50]: #parameters-23
 
-[51]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/Ed25519Keypair.js#L16-L21 "Source code on GitHub"
+[51]: #ccjsonify
 
-[52]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[52]: #parameters-24
 
-[53]: https://nodejs.org/api/buffer.html
+[53]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/Ed25519Keypair.js#L16-L21 "Source code on GitHub"
 
-[54]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[54]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[55]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L21-L201 "Source code on GitHub"
+[55]: https://nodejs.org/api/buffer.html
 
-[56]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L79-L85 "Source code on GitHub"
+[56]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[57]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L90-L96 "Source code on GitHub"
+[57]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/connection.js#L21-L199 "Source code on GitHub"
 
-[58]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L102-L108 "Source code on GitHub"
+[58]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/connection.js#L79-L85 "Source code on GitHub"
 
-[59]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L114-L126 "Source code on GitHub"
+[59]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/connection.js#L90-L96 "Source code on GitHub"
 
-[60]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L132-L139 "Source code on GitHub"
+[60]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/connection.js#L102-L108 "Source code on GitHub"
 
-[61]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L144-L146 "Source code on GitHub"
+[61]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/connection.js#L114-L126 "Source code on GitHub"
 
-[62]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L151-L156 "Source code on GitHub"
+[62]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/connection.js#L132-L139 "Source code on GitHub"
 
-[63]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L162-L167 "Source code on GitHub"
+[63]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/connection.js#L144-L146 "Source code on GitHub"
 
-[64]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L173-L178 "Source code on GitHub"
+[64]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/connection.js#L151-L156 "Source code on GitHub"
 
-[65]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L183-L189 "Source code on GitHub"
+[65]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/connection.js#L161-L166 "Source code on GitHub"
 
-[66]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/connection.js#L194-L200 "Source code on GitHub"
+[66]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/connection.js#L171-L176 "Source code on GitHub"
 
-[67]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L16-L280 "Source code on GitHub"
+[67]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/connection.js#L181-L187 "Source code on GitHub"
 
-[68]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L22-L29 "Source code on GitHub"
+[68]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/connection.js#L192-L198 "Source code on GitHub"
 
-[69]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L80-L87 "Source code on GitHub"
+[69]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/transaction.js#L16-L288 "Source code on GitHub"
 
-[70]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[70]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/transaction.js#L22-L29 "Source code on GitHub"
 
-[71]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L96-L107 "Source code on GitHub"
+[71]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/transaction.js#L80-L87 "Source code on GitHub"
 
-[72]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[72]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[73]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L117-L137 "Source code on GitHub"
+[73]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/transaction.js#L96-L101 "Source code on GitHub"
 
-[74]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L145-L153 "Source code on GitHub"
+[74]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[75]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L162-L176 "Source code on GitHub"
+[75]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/transaction.js#L111-L131 "Source code on GitHub"
 
-[76]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[76]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/transaction.js#L139-L143 "Source code on GitHub"
 
-[77]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L199-L220 "Source code on GitHub"
+[77]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/transaction.js#L152-L162 "Source code on GitHub"
 
-[78]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L233-L257 "Source code on GitHub"
+[78]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[79]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/transaction.js#L266-L279 "Source code on GitHub"
+[79]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/transaction.js#L185-L206 "Source code on GitHub"
 
-[80]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[80]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/transaction.js#L219-L243 "Source code on GitHub"
 
-[81]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/utils/ccJsonLoad.js#L14-L44 "Source code on GitHub"
+[81]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/transaction.js#L252-L265 "Source code on GitHub"
 
-[82]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/3c76d3bb21e8cac17c3ca69cb9bf31b7fbc115ae/src/utils/ccJsonify.js#L12-L65 "Source code on GitHub"
+[82]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[83]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/transaction.js#L274-L287 "Source code on GitHub"
+
+[84]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+[85]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/utils/ccJsonLoad.js#L13-L44 "Source code on GitHub"
+
+[86]: https://github.com/bigchaindb/js-bigchaindb-driver/blob/76c877c649801f0a26351d03237e0b59c18bd3ef/src/utils/ccJsonify.js#L12-L65 "Source code on GitHub"

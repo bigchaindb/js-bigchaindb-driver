@@ -38,13 +38,13 @@ export default class Transaction {
 
     static makeTransactionTemplate() {
         const txTemplate = {
-            'id': null,
-            'operation': null,
-            'outputs': [],
-            'inputs': [],
-            'metadata': null,
-            'asset': null,
-            'version': '2.0',
+            id: null,
+            operation: null,
+            outputs: [],
+            inputs: [],
+            metadata: null,
+            asset: null,
+            version: '2.0',
         }
         return txTemplate
     }
@@ -79,7 +79,7 @@ export default class Transaction {
      */
     static makeCreateTransaction(asset, metadata, outputs, ...issuers) {
         const assetDefinition = {
-            'data': asset || null,
+            data: asset || null,
         }
         const inputs = issuers.map((issuer) => Transaction.makeInputTemplate([issuer]))
 
@@ -95,15 +95,9 @@ export default class Transaction {
      */
     static makeEd25519Condition(publicKey, json = true) {
         const publicKeyBuffer = base58.decode(publicKey)
-
         const ed25519Fulfillment = new Ed25519Sha256()
         ed25519Fulfillment.setPublicKey(publicKeyBuffer)
-
-        if (json) {
-            return ccJsonify(ed25519Fulfillment)
-        }
-
-        return ed25519Fulfillment
+        return json ? ccJsonify(ed25519Fulfillment) : ed25519Fulfillment
     }
 
     /**
@@ -131,8 +125,8 @@ export default class Transaction {
         getPublicKeys(condition.details)
         return {
             condition,
-            'amount': amount,
-            'public_keys': publicKeys,
+            amount,
+            public_keys: publicKeys,
         }
     }
 
@@ -145,11 +139,7 @@ export default class Transaction {
     static makeSha256Condition(preimage, json = true) {
         const sha256Fulfillment = new PreimageSha256()
         sha256Fulfillment.setPreimage(Buffer.from(preimage))
-
-        if (json) {
-            return ccJsonify(sha256Fulfillment)
-        }
-        return sha256Fulfillment
+        return json ? ccJsonify(sha256Fulfillment) : sha256Fulfillment
     }
 
     /**
@@ -162,18 +152,13 @@ export default class Transaction {
     static makeThresholdCondition(threshold, subconditions = [], json = true) {
         const thresholdCondition = new ThresholdSha256()
         thresholdCondition.setThreshold(threshold)
-
         subconditions.forEach((subcondition) => {
             // TODO: add support for Condition
             thresholdCondition.addSubfulfillment(subcondition)
             // ? Should be thresholdCondition.addSubcondition(subcondition)
         })
 
-        if (json) {
-            return ccJsonify(thresholdCondition)
-        }
-
-        return thresholdCondition
+        return json ? ccJsonify(thresholdCondition) : thresholdCondition
     }
 
     /**
@@ -206,15 +191,15 @@ export default class Transaction {
             const { tx, outputIndex } = { tx: unspentOutput.tx, outputIndex: unspentOutput.output_index }
             const fulfilledOutput = tx.outputs[outputIndex]
             const transactionLink = {
-                'output_index': outputIndex,
-                'transaction_id': tx.id,
+                output_index: outputIndex,
+                transaction_id: tx.id,
             }
 
             return Transaction.makeInputTemplate(fulfilledOutput.public_keys, transactionLink)
         })
 
         const assetLink = {
-            'id': unspentOutputs[0].tx.operation === 'CREATE' ? unspentOutputs[0].tx.id
+            id: unspentOutputs[0].tx.operation === 'CREATE' ? unspentOutputs[0].tx.id
                 : unspentOutputs[0].tx.asset.id
         }
         return Transaction.makeTransaction('TRANSFER', assetLink, metadata, outputs, inputs)
@@ -273,6 +258,28 @@ export default class Transaction {
             const fulfillmentUri = signFn(serializedTransaction, input, index)
             input.fulfillment = fulfillmentUri
         })
+
+        const serializedSignedTransaction = Transaction.serializeTransactionIntoCanonicalString(signedTx)
+        signedTx.id = sha256Hash(serializedSignedTransaction)
+        return signedTx
+    }
+
+    /**
+    * Delegate signing of the given `transaction` returning a new copy of `transaction`
+    * that's been signed.
+    * @param {Object} transaction Transaction to sign. `transaction` is not modified.
+    * @param {Function} signFn Function signing the transaction, expected to resolve the fulfillment.
+    * @returns {Promise<Object>} The signed version of `transaction`.
+    */
+    static async delegateSignTransactionAsync(transaction, signFn) {
+        const signedTx = clone(transaction)
+        const serializedTransaction =
+            Transaction.serializeTransactionIntoCanonicalString(transaction)
+
+        await Promise.all(signedTx.inputs.map(async (input, index) => {
+            const fulfillmentUri = await signFn(serializedTransaction, input, index)
+            input.fulfillment = fulfillmentUri
+        }))
 
         const serializedSignedTransaction = Transaction.serializeTransactionIntoCanonicalString(signedTx)
         signedTx.id = sha256Hash(serializedSignedTransaction)

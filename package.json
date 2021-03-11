@@ -78,7 +78,7 @@
     "buffer": "^6.0.3",
     "clone": "^2.1.2",
     "core-js": "^3.9.1",
-    "crypto-conditions": "2.1.1",
+    "crypto-conditions": "2.1.2",
     "decamelize": "^5.0.0",
     "es6-promise": "^4.2.8",
     "fetch-ponyfill": "^7.1.0",
