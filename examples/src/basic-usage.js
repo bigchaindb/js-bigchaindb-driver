@@ -59,5 +59,5 @@ conn.postTransactionCommit(txCreateAliceSimpleSigned)
     })
 
 // ======== Search Asset by Serial Number ======== //
-    .then(() => conn.searchAssets('Bicycle Inc.'))
-    .then(assets => console.log('Found assets with serial number Bicycle Inc.:', assets)) // eslint-disable-line no-console
+    .then(() => conn.searchAssets('abcd1234'))
+    .then(assets => console.log('Found assets with serial number abcd1234:', assets)) // eslint-disable-line no-console
