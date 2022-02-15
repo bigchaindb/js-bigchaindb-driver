@@ -92,7 +92,8 @@ test('Fulfillment correctly formed', t => {
     const msgHash = sha256Hash(msgUniqueFulfillment)
 
     t.truthy(validateFulfillment(
-        txSigned.inputs[0].fulfillment, txCreate.outputs[0].condition.uri,
+        txSigned.inputs[0].fulfillment,
+        txCreate.outputs[0].condition.uri,
         Buffer.from(msgHash, 'hex')
     ))
 })

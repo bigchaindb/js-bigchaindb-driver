@@ -193,7 +193,7 @@ module.exports = {
                 ],
             },
         ],
-
+        'import/no-extraneous-dependencies': ['error', { 'devDependencies': true }],
         /**
      * ES6-specific Issues
      * (http://eslint.org/docs/rules/#ecmascript-6)
