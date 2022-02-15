@@ -225,7 +225,7 @@ test('Get asset for text', t => {
     conn.searchAssets(search)
     t.truthy(conn._req.calledWith(
         expectedPath,
-        { query: { search } }
+        { query: { search, limit: 10 } }
     ))
 })
 
@@ -239,6 +239,6 @@ test('Get metadata for text', t => {
     conn.searchMetadata(search)
     t.truthy(conn._req.calledWith(
         expectedPath,
-        { query: { search } }
+        { query: { search, limit: 10 } }
     ))
 })
