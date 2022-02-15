@@ -33,9 +33,9 @@ export enum TransactionOperations {
 }
 
 export interface TransactionCommon<
-  O = TransactionOperations,
-  A = Record<string, unknown>,
-  M = Record<string, unknown>
+  O extends TransactionOperations = TransactionOperations.CREATE,
+  A extends Record<string, any> = Record<string, unknown>,
+  M extends Record<string, any> = Record<string, unknown>
 > {
   id?: string;
   inputs: TransactionInput[];
@@ -47,16 +47,16 @@ export interface TransactionCommon<
 }
 
 export interface TransactionCommonSigned<
-  O = TransactionOperations,
-  A = Record<string, unknown>,
-  M = Record<string, unknown>
+  O extends TransactionOperations = TransactionOperations.CREATE,
+  A extends Record<string, any> = Record<string, unknown>,
+  M extends Record<string, any> = Record<string, unknown>
 > extends Omit<TransactionCommon<O, A, M>, 'id'> {
   id: string;
 }
 
 export type TransactionAssetMap<
   Operation,
-  A = Record<string, unknown>
+  A extends Record<string, any>
 > = Operation extends TransactionOperations.CREATE
   ? {
       data: A;
@@ -66,18 +66,19 @@ export type TransactionAssetMap<
     };
 
 export interface CreateTransaction<
-  A = Record<string, unknown>,
-  M = Record<string, unknown>
+  A extends Record<string, any> = Record<string, unknown>,
+  M extends Record<string, any> = Record<string, unknown>
 > extends TransactionCommon<TransactionOperations.CREATE, A, M> {
   id: string;
   asset: TransactionAssetMap<TransactionOperations.CREATE, A>;
   operation: TransactionOperations.CREATE;
 }
 
-export interface TransferTransaction<M = Record<string, unknown>>
-  extends TransactionCommon<TransactionOperations.TRANSFER, any, M> {
+export interface TransferTransaction<
+  M extends Record<string, any> = Record<string, unknown>
+> extends TransactionCommon<TransactionOperations.TRANSFER, any, M> {
   id: string;
-  asset: TransactionAssetMap<TransactionOperations.TRANSFER>;
+  asset: TransactionAssetMap<TransactionOperations.TRANSFER, { id: string }>;
   operation: TransactionOperations.TRANSFER;
 }
 
@@ -96,22 +97,22 @@ interface TxTemplate {
   version: '2.0';
 }
 
-declare type DelegateSignFunction = (
+export type DelegateSignFunction = (
   serializedTransaction: string,
   input: TransactionInput,
   index?: number
 ) => string;
 
-declare type DelegateSignFunctionAsync = (
+export type DelegateSignFunctionAsync = (
   serializedTransaction: string,
   input: TransactionInput,
   index?: number
 ) => Promise<string>;
 
 export default class Transaction {
-  static serializeTransactionIntoCanonicalString<O = TransactionOperations>(
-    transaction: TransactionCommon<O>
-  ): string;
+  static serializeTransactionIntoCanonicalString<
+    O extends TransactionOperations = TransactionOperations
+  >(transaction: TransactionCommon<O>): string;
 
   static serializeTransactionIntoCanonicalString(
     transaction: CreateTransaction | TransferTransaction
@@ -185,7 +186,7 @@ export default class Transaction {
   static makeTransactionTemplate(): TxTemplate;
 
   static makeTransaction<
-    O extends keyof TransactionOperations,
+    O extends TransactionOperations,
     A = Record<string, any>,
     M = Record<string, any>
   >(
@@ -212,18 +213,23 @@ export default class Transaction {
     metadata: M
   ): TransferTransaction<M>;
 
-  static signTransaction<O = TransactionOperations.CREATE>(
+  static signTransaction<
+    O extends TransactionOperations = TransactionOperations.CREATE
+  >(
     transaction: TransactionCommon<O>,
     ...privateKeys: string[]
   ): TransactionCommonSigned<O>;
 
-
-  static delegateSignTransaction<O = TransactionOperations.CREATE>(
+  static delegateSignTransaction<
+    O extends TransactionOperations = TransactionOperations.CREATE
+  >(
     transaction: TransactionCommon<O>,
     signFn: DelegateSignFunction
   ): TransactionCommonSigned<O>;
 
-  static delegateSignTransactionAsync<O = TransactionOperations.CREATE>(
+  static delegateSignTransactionAsync<
+    O extends TransactionOperations = TransactionOperations.CREATE
+  >(
     transaction: TransactionCommon<O>,
     signFn: DelegateSignFunctionAsync
   ): Promise<TransactionCommonSigned<O>>;
