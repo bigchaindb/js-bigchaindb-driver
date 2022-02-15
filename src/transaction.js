@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 // Code is Apache-2.0 and docs are CC-BY-4.0
 
-import { Buffer } from 'buffer'
 import stableStringify from 'json-stable-stringify'
 import clone from 'clone'
 import base58 from 'bs58'

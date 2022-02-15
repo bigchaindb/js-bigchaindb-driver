@@ -9,8 +9,8 @@
 const path = require('path')
 const { merge } = require('webpack-merge')
 
-const development = require('./webpack.development.js')
-const production = require('./webpack.production.js')
+const development = require('./webpack.development')
+const production = require('./webpack.production')
 
 const AddVendorsPlugin = require('./plugins/add-vendors-plugin')
 

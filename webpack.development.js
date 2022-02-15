@@ -14,11 +14,9 @@ module.exports = {
         minimizer: [
             new TerserPlugin({
                 test: /vendor/,
-                sourceMap: false
             }),
             new TerserPlugin({
                 test: /^((?!(vendor)).)*.js$/,
-                sourceMap: false
             })
         ],
         splitChunks: {
