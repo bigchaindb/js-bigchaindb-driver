@@ -19,6 +19,16 @@ export interface InputNode {
   endpoint: string;
 }
 
+export type AssetResult = {
+  id: string;
+  data: Record<string, any>;
+};
+
+export type MetadataResult = {
+  id: string;
+  metadata: Record<string, any>;
+};
+
 export enum Endpoints {
   blocks = 'blocks',
   blocksDetail = 'blocksDetail',
@@ -76,8 +86,8 @@ export interface EndpointsResponse<
   [Endpoints.transactionsDetail]: O extends TransactionOperations.CREATE
     ? CreateTransaction<A, M>
     : TransferTransaction<M>;
-  [Endpoints.assets]: { id: string; data: Record<string, any> }[];
-  [Endpoints.metadata]: { id: string; metadata: Record<string, any> }[];
+  [Endpoints.assets]: AssetResult[];
+  [Endpoints.metadata]: MetadataResult[];
 }
 
 export default class Connection {
@@ -111,7 +121,9 @@ export default class Connection {
     transactionId: string
   ): Promise<EndpointsResponse<O>[Endpoints.transactionsDetail]>;
 
-  listBlocks(transactionId: string): Promise<EndpointsResponse[Endpoints.blocks]>;
+  listBlocks(
+    transactionId: string
+  ): Promise<EndpointsResponse[Endpoints.blocks]>;
 
   listOutputs(
     publicKey: string,
@@ -124,7 +136,7 @@ export default class Connection {
   ): Promise<EndpointsResponse<typeof operation>[Endpoints.transactions]>;
 
   postTransaction<
-    O = TransactionOperations.CREATE,
+    O extends TransactionOperations = TransactionOperations.CREATE,
     A = Record<string, any>,
     M = Record<string, any>
   >(
@@ -132,7 +144,7 @@ export default class Connection {
   ): Promise<EndpointsResponse<O, A, M>[Endpoints.transactionsCommit]>;
 
   postTransactionSync<
-    O = TransactionOperations.CREATE,
+    O extends TransactionOperations = TransactionOperations.CREATE,
     A = Record<string, any>,
     M = Record<string, any>
   >(
@@ -140,7 +152,7 @@ export default class Connection {
   ): Promise<EndpointsResponse<O, A, M>[Endpoints.transactionsSync]>;
 
   postTransactionAsync<
-    O = TransactionOperations.CREATE,
+    O extends TransactionOperations = TransactionOperations.CREATE,
     A = Record<string, any>,
     M = Record<string, any>
   >(
@@ -148,14 +160,20 @@ export default class Connection {
   ): Promise<EndpointsResponse<O, A, M>[Endpoints.transactionsAsync]>;
 
   postTransactionCommit<
-    O = TransactionOperations.CREATE,
+    O extends TransactionOperations = TransactionOperations.CREATE,
     A = Record<string, any>,
     M = Record<string, any>
   >(
     transaction: TransactionCommon<O>
   ): Promise<EndpointsResponse<O, A, M>[Endpoints.transactionsCommit]>;
 
-  searchAssets(search: string): Promise<EndpointsResponse[Endpoints.assets]>;
+  searchAssets(
+    search: string,
+    limit?: number
+  ): Promise<EndpointsResponse[Endpoints.assets]>;
 
-  searchMetadata(search: string): Promise<EndpointsResponse[Endpoints.metadata]>;
+  searchMetadata(
+    search: string,
+    limit?: number
+  ): Promise<EndpointsResponse[Endpoints.metadata]>;
 }

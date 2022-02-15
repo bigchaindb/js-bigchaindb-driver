@@ -6,8 +6,8 @@ declare type FilterFn = (val: any, key?: string) => void;
 
 declare function filterFromObject<I = Record<string, any>>(
   obj: I,
-  filter: Array | FilterFn,
-  conf: { isInclusion?: boolean } = {}
+  filter: Array<any> | FilterFn,
+  conf: { isInclusion?: boolean }
 ): Partial<I>;
 
 declare function applyFilterOnObject<I = Record<string, any>>(
@@ -17,7 +17,7 @@ declare function applyFilterOnObject<I = Record<string, any>>(
 
 declare function selectFromObject<I = Record<string, any>>(
   obj: I,
-  filter: Array | FilterFn
+  filter: Array<any> | FilterFn
 ): Partial<I>;
 
 export default function sanitize<I = Record<string, any>>(
