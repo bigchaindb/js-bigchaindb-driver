@@ -62,7 +62,7 @@ jobs:
         run: npm run build
 
       # ensure BCDB node is up and running
-      - run: sleep 10
+      - run: sleep 20
 
       - name: Test
         run: npm run test
