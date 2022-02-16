@@ -45,6 +45,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
+      - name: Run BigChainDB node
+        run: |
+          echo Building and starting up docker containers
+          docker-compose -f ./docker-compose.yml up -d
+
       - name: Install dependencies
         env:
           HUSKY_SKIP_INSTALL: 'true'
@@ -56,10 +61,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Build docker
-        run: |
-          echo Building and starting up docker containers
-          docker-compose -f ./docker-compose.yml up
+      # ensure BCDB node is up and running
+      - run: sleep 10
 
       - name: Test
         run: npm run test
