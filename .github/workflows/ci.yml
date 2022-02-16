@@ -3,14 +3,14 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - master
     paths-ignore:
       - README.md
       - API.md
       - docs/*.rst
   pull_request:
     branches:
-      - main
+      - master
     types:
       - ready_for_review
       - opened
