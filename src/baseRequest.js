@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 // Code is Apache-2.0 and docs are CC-BY-4.0
 
+// TODO: remove abort-controller when using Node >=15
+import AbortController from 'abort-controller'
 import { Promise } from 'es6-promise'
 import fetchPonyfill from 'fetch-ponyfill'
 import { vsprintf } from 'sprintf-js'
