@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 // Code is Apache-2.0 and docs are CC-BY-4.0
 
+// TODO: remove abort-controller when using Node >=15
+import AbortController from 'abort-controller'
 import { Promise } from 'es6-promise'
 import fetchPonyfill from 'fetch-ponyfill'
 import { vsprintf } from 'sprintf-js'
@@ -9,14 +11,14 @@ import { vsprintf } from 'sprintf-js'
 import formatText from './format_text'
 import stringifyAsQueryParam from './stringify_as_query_param'
 
-const fetch = fetchPonyfill(Promise)
+const fetch = fetchPonyfill({ Promise })
 
 export function ResponseError(message, status, requestURI) {
     this.name = 'ResponseError'
     this.message = message
     this.status = status
     this.requestURI = requestURI
-    this.stack = (new Error()).stack
+    this.stack = new Error().stack
 }
 
 ResponseError.prototype = new Error()
@@ -26,17 +28,27 @@ ResponseError.prototype = new Error()
  * Timeout function following https://github.com/github/fetch/issues/175#issuecomment-284787564
  * @param {integer} obj Source object
  * @param {Promise} filter Array of key names to select or function to invoke per iteration
+ * @param {AbortController} controller AbortController instance bound to fetch
  * @return {Object} TimeoutError if the time was consumed, otherwise the Promise will be resolved
  */
-function timeout(ms, promise) {
+function timeout(ms, promise, controller) {
     return new Promise((resolve, reject) => {
-        setTimeout(() => {
+        const nodeTimeout = setTimeout(() => {
+            controller.abort()
             const errorObject = {
-                message: 'TimeoutError'
+                message: 'TimeoutError',
             }
             reject(new Error(errorObject))
         }, ms)
-        promise.then(resolve, reject)
+        promise
+            .then((res) => {
+                clearTimeout(nodeTimeout)
+                resolve(res)
+            })
+            .catch((err) => {
+                clearTimeout(nodeTimeout)
+                reject(err)
+            })
     })
 }
 
@@ -88,25 +100,30 @@ function handleResponse(res) {
  * @return {Promise}        If requestTimeout the timeout function will be called. Otherwise resolve the
  *                          Promise with the handleResponse function
  */
-export default function baseRequest(url, {
-    jsonBody,
-    query,
-    urlTemplateSpec,
-    ...fetchConfig
-} = {}, requestTimeout) {
+export default function baseRequest(
+    url,
+    {
+        jsonBody, query, urlTemplateSpec, ...fetchConfig
+    } = {},
+    requestTimeout = 0
+) {
     let expandedUrl = url
 
     if (urlTemplateSpec != null) {
         if (Array.isArray(urlTemplateSpec) && urlTemplateSpec.length) {
             // Use vsprintf for the array call signature
             expandedUrl = vsprintf(url, urlTemplateSpec)
-        } else if (urlTemplateSpec &&
+        } else if (
+            urlTemplateSpec &&
             typeof urlTemplateSpec === 'object' &&
-            Object.keys(urlTemplateSpec).length) {
+            Object.keys(urlTemplateSpec).length
+        ) {
             expandedUrl = formatText(url, urlTemplateSpec)
         } else if (process.env.NODE_ENV !== 'production') {
             // eslint-disable-next-line no-console
-            console.warn('Supplied urlTemplateSpec was not an array or object. Ignoring...')
+            console.warn(
+                'Supplied urlTemplateSpec was not an array or object. Ignoring...'
+            )
         }
     }
 
@@ -124,11 +141,17 @@ export default function baseRequest(url, {
     if (jsonBody != null) {
         fetchConfig.body = JSON.stringify(jsonBody)
     }
+
     if (requestTimeout) {
-        return timeout(requestTimeout, fetch.fetch(expandedUrl, fetchConfig))
+        const controller = new AbortController()
+        const { signal } = controller
+        return timeout(
+            requestTimeout,
+            fetch.fetch(expandedUrl, { ...fetchConfig, signal }),
+            controller
+        )
             .then(handleResponse)
     } else {
-        return fetch.fetch(expandedUrl, fetchConfig)
-            .then(handleResponse)
+        return fetch.fetch(expandedUrl, fetchConfig).then(handleResponse)
     }
 }

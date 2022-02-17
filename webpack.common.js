@@ -6,7 +6,8 @@
 
 'use strict'
 
-const { paths } = require('./webpack.parts.js')
+const { ProvidePlugin } = require('webpack')
+const { paths } = require('./webpack.parts')
 
 module.exports = {
     entry: paths.entry,
@@ -24,10 +25,18 @@ module.exports = {
     },
     optimization: {
         minimize: true,
-        noEmitOnErrors: true
+        emitOnErrors: false
     },
     resolve: {
         extensions: ['.js'],
         modules: ['node_modules'],
+        fallback: {
+            buffer: require.resolve('buffer/'),
+        }
     },
+    plugins: [
+        new ProvidePlugin({
+            Buffer: ['buffer', 'Buffer']
+        })
+    ]
 }

@@ -8,9 +8,9 @@
 
 const PRODUCTION = process.env.NODE_ENV === 'production'
 
-const common = require('./webpack.common.js')
+const common = require('./webpack.common')
 
-const { outputs } = require('./webpack.parts.js')
+const { outputs } = require('./webpack.parts')
 
 // '[libraryTarget]': [file extension]
 const OUTPUT_MAPPING = {

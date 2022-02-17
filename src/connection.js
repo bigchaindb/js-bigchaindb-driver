@@ -178,10 +178,11 @@ export default class Connection {
     /**
      * @param search
      */
-    searchAssets(search) {
+    searchAssets(search, limit = 10) {
         return this._req(Connection.getApiUrls('assets'), {
             query: {
-                search
+                search,
+                limit
             }
         })
     }
@@ -189,10 +190,11 @@ export default class Connection {
     /**
      * @param search
      */
-    searchMetadata(search) {
+    searchMetadata(search, limit = 10) {
         return this._req(Connection.getApiUrls('metadata'), {
             query: {
-                search
+                search,
+                limit
             }
         })
     }

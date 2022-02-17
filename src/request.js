@@ -70,7 +70,7 @@ export default class Request {
 
         const requestTimeout = timeout ? timeout - backoffTimedelta : timeout
         return baseRequest(apiUrl, requestConfig, requestTimeout)
-            .then(async (res) => {
+            .then((res) => {
                 this.connectionError = null
                 return res.json()
             })
@@ -111,6 +111,8 @@ export default class Request {
     }
 
     static sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms))
+        return new Promise(resolve => {
+            setTimeout(resolve, ms)
+        })
     }
 }
